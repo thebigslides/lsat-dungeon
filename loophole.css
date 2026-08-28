@@ -2281,3 +2281,1460 @@ footer a:hover {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   LOOPHOLE LEAGUE — PIXEL BASKETBALL COURT
+   ========================================================= */
+
+
+/* =========================================================
+   BASKETBALL STAGE
+   ========================================================= */
+
+.basketball-stage {
+  margin: 20px 0 26px;
+
+  background: #04172a;
+
+  border: 3px solid var(--blue-bright);
+
+  outline: 2px solid #020912;
+
+  box-shadow:
+    4px 4px 0 #02070d;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   MINI SCOREBOARD
+   ========================================================= */
+
+.court-scoreboard {
+  min-height: 54px;
+
+  display: grid;
+  grid-template-columns: 1fr 150px 1fr;
+
+  align-items: stretch;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      180deg,
+      #0b3e6c,
+      #061b30
+    );
+
+  border-bottom: 3px solid #020912;
+}
+
+
+.court-team,
+.possession-display {
+  padding: 7px 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+}
+
+
+.court-team:first-child {
+  justify-content: flex-start;
+}
+
+
+.court-team.opponent {
+  justify-content: flex-end;
+}
+
+
+.court-team span,
+.possession-display span {
+  color: var(--blue-light);
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+
+.court-team strong {
+  color: white;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  text-shadow:
+    2px 2px 0 #020912;
+}
+
+
+.possession-display {
+  flex-direction: column;
+
+  gap: 0;
+
+  background: #04172a;
+
+  border-left: 2px solid #0c5289;
+  border-right: 2px solid #0c5289;
+}
+
+
+.possession-display strong {
+  margin-top: 1px;
+
+  color: var(--orange-light);
+
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   COURT
+   ========================================================= */
+
+.pixel-court {
+  height: 270px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #efc377 0px,
+      #efc377 74px,
+      #e7b268 74px,
+      #e7b268 148px
+    );
+
+  border: 5px solid #f9db9b;
+
+  image-rendering: pixelated;
+}
+
+
+/* subtle wood markings */
+
+.pixel-court::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.25;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 31px,
+      #9d6a3b 32px,
+      transparent 33px
+    );
+}
+
+
+/* =========================================================
+   BLUE BASELINE AREA
+   ========================================================= */
+
+.pixel-court::after {
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+  top: 0;
+
+  width: 70px;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #0874bd,
+      #0561a4
+    );
+
+  border-left: 4px solid white;
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   CROWD
+   ========================================================= */
+
+.pixel-crowd {
+  height: 34px;
+
+  position: absolute;
+
+  left: 0;
+  right: 70px;
+  top: 0;
+
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  color: #10283c;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #193c55 0px,
+      #193c55 20px,
+      #102b42 20px,
+      #102b42 40px
+    );
+
+  border-bottom: 4px solid #06192b;
+
+  font-size: 15px;
+
+  overflow: hidden;
+}
+
+
+.pixel-crowd span:nth-child(3n) {
+  color: var(--orange);
+}
+
+
+.pixel-crowd span:nth-child(4n) {
+  color: #e5e5e5;
+}
+
+
+/* =========================================================
+   COURT MARKINGS
+   ========================================================= */
+
+.court-center-line {
+  width: 3px;
+
+  position: absolute;
+
+  top: 34px;
+  bottom: 0;
+  left: 46%;
+
+  background: rgba(255,255,255,0.9);
+
+  z-index: 2;
+}
+
+
+.court-circle {
+  width: 90px;
+  height: 90px;
+
+  position: absolute;
+
+  left: calc(46% - 45px);
+  top: 115px;
+
+  border: 3px solid rgba(255,255,255,0.9);
+  border-radius: 50%;
+
+  z-index: 2;
+}
+
+
+.court-key {
+  width: 145px;
+  height: 126px;
+
+  position: absolute;
+
+  right: 70px;
+  bottom: 0;
+
+  border:
+    3px solid rgba(255,255,255,0.95);
+
+  border-right: 0;
+
+  background:
+    rgba(13, 104, 174, 0.13);
+
+  z-index: 2;
+}
+
+
+.three-point-line {
+  width: 255px;
+  height: 220px;
+
+  position: absolute;
+
+  right: 22px;
+  bottom: -58px;
+
+  border:
+    3px solid rgba(255,255,255,0.95);
+
+  border-radius: 50% 0 0 50%;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   PLAYER
+   ========================================================= */
+
+.pixel-player {
+  width: 40px;
+  height: 72px;
+
+  position: absolute;
+
+  left: 24%;
+  bottom: 37px;
+
+  z-index: 15;
+
+  transform-origin: bottom center;
+
+  image-rendering: pixelated;
+}
+
+
+/* head */
+
+.player-head {
+  width: 20px;
+  height: 19px;
+
+  position: absolute;
+
+  top: 0;
+  left: 10px;
+
+  background: #9a5b36;
+
+  border:
+    3px solid #2a1710;
+
+  box-shadow:
+    inset 0 4px 0 #24140e;
+}
+
+
+/* jersey */
+
+.player-body {
+  width: 27px;
+  height: 30px;
+
+  position: absolute;
+
+  left: 7px;
+  top: 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  background: var(--blue);
+
+  border:
+    3px solid #042845;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+
+/* arms */
+
+.player-arm {
+  width: 7px;
+  height: 25px;
+
+  position: absolute;
+
+  top: 22px;
+
+  background: #9a5b36;
+
+  border:
+    2px solid #2a1710;
+
+  transform-origin: top center;
+}
+
+
+.player-arm-left {
+  left: 2px;
+
+  transform: rotate(10deg);
+}
+
+
+.player-arm-right {
+  right: 1px;
+
+  transform: rotate(-18deg);
+}
+
+
+/* legs */
+
+.player-leg {
+  width: 9px;
+  height: 25px;
+
+  position: absolute;
+
+  top: 47px;
+
+  background: #26384a;
+
+  border:
+    2px solid #06101a;
+
+  transform-origin: top center;
+}
+
+
+.player-leg-left {
+  left: 8px;
+
+  transform: rotate(5deg);
+}
+
+
+.player-leg-right {
+  right: 8px;
+
+  transform: rotate(-5deg);
+}
+
+
+/* =========================================================
+   DEFENDER
+   ========================================================= */
+
+.pixel-defender {
+  width: 40px;
+  height: 72px;
+
+  position: absolute;
+
+  left: 47%;
+  bottom: 37px;
+
+  z-index: 14;
+
+  transform-origin: bottom center;
+
+  image-rendering: pixelated;
+}
+
+
+.defender-head {
+  width: 20px;
+  height: 19px;
+
+  position: absolute;
+
+  top: 0;
+  left: 10px;
+
+  background: #6f412b;
+
+  border:
+    3px solid #24130d;
+
+  box-shadow:
+    inset 0 4px 0 #15100e;
+}
+
+
+.defender-body {
+  width: 27px;
+  height: 30px;
+
+  position: absolute;
+
+  left: 7px;
+  top: 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  background: var(--orange);
+
+  border:
+    3px solid var(--orange-dark);
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+.defender-arm {
+  width: 7px;
+  height: 25px;
+
+  position: absolute;
+
+  top: 21px;
+
+  background: #6f412b;
+
+  border:
+    2px solid #24130d;
+
+  transform-origin: top center;
+}
+
+
+.defender-arm-left {
+  left: 1px;
+
+  transform: rotate(15deg);
+}
+
+
+.defender-arm-right {
+  right: 1px;
+
+  transform: rotate(-15deg);
+}
+
+
+.defender-leg {
+  width: 9px;
+  height: 25px;
+
+  position: absolute;
+
+  top: 47px;
+
+  background: #3b241b;
+
+  border:
+    2px solid #160d09;
+}
+
+
+.defender-leg-left {
+  left: 8px;
+
+  transform: rotate(8deg);
+}
+
+
+.defender-leg-right {
+  right: 8px;
+
+  transform: rotate(-8deg);
+}
+
+
+/* =========================================================
+   BASKETBALL
+   ========================================================= */
+
+.pixel-ball {
+  width: 25px;
+  height: 25px;
+
+  position: absolute;
+
+  left: calc(24% + 31px);
+  bottom: 83px;
+
+  z-index: 25;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+
+  filter:
+    drop-shadow(2px 2px 0 rgba(0,0,0,0.4));
+
+  transform-origin: center;
+
+  image-rendering: pixelated;
+}
+
+
+/* =========================================================
+   BASKET
+   ========================================================= */
+
+.pixel-hoop {
+  width: 75px;
+  height: 110px;
+
+  position: absolute;
+
+  right: 34px;
+  bottom: 47px;
+
+  z-index: 20;
+}
+
+
+.backboard {
+  width: 11px;
+  height: 82px;
+
+  position: absolute;
+
+  right: 0;
+  top: 0;
+
+  background: #f5f5ef;
+
+  border:
+    3px solid #173349;
+
+  box-shadow:
+    3px 0 0 rgba(0,0,0,0.25);
+}
+
+
+.rim {
+  width: 42px;
+  height: 7px;
+
+  position: absolute;
+
+  right: 9px;
+  top: 49px;
+
+  background: var(--orange);
+
+  border:
+    2px solid #8e3900;
+
+  z-index: 3;
+}
+
+
+.net {
+  width: 31px;
+  height: 29px;
+
+  position: absolute;
+
+  right: 14px;
+  top: 55px;
+
+  border-left:
+    3px solid rgba(255,255,255,0.9);
+
+  border-right:
+    3px solid rgba(255,255,255,0.9);
+
+  border-bottom:
+    3px solid rgba(255,255,255,0.9);
+
+  transform:
+    perspective(20px)
+    rotateX(-8deg);
+}
+
+
+/* net lines */
+
+.net::before {
+  content: "";
+
+  position: absolute;
+
+  left: 5px;
+  right: 5px;
+  top: 8px;
+
+  height: 2px;
+
+  background: white;
+
+  box-shadow:
+    0 8px 0 white;
+}
+
+
+/* =========================================================
+   RESULT TEXT
+   ========================================================= */
+
+.shot-result {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  z-index: 100;
+
+  transform:
+    translate(-50%, -50%);
+
+  padding: 8px 15px;
+
+  color: white;
+
+  background: var(--blue);
+
+  border:
+    3px solid white;
+
+  outline:
+    3px solid #020912;
+
+  box-shadow:
+    5px 5px 0 rgba(0,0,0,0.55);
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: clamp(20px, 5vw, 38px);
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    3px 3px 0 #020912;
+}
+
+
+/* =========================================================
+   IDLE ANIMATIONS
+   ========================================================= */
+
+.pixel-player {
+  animation:
+    playerIdle
+    0.75s
+    steps(2)
+    infinite;
+}
+
+
+@keyframes playerIdle {
+
+  0% {
+    transform:
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      translateY(-2px);
+  }
+
+  100% {
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+.pixel-defender {
+  animation:
+    defenderIdle
+    0.85s
+    steps(2)
+    infinite;
+}
+
+
+@keyframes defenderIdle {
+
+  0% {
+    transform:
+      translateX(0);
+  }
+
+  50% {
+    transform:
+      translateX(2px);
+  }
+
+  100% {
+    transform:
+      translateX(0);
+  }
+
+}
+
+
+.pixel-ball {
+  animation:
+    ballIdle
+    0.65s
+    steps(2)
+    infinite;
+}
+
+
+@keyframes ballIdle {
+
+  0% {
+    transform:
+      translateY(0)
+      rotate(0deg);
+  }
+
+  50% {
+    transform:
+      translateY(7px)
+      rotate(20deg);
+  }
+
+  100% {
+    transform:
+      translateY(0)
+      rotate(40deg);
+  }
+
+}
+
+
+/* =========================================================
+   SHOOTING PLAYER
+   ========================================================= */
+
+.pixel-player.shooting {
+  animation:
+    playerShoot
+    0.65s
+    steps(5)
+    forwards;
+}
+
+
+.pixel-player.shooting
+.player-arm-right {
+  animation:
+    shootingArm
+    0.65s
+    steps(4)
+    forwards;
+}
+
+
+@keyframes playerShoot {
+
+  0% {
+    transform:
+      translateY(0)
+      scaleY(1);
+  }
+
+  25% {
+    transform:
+      translateY(4px)
+      scaleY(0.95);
+  }
+
+  50% {
+    transform:
+      translateY(-12px)
+      scaleY(1.03);
+  }
+
+  75% {
+    transform:
+      translateY(-12px);
+  }
+
+  100% {
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+@keyframes shootingArm {
+
+  0% {
+    transform:
+      rotate(-18deg);
+  }
+
+  40% {
+    transform:
+      rotate(-80deg);
+  }
+
+  100% {
+    transform:
+      rotate(-115deg);
+  }
+
+}
+
+
+/* =========================================================
+   MADE SHOT
+   ========================================================= */
+
+.pixel-ball.shot-made {
+  animation:
+    madeShot
+    1.05s
+    linear
+    forwards;
+}
+
+
+@keyframes madeShot {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform:
+      rotate(0deg)
+      scale(1);
+  }
+
+  20% {
+    left: 38%;
+    bottom: 150px;
+
+    transform:
+      rotate(90deg);
+  }
+
+  42% {
+    left: 56%;
+    bottom: 190px;
+
+    transform:
+      rotate(180deg);
+  }
+
+  63% {
+    left: 72%;
+    bottom: 168px;
+
+    transform:
+      rotate(270deg);
+  }
+
+  82% {
+    left: calc(100% - 94px);
+    bottom: 132px;
+
+    transform:
+      rotate(360deg)
+      scale(0.95);
+  }
+
+  100% {
+    left: calc(100% - 82px);
+    bottom: 84px;
+
+    transform:
+      rotate(450deg)
+      scale(0.85);
+  }
+
+}
+
+
+/* =========================================================
+   SWISH
+   ========================================================= */
+
+.pixel-hoop.swish
+.net {
+  animation:
+    netSwish
+    0.45s
+    steps(4)
+    0.82s;
+}
+
+
+@keyframes netSwish {
+
+  0% {
+    transform:
+      skewX(0deg);
+  }
+
+  30% {
+    transform:
+      skewX(12deg)
+      translateY(4px);
+  }
+
+  60% {
+    transform:
+      skewX(-9deg)
+      translateY(2px);
+  }
+
+  100% {
+    transform:
+      skewX(0deg);
+  }
+
+}
+
+
+/* =========================================================
+   MISS — BRICK
+   ========================================================= */
+
+.pixel-ball.shot-miss {
+  animation:
+    missedShot
+    1.15s
+    linear
+    forwards;
+}
+
+
+@keyframes missedShot {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform:
+      rotate(0deg);
+  }
+
+  20% {
+    left: 39%;
+    bottom: 150px;
+
+    transform:
+      rotate(90deg);
+  }
+
+  45% {
+    left: 59%;
+    bottom: 185px;
+
+    transform:
+      rotate(180deg);
+  }
+
+  70% {
+    left: 77%;
+    bottom: 151px;
+
+    transform:
+      rotate(300deg);
+  }
+
+  82% {
+    left: calc(100% - 105px);
+    bottom: 130px;
+
+    transform:
+      rotate(380deg);
+  }
+
+  88% {
+    left: calc(100% - 130px);
+    bottom: 143px;
+
+    transform:
+      rotate(420deg);
+  }
+
+  100% {
+    left: calc(100% - 175px);
+    bottom: 30px;
+
+    transform:
+      rotate(620deg);
+  }
+
+}
+
+
+/* =========================================================
+   BLOCKED SHOT
+   ========================================================= */
+
+.pixel-defender.blocking {
+  animation:
+    defenderBlock
+    0.65s
+    steps(4)
+    forwards;
+}
+
+
+.pixel-defender.blocking
+.defender-arm-left {
+  animation:
+    blockArm
+    0.6s
+    steps(3)
+    forwards;
+}
+
+
+@keyframes defenderBlock {
+
+  0% {
+    transform:
+      translateY(0);
+  }
+
+  35% {
+    transform:
+      translateY(-25px)
+      translateX(-8px);
+  }
+
+  65% {
+    transform:
+      translateY(-25px)
+      translateX(-8px);
+  }
+
+  100% {
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+@keyframes blockArm {
+
+  0% {
+    transform:
+      rotate(15deg);
+  }
+
+  40% {
+    transform:
+      rotate(115deg);
+  }
+
+  100% {
+    transform:
+      rotate(130deg);
+  }
+
+}
+
+
+.pixel-ball.shot-blocked {
+  animation:
+    blockedShot
+    0.8s
+    steps(6)
+    forwards;
+}
+
+
+@keyframes blockedShot {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+  }
+
+  35% {
+    left: 41%;
+    bottom: 138px;
+
+    transform:
+      rotate(130deg);
+  }
+
+  48% {
+    left: 46%;
+    bottom: 144px;
+
+    transform:
+      rotate(190deg);
+  }
+
+  65% {
+    left: 38%;
+    bottom: 110px;
+
+    transform:
+      rotate(300deg);
+  }
+
+  100% {
+    left: 29%;
+    bottom: 20px;
+
+    transform:
+      rotate(540deg);
+  }
+
+}
+
+
+/* =========================================================
+   AIRBALL
+   ========================================================= */
+
+.pixel-ball.shot-airball {
+  animation:
+    airballShot
+    1.15s
+    linear
+    forwards;
+}
+
+
+@keyframes airballShot {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+  }
+
+  25% {
+    left: 40%;
+    bottom: 165px;
+  }
+
+  50% {
+    left: 61%;
+    bottom: 205px;
+  }
+
+  75% {
+    left: 82%;
+    bottom: 180px;
+  }
+
+  100% {
+    left: calc(100% - 35px);
+    bottom: 118px;
+
+    transform:
+      rotate(600deg);
+  }
+
+}
+
+
+/* =========================================================
+   MADE SHOT CELEBRATION
+   ========================================================= */
+
+.pixel-player.celebrate {
+  animation:
+    playerCelebrate
+    0.7s
+    steps(4)
+    infinite;
+}
+
+
+@keyframes playerCelebrate {
+
+  0% {
+    transform:
+      translateY(0);
+  }
+
+  25% {
+    transform:
+      translateY(-7px)
+      rotate(-4deg);
+  }
+
+  50% {
+    transform:
+      translateY(0);
+  }
+
+  75% {
+    transform:
+      translateY(-7px)
+      rotate(4deg);
+  }
+
+  100% {
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   RESULT POP
+   ========================================================= */
+
+.shot-result.result-pop {
+  animation:
+    resultPop
+    0.45s
+    steps(4)
+    forwards;
+}
+
+
+@keyframes resultPop {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.5);
+  }
+
+  55% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.15);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   MADE RESULT
+   ========================================================= */
+
+.shot-result.made {
+  color: white;
+
+  background: var(--green);
+
+  border-color: #d8ffc7;
+}
+
+
+/* =========================================================
+   MISS RESULT
+   ========================================================= */
+
+.shot-result.missed {
+  color: white;
+
+  background: var(--red);
+
+  border-color: #ffb5ad;
+}
+
+
+/* =========================================================
+   RESPONSIVE COURT
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .pixel-court {
+    height: 230px;
+  }
+
+
+  .court-scoreboard {
+    grid-template-columns:
+      1fr 105px 1fr;
+  }
+
+
+  .court-team {
+    padding:
+      7px 8px;
+  }
+
+
+  .pixel-player {
+    left: 15%;
+  }
+
+
+  .pixel-ball {
+    left:
+      calc(15% + 31px);
+  }
+
+
+  .pixel-defender {
+    left: 44%;
+  }
+
+
+  .three-point-line {
+    width: 200px;
+  }
+
+
+  .court-circle {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .pixel-player,
+  .pixel-defender,
+  .pixel-ball {
+    animation: none;
+  }
+
+}
