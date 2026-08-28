@@ -1,355 +1,19 @@
-// ==========================================
-// LOOPHOLE TRAINING ENGINE
-// ==========================================
+/* =========================================================
+   LOOPHOLE TRAINING ENGINE
+   VERSION 2
+   Learn → Interact → Drill → Master
+   ========================================================= */
 
-const SAVE_KEY = "loopholeTrainingPlayer_v1";
 
+/* =========================================================
+   SAVE SYSTEM
+   ========================================================= */
 
-// ==========================================
-// QUESTION BANK
-//
-// These are ORIGINAL practice questions.
-// We can massively expand this later.
-// ==========================================
+const SAVE_KEY = "loopholeTraining_v2";
 
-const questions = [
-  {
-    id: "arg-001",
 
-    concept: "arguments",
-    subtype: "inference",
-
-    tag: "VALID INFERENCE",
-    difficulty: "Rookie",
-
-    stimulus:
-      "Every player selected for the All-Star team receives an invitation. Luka was selected for the All-Star team.",
-
-    prompt:
-      "Which statement must be true?",
-
-    answers: [
-      "Luka received an invitation.",
-      "Luka was the best player selected.",
-      "Every player who received an invitation was selected.",
-      "Luka might not have received an invitation."
-    ],
-
-    correct: 0,
-
-    feedback: {
-      title: "That's the inference.",
-
-      explanation:
-        "Every selected player receives an invitation. Luka was selected. Therefore, Luka must receive an invitation."
-    }
-  },
-
-
-  {
-    id: "arg-002",
-
-    concept: "arguments",
-    subtype: "conclusion",
-
-    tag: "FIND THE CONCLUSION",
-    difficulty: "Rookie",
-
-    stimulus:
-      "The city should expand its rail system. Traffic congestion has increased every year, and cities with larger rail networks generally have fewer commuters traveling by car.",
-
-    prompt:
-      "Which statement is the conclusion of the argument?",
-
-    answers: [
-      "Traffic congestion has increased every year.",
-      "The city should expand its rail system.",
-      "Some cities have larger rail networks.",
-      "Many commuters travel by car."
-    ],
-
-    correct: 1,
-
-    feedback: {
-      title: "Conclusion identified.",
-
-      explanation:
-        "The claims about congestion and other cities provide support. The claim being supported is that the city should expand its rail system."
-    }
-  },
-
-
-  {
-    id: "arg-003",
-
-    concept: "arguments",
-    subtype: "premise",
-
-    tag: "FIND THE PREMISE",
-    difficulty: "Rookie",
-
-    stimulus:
-      "Maya will probably succeed in the advanced course because she earned the highest grade in the prerequisite course.",
-
-    prompt:
-      "Which statement functions as a premise?",
-
-    answers: [
-      "Maya will probably succeed in the advanced course.",
-      "Advanced courses are always difficult.",
-      "Maya earned the highest grade in the prerequisite course.",
-      "Maya enjoys advanced courses."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "That's the support.",
-
-      explanation:
-        "Maya's prerequisite grade is offered as evidence for the conclusion that she will probably succeed in the advanced course."
-    }
-  },
-
-
-  {
-    id: "arg-004",
-
-    concept: "arguments",
-    subtype: "invalid-inference",
-
-    tag: "VALID OR INVALID",
-    difficulty: "Starter",
-
-    stimulus:
-      "All licensed pilots completed flight training. Jordan completed flight training.",
-
-    prompt:
-      "Which statement is properly supported?",
-
-    answers: [
-      "Jordan must be a licensed pilot.",
-      "Jordan cannot be a licensed pilot.",
-      "Jordan may or may not be a licensed pilot.",
-      "Everyone who completes flight training becomes a licensed pilot."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "No reversal allowed.",
-
-      explanation:
-        "Licensed pilot guarantees completed training. Completed training does not guarantee that someone is a licensed pilot. Jordan could be licensed or unlicensed."
-    }
-  },
-
-
-  {
-    id: "arg-005",
-
-    concept: "arguments",
-    subtype: "argument-recognition",
-
-    tag: "ARGUMENT STRUCTURE",
-    difficulty: "Starter",
-
-    stimulus:
-      "The museum closes at 6:00 p.m. The building was constructed in 1924. Its newest exhibit contains paintings from several local artists.",
-
-    prompt:
-      "Does this passage contain an argument?",
-
-    answers: [
-      "Yes, because it contains several statements.",
-      "Yes, because the statements concern the same museum.",
-      "No, because none of the statements is offered as support for another.",
-      "No, because arguments must contain disagreement."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "No support relationship.",
-
-      explanation:
-        "A collection of statements is not automatically an argument. An argument requires at least one claim to be offered as support for another."
-    }
-  },
-
-
-  {
-    id: "arg-006",
-
-    concept: "arguments",
-    subtype: "conclusion",
-
-    tag: "FIND THE CONCLUSION",
-    difficulty: "Starter",
-
-    stimulus:
-      "The restaurant is unlikely to remain open much longer. Its customer traffic has declined for six consecutive months, and its rent recently increased by twenty percent.",
-
-    prompt:
-      "What is the main conclusion?",
-
-    answers: [
-      "The restaurant's rent increased.",
-      "Customer traffic has declined.",
-      "The restaurant is unlikely to remain open much longer.",
-      "Restaurants require customers to remain open."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "Main conclusion secured.",
-
-      explanation:
-        "Declining traffic and increased rent are evidence. They support the prediction that the restaurant is unlikely to remain open much longer."
-    }
-  },
-
-
-  {
-    id: "arg-007",
-
-    concept: "arguments",
-    subtype: "inference",
-
-    tag: "VALID INFERENCE",
-    difficulty: "Intermediate",
-
-    stimulus:
-      "No member of the committee who opposed the proposal voted for the final resolution. Priya opposed the proposal.",
-
-    prompt:
-      "Which statement must be true?",
-
-    answers: [
-      "Priya voted for the final resolution.",
-      "Priya did not vote for the final resolution.",
-      "Priya was absent from the final vote.",
-      "Everyone who rejected the resolution opposed the proposal."
-    ],
-
-    correct: 1,
-
-    feedback: {
-      title: "Clean deduction.",
-
-      explanation:
-        "Anyone who opposed the proposal did not vote for the final resolution. Priya opposed it, so she could not have voted for the resolution."
-    }
-  },
-
-
-  {
-    id: "arg-008",
-
-    concept: "arguments",
-    subtype: "premise-conclusion",
-
-    tag: "ARGUMENT STRUCTURE",
-    difficulty: "Intermediate",
-
-    stimulus:
-      "Electric buses require less maintenance than diesel buses. They also produce no tailpipe emissions. Therefore, the transit authority has good reason to replace some of its diesel fleet with electric buses.",
-
-    prompt:
-      "How is the final sentence functioning?",
-
-    answers: [
-      "It provides evidence for the first sentence.",
-      "It provides an example of an electric bus.",
-      "It states the conclusion supported by the previous claims.",
-      "It contradicts both previous statements."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "Structure recognized.",
-
-      explanation:
-        "The first two sentences provide benefits of electric buses. The final sentence draws a recommendation from those premises."
-    }
-  },
-
-
-  {
-    id: "arg-009",
-
-    concept: "arguments",
-    subtype: "invalid-inference",
-
-    tag: "INFERENCE CHECK",
-    difficulty: "Intermediate",
-
-    stimulus:
-      "Some attorneys at the firm specialize in tax law. Every attorney who specializes in tax law has completed advanced tax coursework.",
-
-    prompt:
-      "Which statement must be true?",
-
-    answers: [
-      "Every attorney at the firm completed advanced tax coursework.",
-      "At least one attorney at the firm completed advanced tax coursework.",
-      "Only attorneys at this firm complete advanced tax coursework.",
-      "Most attorneys at the firm specialize in tax law."
-    ],
-
-    correct: 1,
-
-    feedback: {
-      title: "Existence carries through.",
-
-      explanation:
-        "At least one attorney specializes in tax law, and every tax-law specialist completed advanced coursework. Therefore at least one attorney at the firm completed that coursework."
-    }
-  },
-
-
-  {
-    id: "arg-010",
-
-    concept: "arguments",
-    subtype: "argument-recognition",
-
-    tag: "ARGUMENT STRUCTURE",
-    difficulty: "Intermediate",
-
-    stimulus:
-      "The lake's water level is lower than it was last summer. Rainfall in the region has also been below average. The reduced rainfall is therefore probably contributing to the lake's lower water level.",
-
-    prompt:
-      "Which claim is supported by the others?",
-
-    answers: [
-      "The lake existed last summer.",
-      "Rainfall has been below average.",
-      "Reduced rainfall is probably contributing to the lower water level.",
-      "The lake will completely dry up."
-    ],
-
-    correct: 2,
-
-    feedback: {
-      title: "Argument mapped.",
-
-      explanation:
-        "The observations about water level and rainfall support the causal conclusion that reduced rainfall is probably contributing to the lower lake level."
-    }
-  }
-];
-
-
-// ==========================================
-// DEFAULT PLAYER SAVE
-// ==========================================
-
-const defaultPlayer = {
-  version: 1,
+const DEFAULT_PLAYER = {
+  version: 2,
 
   xp: 0,
   level: 1,
@@ -360,73 +24,139 @@ const defaultPlayer = {
   totalAnswered: 0,
   totalCorrect: 0,
 
-  mastery: {
-    arguments: 0,
-    inferences: 0,
-    powerPlayers: 0,
-    loopholes: 0,
-    mixed: 0
+  currentChapter: 1,
+
+  progress: {
+    chapter1: {
+      lessons: {
+        "1-1": {
+          unlocked: true,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-2": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-3": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-4": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-5": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        }
+      },
+
+      test: {
+        unlocked: false,
+        attempts: 0,
+        bestScore: 0,
+        passed: false
+      }
+    }
   },
 
-  unlockedLevels: [
-    "arguments"
-  ],
+  conceptMastery: {
+    arguments: 0,
+    premises: 0,
+    conclusions: 0,
+    premiseSets: 0,
+    inferences: 0
+  },
 
-  questionHistory: {},
-
-  currentRound: {
-    level: "arguments",
-    questionIndex: 0,
-    correct: 0,
-    answered: false
-  }
+  questionHistory: {}
 };
 
 
-// ==========================================
-// LOAD / SAVE
-// ==========================================
+
+/* =========================================================
+   LOAD PLAYER
+   ========================================================= */
 
 function cloneDefaultPlayer() {
-  return JSON.parse(JSON.stringify(defaultPlayer));
+  return JSON.parse(
+    JSON.stringify(DEFAULT_PLAYER)
+  );
 }
 
 
 function loadPlayer() {
 
-  const saved = localStorage.getItem(SAVE_KEY);
+  const saved =
+    localStorage.getItem(SAVE_KEY);
+
 
   if (!saved) {
     return cloneDefaultPlayer();
   }
 
+
   try {
 
-    const parsed = JSON.parse(saved);
+    const parsed =
+      JSON.parse(saved);
+
+
+    const fresh =
+      cloneDefaultPlayer();
+
 
     return {
-      ...cloneDefaultPlayer(),
+      ...fresh,
       ...parsed,
 
-      mastery: {
-        ...defaultPlayer.mastery,
-        ...(parsed.mastery || {})
+      progress: {
+        ...fresh.progress,
+        ...(parsed.progress || {}),
+
+        chapter1: {
+          ...fresh.progress.chapter1,
+          ...(parsed.progress?.chapter1 || {}),
+
+          lessons: {
+            ...fresh.progress.chapter1.lessons,
+            ...(parsed.progress?.chapter1?.lessons || {})
+          },
+
+          test: {
+            ...fresh.progress.chapter1.test,
+            ...(parsed.progress?.chapter1?.test || {})
+          }
+        }
+      },
+
+      conceptMastery: {
+        ...fresh.conceptMastery,
+        ...(parsed.conceptMastery || {})
       },
 
       questionHistory: {
         ...(parsed.questionHistory || {})
-      },
-
-      currentRound: {
-        ...defaultPlayer.currentRound,
-        ...(parsed.currentRound || {})
       }
     };
 
   } catch (error) {
 
     console.error(
-      "Could not load Loophole save:",
+      "Could not load save:",
       error
     );
 
@@ -447,9 +177,621 @@ function savePlayer() {
 let player = loadPlayer();
 
 
-// ==========================================
-// DOM
-// ==========================================
+
+/* =========================================================
+   LESSON DATA
+
+   IMPORTANT:
+   This is our own instructional material.
+
+   We can later expand this lesson-by-lesson as you
+   work through the book.
+   ========================================================= */
+
+const lessons = {
+
+  /* =======================================================
+     LESSON 1.1
+     ======================================================= */
+
+  "1-1": {
+
+    chapter: 1,
+
+    number: "1.1",
+
+    title: "What Is an Argument?",
+
+    concept: "arguments",
+
+    xpReward: 150,
+
+
+    steps: [
+
+      /* ---------------------------------------------------
+         STEP 1 — TEACHING
+         --------------------------------------------------- */
+
+      {
+        type: "learn",
+
+        title: "What Is an Argument?",
+
+        html: `
+          <p>
+            Before we can analyze an argument,
+            we need to know what actually makes
+            something an <strong>argument</strong>.
+          </p>
+
+          <p>
+            An argument isn't just a bunch of
+            statements sitting next to each other.
+          </p>
+
+          <div class="concept-box">
+
+            <h3>The basic idea</h3>
+
+            <p>
+              In an argument, one or more statements
+              are offered as <strong>support</strong>
+              for another statement.
+            </p>
+
+          </div>
+
+          <p>
+            That relationship is what matters:
+          </p>
+
+          <div class="logic-flow">
+
+            <div class="logic-node">
+              SUPPORT
+            </div>
+
+            <div class="logic-arrow">
+              ↓
+            </div>
+
+            <div class="logic-node conclusion-node">
+              CLAIM
+            </div>
+
+          </div>
+
+          <p>
+            No support relationship?
+            Then you may simply have a collection
+            of statements rather than an argument.
+          </p>
+        `
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 2 — EXAMPLE
+         --------------------------------------------------- */
+
+      {
+        type: "learn",
+
+        title: "Statements Aren't Enough",
+
+        html: `
+          <p>
+            Consider these statements:
+          </p>
+
+          <div class="concept-example">
+
+            <p>
+              Luka plays professional basketball.
+            </p>
+
+            <p>
+              Luka wears number 77.
+            </p>
+
+            <p>
+              Luka was born in Slovenia.
+            </p>
+
+          </div>
+
+          <p>
+            All three statements might be true.
+          </p>
+
+          <p>
+            But notice something important:
+            <strong>none of them is being used
+            to prove another.</strong>
+          </p>
+
+          <p>
+            They're related statements, but there
+            isn't yet a support relationship.
+          </p>
+        `
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 3 — INTERACTIVE CHECK
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Check the Relationship",
+
+        prompt:
+          "Does this passage contain an argument?",
+
+        stimulus:
+          "The library closes at 8:00 p.m. It contains more than 50,000 books. The building was renovated five years ago.",
+
+        answers: [
+          "Yes — it contains several factual claims.",
+          "Yes — all of the statements concern the library.",
+          "No — none of the statements is being used to support another.",
+          "No — arguments must contain disagreement."
+        ],
+
+        correct: 2,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "Exactly.",
+          text:
+            "The statements are related, but no statement is being offered as evidence for another. That's the distinction we're looking for."
+        },
+
+        feedbackWrong: {
+          label: "NOT QUITE",
+          title: "Look for support, not just statements.",
+          text:
+            "Having several related statements does not automatically create an argument. Ask whether one claim is being used to support another."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 4 — TEACHING
+         --------------------------------------------------- */
+
+      {
+        type: "learn",
+
+        title: "Now Add Support",
+
+        html: `
+          <p>
+            Now compare the previous example with this:
+          </p>
+
+          <div class="concept-example">
+
+            <p>
+              The roads are covered in ice.
+            </p>
+
+            <p>
+              <strong>
+                Therefore, schools should delay
+                opening this morning.
+              </strong>
+            </p>
+
+          </div>
+
+          <p>
+            Now we have something different.
+          </p>
+
+          <div class="logic-flow">
+
+            <div class="logic-node">
+              Roads are covered in ice
+            </div>
+
+            <div class="logic-arrow">
+              ↓ supports ↓
+            </div>
+
+            <div class="logic-node conclusion-node">
+              Schools should delay opening
+            </div>
+
+          </div>
+
+          <p>
+            The first statement gives us a
+            <strong>reason</strong> to accept
+            the second statement.
+          </p>
+
+          <p>
+            That's an argument.
+          </p>
+        `
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 5 — INTERACTIVE
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Argument or Not?",
+
+        prompt:
+          "Which best describes this passage?",
+
+        stimulus:
+          "Attendance at the theater has fallen for six straight months. Therefore, the theater should reconsider its current ticket prices.",
+
+        answers: [
+          "It is an argument because the attendance claim supports the recommendation.",
+          "It is not an argument because both statements could be true.",
+          "It is not an argument because recommendations cannot be conclusions.",
+          "It is an argument only if ticket prices actually caused the decline."
+        ],
+
+        correct: 0,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "There's the support relationship.",
+          text:
+            "The decline in attendance is being offered as a reason for the recommendation about ticket prices. Whether the argument is ultimately persuasive is a separate question."
+        },
+
+        feedbackWrong: {
+          label: "BLOCKED",
+          title: "Separate existence from quality.",
+          text:
+            "An argument does not have to be good to count as an argument. Here, the attendance claim is clearly being offered as support for the recommendation."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 6 — IMPORTANT DISTINCTION
+         --------------------------------------------------- */
+
+      {
+        type: "learn",
+
+        title: "Argument ≠ Good Argument",
+
+        html: `
+          <p>
+            This distinction is important.
+          </p>
+
+          <div class="concept-box">
+
+            <h3>
+              An argument can be terrible and
+              still be an argument.
+            </h3>
+
+            <p>
+              We're first asking whether a
+              support relationship exists.
+              We're not yet asking whether that
+              support is strong.
+            </p>
+
+          </div>
+
+          <p>
+            For example:
+          </p>
+
+          <div class="concept-example">
+
+            <p>
+              Marcus owns a red car.
+            </p>
+
+            <p>
+              Therefore, Marcus must be an
+              excellent basketball player.
+            </p>
+
+          </div>
+
+          <p>
+            That's obviously awful reasoning.
+          </p>
+
+          <p>
+            But structurally, the first claim is
+            still being presented as support for
+            the second.
+          </p>
+
+          <p>
+            So it <strong>is</strong> an argument.
+            It's just a bad one.
+          </p>
+        `
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 7 — CHECK
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Bad Argument or No Argument?",
+
+        prompt:
+          "How should we classify this passage?",
+
+        stimulus:
+          "Nina owns three blue shirts. Therefore, Nina will become a successful attorney.",
+
+        answers: [
+          "Not an argument because the reasoning is terrible.",
+          "An argument because one statement is presented as support for another.",
+          "Not an argument because the conclusion concerns the future.",
+          "An argument only if Nina actually becomes an attorney."
+        ],
+
+        correct: 1,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "Bad reasoning. Still an argument.",
+          text:
+            "The premise provides terrible support, but it is nevertheless presented as support for the conclusion."
+        },
+
+        feedbackWrong: {
+          label: "OFF THE RIM",
+          title: "Don't confuse quality with structure.",
+          text:
+            "We're not deciding whether the reasoning is persuasive yet. We're deciding whether a claim is being offered in support of another claim."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 8 — MINI DRILL INTRO
+         --------------------------------------------------- */
+
+      {
+        type: "learn",
+
+        title: "Mini Drill",
+
+        html: `
+          <p>
+            Time to make sure the distinction
+            actually stuck.
+          </p>
+
+          <div class="concept-box">
+
+            <h3>Your job</h3>
+
+            <p>
+              For each passage, decide whether
+              it contains an argument.
+            </p>
+
+          </div>
+
+          <p>
+            Remember:
+          </p>
+
+          <p>
+            <strong>
+              Don't ask whether the statements
+              are related.
+            </strong>
+          </p>
+
+          <p>
+            Ask whether one statement is being
+            offered as <em>support</em> for another.
+          </p>
+        `
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 9 — MINI DRILL
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Mini Drill — 1 of 3",
+
+        drill: true,
+
+        prompt:
+          "Argument or collection of statements?",
+
+        stimulus:
+          "The café opened in 2018. It has twelve employees. Its walls are painted green.",
+
+        answers: [
+          "Argument",
+          "Collection of statements"
+        ],
+
+        correct: 1,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "Collection of statements.",
+          text:
+            "Nothing is being offered as support for anything else."
+        },
+
+        feedbackWrong: {
+          label: "BLOCKED",
+          title: "Find the support relationship.",
+          text:
+            "These statements describe the same café, but none is being used to establish another."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 10 — MINI DRILL
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Mini Drill — 2 of 3",
+
+        drill: true,
+
+        prompt:
+          "Argument or collection of statements?",
+
+        stimulus:
+          "The café has lost money during each of the last four months. Thus, the owner should consider reducing operating costs.",
+
+        answers: [
+          "Argument",
+          "Collection of statements"
+        ],
+
+        correct: 0,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "Argument.",
+          text:
+            "The financial losses are being offered as support for the recommendation."
+        },
+
+        feedbackWrong: {
+          label: "POSSESSION LOST",
+          title: "There is support here.",
+          text:
+            "The first claim gives a reason for accepting the recommendation in the second."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 11 — MINI DRILL
+         --------------------------------------------------- */
+
+      {
+        type: "question",
+
+        title: "Mini Drill — 3 of 3",
+
+        drill: true,
+
+        prompt:
+          "Argument or collection of statements?",
+
+        stimulus:
+          "The train arrived twenty minutes late. Several passengers were carrying luggage. The station has four platforms.",
+
+        answers: [
+          "Argument",
+          "Collection of statements"
+        ],
+
+        correct: 1,
+
+        feedbackCorrect: {
+          label: "BUCKET",
+          title: "You got it.",
+          text:
+            "There is no support relationship among the statements."
+        },
+
+        feedbackWrong: {
+          label: "BLOCKED",
+          title: "Related facts aren't enough.",
+          text:
+            "All three statements concern the same situation, but none is offered as evidence for another."
+        }
+      },
+
+
+      /* ---------------------------------------------------
+         STEP 12 — COMPLETE
+         --------------------------------------------------- */
+
+      {
+        type: "complete",
+
+        title: "Lesson Complete",
+
+        html: `
+          <div class="completion-screen">
+
+            <div class="completion-symbol">
+              ✓
+            </div>
+
+            <p class="eyebrow">
+              LESSON COMPLETE
+            </p>
+
+            <h2>
+              What Is an Argument?
+            </h2>
+
+            <p>
+              You now have the foundation:
+              arguments contain a
+              <strong>support relationship</strong>.
+            </p>
+
+            <div class="completion-summary">
+
+              <div>
+                <span>Concept</span>
+                <strong>Arguments</strong>
+              </div>
+
+              <div>
+                <span>Reward</span>
+                <strong>+150 XP</strong>
+              </div>
+
+              <div>
+                <span>Next</span>
+                <strong>Premises</strong>
+              </div>
+
+            </div>
+
+          </div>
+        `
+      }
+    ]
+  }
+};
+
+
+
+/* =========================================================
+   DOM REFERENCES
+   ========================================================= */
 
 const playerLevel =
   document.querySelector("#playerLevel");
@@ -460,200 +802,192 @@ const playerXP =
 const playerStreak =
   document.querySelector("#playerStreak");
 
-const masteryPercent =
-  document.querySelector("#masteryPercent");
+const totalAnswered =
+  document.querySelector("#totalAnswered");
 
-const masteryBar =
-  document.querySelector("#masteryBar");
+const overallAccuracy =
+  document.querySelector("#overallAccuracy");
 
-const questionNumber =
-  document.querySelector("#questionNumber");
-
-const questionTotal =
-  document.querySelector("#questionTotal");
-
-const accuracyDisplay =
-  document.querySelector("#accuracyDisplay");
-
-const roundProgressBar =
-  document.querySelector("#roundProgressBar");
-
-const questionTag =
-  document.querySelector("#questionTag");
-
-const difficulty =
-  document.querySelector("#difficulty");
-
-const stimulus =
-  document.querySelector("#stimulus");
-
-const questionPrompt =
-  document.querySelector("#questionPrompt");
-
-const answerContainer =
-  document.querySelector("#answerContainer");
-
-const submitAnswer =
-  document.querySelector("#submitAnswer");
-
-const feedbackPanel =
-  document.querySelector("#feedbackPanel");
-
-const feedbackTitle =
-  document.querySelector("#feedbackTitle");
-
-const feedbackExplanation =
-  document.querySelector("#feedbackExplanation");
-
-const nextQuestion =
-  document.querySelector("#nextQuestion");
+const bestStreak =
+  document.querySelector("#bestStreak");
 
 
-// ==========================================
-// GAME STATE
-// ==========================================
+const courseProgressPercent =
+  document.querySelector("#courseProgressPercent");
 
-let currentQuestionIndex =
-  Math.min(
-    player.currentRound.questionIndex || 0,
-    questions.length - 1
-  );
+const courseProgressBar =
+  document.querySelector("#courseProgressBar");
 
-let selectedAnswer = null;
-let answerLocked = false;
+const chapterMastery =
+  document.querySelector("#chapterMastery");
+
+const chapterMasteryBar =
+  document.querySelector("#chapterMasteryBar");
+
+const lessonProgress =
+  document.querySelector("#lessonProgress");
+
+const currentObjective =
+  document.querySelector("#currentObjective");
+
+const continueTraining =
+  document.querySelector("#continueTraining");
 
 
-// ==========================================
-// XP SYSTEM
-// ==========================================
+const argumentsMastery =
+  document.querySelector("#argumentsMastery");
 
-function getLevelFromXP(xp) {
+const argumentsMasteryBar =
+  document.querySelector("#argumentsMasteryBar");
 
-  return Math.floor(xp / 500) + 1;
+const premisesMastery =
+  document.querySelector("#premisesMastery");
+
+const premisesMasteryBar =
+  document.querySelector("#premisesMasteryBar");
+
+const conclusionsMastery =
+  document.querySelector("#conclusionsMastery");
+
+const conclusionsMasteryBar =
+  document.querySelector("#conclusionsMasteryBar");
+
+const premiseSetsMastery =
+  document.querySelector("#premiseSetsMastery");
+
+const premiseSetsMasteryBar =
+  document.querySelector("#premiseSetsMasteryBar");
+
+const inferencesMastery =
+  document.querySelector("#inferencesMastery");
+
+const inferencesMasteryBar =
+  document.querySelector("#inferencesMasteryBar");
+
+
+const lessonScreen =
+  document.querySelector("#lessonScreen");
+
+const exitLesson =
+  document.querySelector("#exitLesson");
+
+const lessonProgressText =
+  document.querySelector("#lessonProgressText");
+
+const lessonScreenProgressBar =
+  document.querySelector("#lessonScreenProgressBar");
+
+const lessonStageType =
+  document.querySelector("#lessonStageType");
+
+const lessonStageTitle =
+  document.querySelector("#lessonStageTitle");
+
+const lessonBody =
+  document.querySelector("#lessonBody");
+
+const interactionArea =
+  document.querySelector("#interactionArea");
+
+const lessonFeedback =
+  document.querySelector("#lessonFeedback");
+
+const lessonFeedbackIcon =
+  document.querySelector("#lessonFeedbackIcon");
+
+const lessonFeedbackLabel =
+  document.querySelector("#lessonFeedbackLabel");
+
+const lessonFeedbackTitle =
+  document.querySelector("#lessonFeedbackTitle");
+
+const lessonFeedbackText =
+  document.querySelector("#lessonFeedbackText");
+
+const previousLessonStep =
+  document.querySelector("#previousLessonStep");
+
+const nextLessonStep =
+  document.querySelector("#nextLessonStep");
+
+const stepCounter =
+  document.querySelector("#stepCounter");
+
+
+const chapterTestCard =
+  document.querySelector("#chapterTestCard");
+
+const startChapterTest =
+  document.querySelector("#startChapterTest");
+
+
+
+/* =========================================================
+   CURRENT LESSON STATE
+   ========================================================= */
+
+let activeLessonID = null;
+
+let activeLesson = null;
+
+let currentStepIndex = 0;
+
+let currentSelection = null;
+
+let currentQuestionAnswered = false;
+
+let lessonCorrect = 0;
+
+let lessonQuestionsAnswered = 0;
+
+
+
+/* =========================================================
+   PLAYER LEVEL
+   ========================================================= */
+
+function calculatePlayerLevel() {
+
+  return Math.floor(
+    player.xp / 500
+  ) + 1;
 }
 
 
-function awardXP(amount) {
 
-  player.xp += amount;
+/* =========================================================
+   PLAYER HUD
+   ========================================================= */
+
+function renderPlayerHUD() {
 
   player.level =
-    getLevelFromXP(player.xp);
+    calculatePlayerLevel();
 
-  animateElement(
-    playerXP,
-    "xp-pulse"
-  );
-}
-
-
-// ==========================================
-// MASTERY
-// ==========================================
-
-function calculateArgumentsMastery() {
-
-  if (player.totalAnswered === 0) {
-    return 0;
-  }
-
-  const accuracy =
-    player.totalCorrect /
-    player.totalAnswered;
-
-  const experienceFactor =
-    Math.min(
-      player.totalAnswered / 20,
-      1
-    );
-
-  return Math.round(
-    accuracy *
-    experienceFactor *
-    100
-  );
-}
-
-
-function updateMastery() {
-
-  player.mastery.arguments =
-    calculateArgumentsMastery();
-
-  // Unlock Level 2 later once mastery reaches 80.
-  if (
-    player.mastery.arguments >= 80 &&
-    !player.unlockedLevels.includes("inferences")
-  ) {
-
-    player.unlockedLevels.push(
-      "inferences"
-    );
-  }
-}
-
-
-// ==========================================
-// QUESTION HISTORY
-// ==========================================
-
-function recordQuestionResult(
-  question,
-  wasCorrect
-) {
-
-  if (
-    !player.questionHistory[question.id]
-  ) {
-
-    player.questionHistory[question.id] = {
-      attempts: 0,
-      correct: 0,
-      incorrect: 0
-    };
-  }
-
-  const history =
-    player.questionHistory[question.id];
-
-  history.attempts++;
-
-  if (wasCorrect) {
-    history.correct++;
-  } else {
-    history.incorrect++;
-  }
-
-  history.lastAttempt =
-    new Date().toISOString();
-}
-
-
-// ==========================================
-// RENDER PLAYER HUD
-// ==========================================
-
-function renderHUD() {
 
   playerLevel.textContent =
     player.level;
 
+
   playerXP.textContent =
     player.xp.toLocaleString();
+
 
   playerStreak.textContent =
     `🔥 ${player.streak}`;
 
-  masteryPercent.textContent =
-    `${player.mastery.arguments}%`;
 
-  masteryBar.style.width =
-    `${player.mastery.arguments}%`;
+  totalAnswered.textContent =
+    player.totalAnswered;
+
+
+  bestStreak.textContent =
+    player.bestStreak;
 
 
   if (player.totalAnswered === 0) {
 
-    accuracyDisplay.textContent =
+    overallAccuracy.textContent =
       "—";
 
   } else {
@@ -666,156 +1000,739 @@ function renderHUD() {
         ) * 100
       );
 
-    accuracyDisplay.textContent =
+
+    overallAccuracy.textContent =
       `${accuracy}%`;
   }
 }
 
 
-// ==========================================
-// RENDER QUESTION
-// ==========================================
 
-function renderQuestion() {
+/* =========================================================
+   CHAPTER PROGRESS
+   ========================================================= */
 
-  const question =
-    questions[currentQuestionIndex];
+function calculateCompletedLessons() {
 
-
-  selectedAnswer = null;
-  answerLocked = false;
+  const lessons =
+    player.progress.chapter1.lessons;
 
 
-  questionNumber.textContent =
-    currentQuestionIndex + 1;
+  return Object.values(lessons)
+    .filter(
+      lesson => lesson.completed
+    )
+    .length;
+}
 
-  questionTotal.textContent =
-    questions.length;
+
+function calculateChapterProgress() {
+
+  const completed =
+    calculateCompletedLessons();
+
+
+  return Math.round(
+    (completed / 5) * 100
+  );
+}
+
+
+function renderChapterProgress() {
+
+  const completed =
+    calculateCompletedLessons();
 
 
   const progress =
-    (
-      currentQuestionIndex /
-      questions.length
-    ) * 100;
+    calculateChapterProgress();
 
-  roundProgressBar.style.width =
+
+  lessonProgress.textContent =
+    `${completed} / 5 Complete`;
+
+
+  chapterMastery.textContent =
     `${progress}%`;
 
 
-  questionTag.textContent =
-    question.tag;
-
-  difficulty.textContent =
-    `Difficulty: ${question.difficulty}`;
-
-  stimulus.textContent =
-    question.stimulus;
-
-  questionPrompt.textContent =
-    question.prompt;
+  chapterMasteryBar.style.width =
+    `${progress}%`;
 
 
-  answerContainer.innerHTML = "";
+  courseProgressPercent.textContent =
+    `${progress}%`;
 
 
-  question.answers.forEach(
-    (answer, index) => {
+  courseProgressBar.style.width =
+    `${progress}%`;
+}
+
+
+
+/* =========================================================
+   CONCEPT MASTERY
+   ========================================================= */
+
+function renderConceptMastery() {
+
+  const mastery =
+    player.conceptMastery;
+
+
+  argumentsMastery.textContent =
+    `${mastery.arguments}%`;
+
+  argumentsMasteryBar.style.width =
+    `${mastery.arguments}%`;
+
+
+  premisesMastery.textContent =
+    `${mastery.premises}%`;
+
+  premisesMasteryBar.style.width =
+    `${mastery.premises}%`;
+
+
+  conclusionsMastery.textContent =
+    `${mastery.conclusions}%`;
+
+  conclusionsMasteryBar.style.width =
+    `${mastery.conclusions}%`;
+
+
+  premiseSetsMastery.textContent =
+    `${mastery.premiseSets}%`;
+
+  premiseSetsMasteryBar.style.width =
+    `${mastery.premiseSets}%`;
+
+
+  inferencesMastery.textContent =
+    `${mastery.inferences}%`;
+
+  inferencesMasteryBar.style.width =
+    `${mastery.inferences}%`;
+}
+
+
+
+/* =========================================================
+   LESSON CARD STATES
+   ========================================================= */
+
+function renderLessonCards() {
+
+  const lessonData =
+    player.progress.chapter1.lessons;
+
+
+  document
+    .querySelectorAll(".lesson-card")
+    .forEach(card => {
+
+      const id =
+        card.dataset.lesson;
+
+
+      const progress =
+        lessonData[id];
+
+
+      if (!progress) {
+        return;
+      }
+
+
+      card.classList.remove(
+        "available",
+        "locked",
+        "completed"
+      );
+
 
       const button =
-        document.createElement("button");
-
-      button.className =
-        "answer-button";
-
-      button.dataset.index =
-        index;
-
-
-      const letter =
-        String.fromCharCode(
-          65 + index
+        card.querySelector(
+          ".lesson-button"
         );
 
 
-      button.innerHTML = `
-        <span class="answer-letter">
-          ${letter}
-        </span>
-
-        <span class="answer-text">
-          ${answer}
-        </span>
-      `;
+      const icon =
+        card.querySelector(
+          ".lesson-status-icon"
+        );
 
 
-      button.addEventListener(
-        "click",
-        () => selectAnswer(
-          index,
-          button
-        )
-      );
+      if (progress.completed) {
+
+        card.classList.add(
+          "completed"
+        );
 
 
-      answerContainer.appendChild(
-        button
-      );
+        icon.textContent =
+          "✓";
+
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          "Review Lesson";
+
+
+        button.dataset.startLesson =
+          id;
+
+      }
+
+      else if (progress.unlocked) {
+
+        card.classList.add(
+          "available"
+        );
+
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          progress.attempts > 0
+            ? "Continue Lesson"
+            : "Start Lesson";
+
+
+        button.dataset.startLesson =
+          id;
+
+      }
+
+      else {
+
+        card.classList.add(
+          "locked"
+        );
+
+
+        button.disabled =
+          true;
+
+
+        button.textContent =
+          "🔒 Locked";
+      }
+    });
+}
+
+
+
+/* =========================================================
+   CURRENT OBJECTIVE
+   ========================================================= */
+
+function renderCurrentObjective() {
+
+  const lessonData =
+    player.progress.chapter1.lessons;
+
+
+  const order = [
+    ["1-1", "What Is an Argument?"],
+    ["1-2", "Premises"],
+    ["1-3", "Conclusions"],
+    ["1-4", "Premise Sets"],
+    ["1-5", "Valid & Invalid Conclusions"]
+  ];
+
+
+  for (const [id, title] of order) {
+
+    if (
+      lessonData[id].unlocked &&
+      !lessonData[id].completed
+    ) {
+
+      currentObjective.textContent =
+        `Complete Lesson ${id.replace("-", ".")} — ${title}`;
+
+
+      continueTraining.dataset.lesson =
+        id;
+
+
+      continueTraining.disabled =
+        !lessons[id];
+
+
+      return;
     }
-  );
+  }
 
 
-  submitAnswer.disabled = true;
+  if (
+    player.progress.chapter1.test.unlocked
+  ) {
 
-  feedbackPanel.classList.add(
-    "hidden"
-  );
-
-  feedbackPanel.classList.remove(
-    "wrong"
-  );
-
-  nextQuestion.classList.add(
-    "hidden"
-  );
+    currentObjective.textContent =
+      "Complete the Chapter 1 Assessment";
 
 
-  player.currentRound.questionIndex =
-    currentQuestionIndex;
+    continueTraining.dataset.lesson =
+      "";
 
-  player.currentRound.answered =
-    false;
+
+    continueTraining.disabled =
+      false;
+
+
+    return;
+  }
+
+
+  currentObjective.textContent =
+    "Chapter 1 Complete";
+}
+
+
+
+/* =========================================================
+   CHAPTER TEST LOCK
+   ========================================================= */
+
+function updateChapterTestUnlock() {
+
+  const allComplete =
+    Object.values(
+      player.progress.chapter1.lessons
+    )
+    .every(
+      lesson => lesson.completed
+    );
+
+
+  player.progress.chapter1.test.unlocked =
+    allComplete;
+
+
+  if (allComplete) {
+
+    chapterTestCard.classList.remove(
+      "locked"
+    );
+
+
+    startChapterTest.disabled =
+      false;
+
+
+    startChapterTest.textContent =
+      "Begin Assessment";
+
+  } else {
+
+    chapterTestCard.classList.add(
+      "locked"
+    );
+
+
+    startChapterTest.disabled =
+      true;
+
+
+    startChapterTest.textContent =
+      "🔒 Complete Lessons";
+  }
+}
+
+
+
+/* =========================================================
+   RENDER DASHBOARD
+   ========================================================= */
+
+function renderDashboard() {
+
+  renderPlayerHUD();
+
+  renderChapterProgress();
+
+  renderConceptMastery();
+
+  renderLessonCards();
+
+  updateChapterTestUnlock();
+
+  renderCurrentObjective();
 
   savePlayer();
 }
 
 
-// ==========================================
-// SELECT ANSWER
-// ==========================================
 
-function selectAnswer(
-  index,
-  button
-) {
+/* =========================================================
+   OPEN LESSON
+   ========================================================= */
 
-  if (answerLocked) {
+function openLesson(id) {
+
+  if (!lessons[id]) {
+
+    alert(
+      "This lesson hasn't been built yet."
+    );
+
     return;
   }
 
 
-  selectedAnswer = index;
+  const progress =
+    player.progress.chapter1.lessons[id];
+
+
+  if (!progress.unlocked) {
+    return;
+  }
+
+
+  activeLessonID =
+    id;
+
+
+  activeLesson =
+    lessons[id];
+
+
+  currentStepIndex =
+    0;
+
+
+  currentSelection =
+    null;
+
+
+  currentQuestionAnswered =
+    false;
+
+
+  lessonCorrect =
+    0;
+
+
+  lessonQuestionsAnswered =
+    0;
+
+
+  progress.attempts++;
+
+
+  savePlayer();
+
+
+  lessonScreen.classList.remove(
+    "hidden"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+
+  renderLessonStep();
+}
+
+
+
+/* =========================================================
+   CLOSE LESSON
+   ========================================================= */
+
+function closeLesson() {
+
+  lessonScreen.classList.add(
+    "hidden"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+
+  activeLessonID =
+    null;
+
+
+  activeLesson =
+    null;
+
+
+  currentStepIndex =
+    0;
+
+
+  renderDashboard();
+}
+
+
+
+/* =========================================================
+   RENDER LESSON STEP
+   ========================================================= */
+
+function renderLessonStep() {
+
+  if (!activeLesson) {
+    return;
+  }
+
+
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
+
+
+  const totalSteps =
+    activeLesson.steps.length;
+
+
+  const progress =
+    (
+      (currentStepIndex + 1) /
+      totalSteps
+    ) * 100;
+
+
+  lessonProgressText.textContent =
+    `Lesson ${activeLesson.number}`;
+
+
+  lessonScreenProgressBar.style.width =
+    `${progress}%`;
+
+
+  stepCounter.textContent =
+    `${currentStepIndex + 1} / ${totalSteps}`;
+
+
+  lessonStageTitle.textContent =
+    step.title;
+
+
+  lessonFeedback.classList.add(
+    "hidden"
+  );
+
+
+  lessonFeedback.classList.remove(
+    "wrong"
+  );
+
+
+  currentSelection =
+    null;
+
+
+  currentQuestionAnswered =
+    false;
+
+
+  interactionArea.innerHTML =
+    "";
+
+
+  previousLessonStep.disabled =
+    currentStepIndex === 0;
+
+
+
+  /* =======================================================
+     LEARN STEP
+     ======================================================= */
+
+  if (step.type === "learn") {
+
+    lessonStageType.textContent =
+      "LEARN";
+
+
+    lessonBody.innerHTML =
+      step.html;
+
+
+    nextLessonStep.disabled =
+      false;
+
+
+    nextLessonStep.textContent =
+      "Continue →";
+  }
+
+
+
+  /* =======================================================
+     QUESTION STEP
+     ======================================================= */
+
+  if (step.type === "question") {
+
+    lessonStageType.textContent =
+      step.drill
+        ? "MINI DRILL"
+        : "KNOWLEDGE CHECK";
+
+
+    lessonBody.innerHTML = `
+
+      <div class="lesson-question-block">
+
+        <p class="lesson-stimulus">
+          ${step.stimulus}
+        </p>
+
+        <h3 class="interaction-question">
+          ${step.prompt}
+        </h3>
+
+      </div>
+
+    `;
+
+
+    const options =
+      document.createElement("div");
+
+
+    options.className =
+      "interaction-options";
+
+
+    step.answers.forEach(
+      (answer, index) => {
+
+        const button =
+          document.createElement("button");
+
+
+        button.className =
+          "interaction-option";
+
+
+        button.dataset.answer =
+          index;
+
+
+        const letter =
+          String.fromCharCode(
+            65 + index
+          );
+
+
+        button.innerHTML = `
+
+          <span class="answer-letter">
+            ${letter}
+          </span>
+
+          <span>
+            ${answer}
+          </span>
+
+        `;
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectLessonAnswer(
+              index,
+              button
+            );
+
+          }
+        );
+
+
+        options.appendChild(
+          button
+        );
+      }
+    );
+
+
+    interactionArea.appendChild(
+      options
+    );
+
+
+    nextLessonStep.disabled =
+      true;
+
+
+    nextLessonStep.textContent =
+      "Check Answer";
+  }
+
+
+
+  /* =======================================================
+     COMPLETION STEP
+     ======================================================= */
+
+  if (step.type === "complete") {
+
+    lessonStageType.textContent =
+      "COMPLETE";
+
+
+    lessonBody.innerHTML =
+      step.html;
+
+
+    completeLesson();
+
+
+    nextLessonStep.disabled =
+      false;
+
+
+    nextLessonStep.textContent =
+      "Return to Chapter";
+  }
+}
+
+
+
+/* =========================================================
+   SELECT LESSON ANSWER
+   ========================================================= */
+
+function selectLessonAnswer(
+  index,
+  button
+) {
+
+  if (currentQuestionAnswered) {
+    return;
+  }
+
+
+  currentSelection =
+    index;
 
 
   document
     .querySelectorAll(
-      ".answer-button"
+      ".interaction-option"
     )
-    .forEach((answerButton) => {
+    .forEach(option => {
 
-      answerButton.classList.remove(
+      option.classList.remove(
         "selected"
       );
+
     });
 
 
@@ -824,68 +1741,86 @@ function selectAnswer(
   );
 
 
-  submitAnswer.disabled = false;
+  nextLessonStep.disabled =
+    false;
 }
 
 
-// ==========================================
-// SUBMIT ANSWER
-// ==========================================
 
-function handleSubmit() {
+/* =========================================================
+   CHECK LESSON ANSWER
+   ========================================================= */
+
+function checkLessonAnswer() {
 
   if (
-    selectedAnswer === null ||
-    answerLocked
+    currentSelection === null ||
+    currentQuestionAnswered
   ) {
     return;
   }
 
 
-  answerLocked = true;
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
 
 
-  const question =
-    questions[currentQuestionIndex];
-
-  const wasCorrect =
-    selectedAnswer ===
-    question.correct;
+  const correct =
+    currentSelection ===
+    step.correct;
 
 
-  const answerButtons =
+  currentQuestionAnswered =
+    true;
+
+
+  lessonQuestionsAnswered++;
+
+
+  player.totalAnswered++;
+
+
+  recordQuestionAttempt(
+    activeLessonID,
+    currentStepIndex,
+    correct
+  );
+
+
+  const options =
     document.querySelectorAll(
-      ".answer-button"
+      ".interaction-option"
     );
 
 
-  answerButtons.forEach(
-    (button, index) => {
+  options.forEach(
+    (option, index) => {
 
-      button.disabled = true;
+      option.disabled =
+        true;
 
-      button.classList.remove(
+
+      option.classList.remove(
         "selected"
       );
 
 
-      if (
-        index ===
-        question.correct
-      ) {
+      if (index === step.correct) {
 
-        button.classList.add(
+        option.classList.add(
           "correct"
         );
       }
 
 
       if (
-        index === selectedAnswer &&
-        !wasCorrect
+        index === currentSelection &&
+        !correct
       ) {
 
-        button.classList.add(
+        option.classList.add(
           "incorrect"
         );
       }
@@ -893,19 +1828,21 @@ function handleSubmit() {
   );
 
 
-  player.totalAnswered++;
 
-  recordQuestionResult(
-    question,
-    wasCorrect
-  );
+  /* =======================================================
+     CORRECT
+     ======================================================= */
 
+  if (correct) {
 
-  if (wasCorrect) {
+    lessonCorrect++;
+
 
     player.totalCorrect++;
 
+
     player.streak++;
+
 
     player.bestStreak =
       Math.max(
@@ -914,354 +1851,551 @@ function handleSubmit() {
       );
 
 
-    player.currentRound.correct++;
-
-
-    const streakBonus =
-      Math.min(
-        player.streak * 2,
-        20
-      );
-
-
-    const earnedXP =
-      40 + streakBonus;
-
-
-    awardXP(
-      earnedXP
+    showLessonFeedback(
+      true,
+      step.feedbackCorrect
     );
 
-
-    showCorrectFeedback(
-      question,
-      earnedXP
-    );
+  }
 
 
-    animateElement(
-      playerStreak,
-      "streak-pulse"
-    );
 
-  } else {
+  /* =======================================================
+     WRONG
+     ======================================================= */
 
-    player.streak = 0;
+  else {
 
-    showIncorrectFeedback(
-      question
+    player.streak =
+      0;
+
+
+    showLessonFeedback(
+      false,
+      step.feedbackWrong
     );
   }
 
 
-  updateMastery();
+  renderPlayerHUD();
 
-
-  player.currentRound.answered =
-    true;
-
-
-  renderHUD();
 
   savePlayer();
 
 
-  submitAnswer.disabled =
-    true;
+  nextLessonStep.disabled =
+    false;
 
-  nextQuestion.classList.remove(
-    "hidden"
-  );
+
+  nextLessonStep.textContent =
+    "Continue →";
 }
 
 
-// ==========================================
-// CORRECT FEEDBACK
-// ==========================================
 
-function showCorrectFeedback(
-  question,
-  xp
+/* =========================================================
+   SHOW FEEDBACK
+   ========================================================= */
+
+function showLessonFeedback(
+  correct,
+  feedback
 ) {
 
-  feedbackPanel.classList.remove(
-    "hidden",
-    "wrong"
-  );
-
-
-  feedbackPanel.querySelector(
-    ".feedback-icon"
-  ).textContent = "✓";
-
-
-  feedbackPanel.querySelector(
-    ".feedback-label"
-  ).textContent = "BUCKET";
-
-
-  feedbackTitle.textContent =
-    question.feedback.title;
-
-
-  feedbackExplanation.textContent =
-    question.feedback.explanation;
-
-
-  feedbackPanel.querySelector(
-    ".feedback-rewards"
-  ).innerHTML = `
-    <span>+${xp} XP</span>
-    <span>🔥 Streak ${player.streak}</span>
-  `;
-}
-
-
-// ==========================================
-// INCORRECT FEEDBACK
-// ==========================================
-
-function showIncorrectFeedback(
-  question
-) {
-
-  feedbackPanel.classList.remove(
+  lessonFeedback.classList.remove(
     "hidden"
   );
 
-  feedbackPanel.classList.add(
-    "wrong"
-  );
+
+  if (correct) {
+
+    lessonFeedback.classList.remove(
+      "wrong"
+    );
 
 
-  feedbackPanel.querySelector(
-    ".feedback-icon"
-  ).textContent = "✕";
+    lessonFeedbackIcon.textContent =
+      "✓";
+
+  } else {
+
+    lessonFeedback.classList.add(
+      "wrong"
+    );
 
 
-  feedbackPanel.querySelector(
-    ".feedback-label"
-  ).textContent =
-    "POSSESSION LOST";
+    lessonFeedbackIcon.textContent =
+      "✕";
+  }
 
 
-  feedbackTitle.textContent =
-    "That doesn't follow.";
+  lessonFeedbackLabel.textContent =
+    feedback.label;
 
 
-  feedbackExplanation.textContent =
-    question.feedback.explanation;
+  lessonFeedbackTitle.textContent =
+    feedback.title;
 
 
-  feedbackPanel.querySelector(
-    ".feedback-rewards"
-  ).innerHTML = `
-    <span>Review the reasoning</span>
-    <span>Streak reset</span>
-  `;
+  lessonFeedbackText.textContent =
+    feedback.text;
 }
 
 
-// ==========================================
-// NEXT QUESTION
-// ==========================================
 
-function handleNextQuestion() {
+/* =========================================================
+   RECORD QUESTION HISTORY
+   ========================================================= */
 
-  currentQuestionIndex++;
+function recordQuestionAttempt(
+  lessonID,
+  stepIndex,
+  correct
+) {
 
+  const id =
+    `${lessonID}-step-${stepIndex}`;
+
+
+  if (!player.questionHistory[id]) {
+
+    player.questionHistory[id] = {
+      attempts: 0,
+      correct: 0,
+      incorrect: 0
+    };
+  }
+
+
+  const history =
+    player.questionHistory[id];
+
+
+  history.attempts++;
+
+
+  if (correct) {
+
+    history.correct++;
+
+  } else {
+
+    history.incorrect++;
+  }
+
+
+  history.lastAttempt =
+    new Date().toISOString();
+}
+
+
+
+/* =========================================================
+   NEXT STEP
+   ========================================================= */
+
+function handleNextStep() {
+
+  if (!activeLesson) {
+    return;
+  }
+
+
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
+
+
+
+  /* -------------------------------------------------------
+     QUESTION NOT YET CHECKED
+     ------------------------------------------------------- */
 
   if (
-    currentQuestionIndex >=
-    questions.length
+    step.type === "question" &&
+    !currentQuestionAnswered
   ) {
 
-    finishRound();
+    checkLessonAnswer();
 
     return;
   }
 
 
-  renderQuestion();
 
-  renderHUD();
+  /* -------------------------------------------------------
+     COMPLETION SCREEN
+     ------------------------------------------------------- */
+
+  if (step.type === "complete") {
+
+    closeLesson();
+
+    return;
+  }
 
 
-  window.scrollTo({
+
+  /* -------------------------------------------------------
+     MOVE FORWARD
+     ------------------------------------------------------- */
+
+  if (
+    currentStepIndex <
+    activeLesson.steps.length - 1
+  ) {
+
+    currentStepIndex++;
+
+    renderLessonStep();
+
+    scrollLessonTop();
+  }
+}
+
+
+
+/* =========================================================
+   PREVIOUS STEP
+   ========================================================= */
+
+function handlePreviousStep() {
+
+  if (
+    !activeLesson ||
+    currentStepIndex === 0
+  ) {
+    return;
+  }
+
+
+  currentStepIndex--;
+
+
+  renderLessonStep();
+
+
+  scrollLessonTop();
+}
+
+
+
+/* =========================================================
+   LESSON COMPLETION
+   ========================================================= */
+
+function completeLesson() {
+
+  const lessonProgressData =
+    player.progress
+      .chapter1
+      .lessons[
+        activeLessonID
+      ];
+
+
+  /* -------------------------------------------------------
+     ONLY AWARD COMPLETION XP ONCE
+     ------------------------------------------------------- */
+
+  if (!lessonProgressData.completed) {
+
+    player.xp +=
+      activeLesson.xpReward;
+
+
+    lessonProgressData.completed =
+      true;
+
+
+
+    /* -----------------------------------------------------
+       CALCULATE MASTERY
+       ----------------------------------------------------- */
+
+    let mastery = 100;
+
+
+    if (lessonQuestionsAnswered > 0) {
+
+      mastery =
+        Math.round(
+          (
+            lessonCorrect /
+            lessonQuestionsAnswered
+          ) * 100
+        );
+    }
+
+
+    lessonProgressData.mastery =
+      mastery;
+
+
+
+    /* -----------------------------------------------------
+       UPDATE CONCEPT MASTERY
+       ----------------------------------------------------- */
+
+    player.conceptMastery[
+      activeLesson.concept
+    ] =
+      mastery;
+
+
+
+    /* -----------------------------------------------------
+       UNLOCK NEXT LESSON
+       ----------------------------------------------------- */
+
+    unlockNextLesson(
+      activeLessonID
+    );
+
+
+    updateChapterTestUnlock();
+
+
+    savePlayer();
+  }
+}
+
+
+
+/* =========================================================
+   UNLOCK NEXT LESSON
+   ========================================================= */
+
+function unlockNextLesson(
+  completedID
+) {
+
+  const order = [
+    "1-1",
+    "1-2",
+    "1-3",
+    "1-4",
+    "1-5"
+  ];
+
+
+  const index =
+    order.indexOf(
+      completedID
+    );
+
+
+  if (
+    index === -1 ||
+    index === order.length - 1
+  ) {
+    return;
+  }
+
+
+  const nextID =
+    order[index + 1];
+
+
+  player.progress
+    .chapter1
+    .lessons[
+      nextID
+    ]
+    .unlocked = true;
+}
+
+
+
+/* =========================================================
+   SCROLL LESSON TO TOP
+   ========================================================= */
+
+function scrollLessonTop() {
+
+  lessonScreen.scrollTo({
     top: 0,
     behavior: "smooth"
   });
 }
 
 
-// ==========================================
-// FINISH ROUND
-// ==========================================
 
-function finishRound() {
+/* =========================================================
+   START BUTTON EVENTS
+   ========================================================= */
 
-  roundProgressBar.style.width =
-    "100%";
+function bindLessonButtons() {
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          "[data-start-lesson]"
+        );
 
 
-  const roundCorrect =
-    player.currentRound.correct;
+      if (!button) {
+        return;
+      }
 
 
-  const roundAccuracy =
-    Math.round(
-      (
-        roundCorrect /
-        questions.length
-      ) * 100
+      const id =
+        button.dataset.startLesson;
+
+
+      if (!id) {
+        return;
+      }
+
+
+      openLesson(id);
+    }
+  );
+}
+
+
+
+/* =========================================================
+   CONTINUE TRAINING
+   ========================================================= */
+
+continueTraining.addEventListener(
+  "click",
+  () => {
+
+    const id =
+      continueTraining.dataset.lesson;
+
+
+    if (id) {
+
+      openLesson(id);
+
+      return;
+    }
+
+
+    if (
+      player.progress.chapter1.test.unlocked
+    ) {
+
+      startAssessmentPlaceholder();
+    }
+  }
+);
+
+
+
+/* =========================================================
+   LESSON CONTROLS
+   ========================================================= */
+
+nextLessonStep.addEventListener(
+  "click",
+  handleNextStep
+);
+
+
+previousLessonStep.addEventListener(
+  "click",
+  handlePreviousStep
+);
+
+
+exitLesson.addEventListener(
+  "click",
+  closeLesson
+);
+
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      !lessonScreen.classList.contains(
+        "hidden"
+      )
+    ) {
+
+      closeLesson();
+    }
+  }
+);
+
+
+
+/* =========================================================
+   CHAPTER TEST PLACEHOLDER
+
+   We build the actual chapter test once
+   all Chapter 1 lessons exist.
+   ========================================================= */
+
+function startAssessmentPlaceholder() {
+
+  alert(
+    "Chapter Assessment engine is coming next."
+  );
+}
+
+
+startChapterTest.addEventListener(
+  "click",
+  startAssessmentPlaceholder
+);
+
+
+
+/* =========================================================
+   DEVELOPMENT RESET
+
+   IMPORTANT:
+   If you ever want to wipe your local progress,
+   open the browser console and run:
+
+   resetLoopholeProgress()
+
+   ========================================================= */
+
+window.resetLoopholeProgress =
+  function () {
+
+    const confirmed =
+      confirm(
+        "Reset all Loophole Training progress?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    localStorage.removeItem(
+      SAVE_KEY
     );
 
 
-  document.querySelector(
-    ".question-card"
-  ).innerHTML = `
-
-    <div class="question-content">
-
-      <p class="eyebrow">
-        ROUND COMPLETE
-      </p>
-
-      <h2 class="question-prompt">
-        Arguments Training Complete
-      </h2>
-
-      <p class="stimulus">
-        You answered
-        ${roundCorrect}
-        of
-        ${questions.length}
-        questions correctly.
-
-        Round accuracy:
-        ${roundAccuracy}%.
-      </p>
-
-      <div
-        style="
-          margin-top: 30px;
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-        "
-      >
-
-        <button
-          class="submit-button"
-          id="restartRound"
-        >
-          Run It Back
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-
-  feedbackPanel.classList.add(
-    "hidden"
-  );
-
-  nextQuestion.classList.add(
-    "hidden"
-  );
-
-
-  player.currentRound = {
-    level: "arguments",
-    questionIndex: 0,
-    correct: 0,
-    answered: false
+    location.reload();
   };
 
 
-  savePlayer();
 
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-  document
-    .querySelector(
-      "#restartRound"
-    )
-    .addEventListener(
-      "click",
-      restartRound
-    );
-}
+bindLessonButtons();
 
-
-// ==========================================
-// RESTART ROUND
-// ==========================================
-
-function restartRound() {
-
-  window.location.reload();
-}
-
-
-// ==========================================
-// ANIMATION HELPER
-// ==========================================
-
-function animateElement(
-  element,
-  className
-) {
-
-  element.classList.remove(
-    className
-  );
-
-
-  void element.offsetWidth;
-
-
-  element.classList.add(
-    className
-  );
-
-
-  setTimeout(
-    () => {
-
-      element.classList.remove(
-        className
-      );
-
-    },
-    500
-  );
-}
-
-
-// ==========================================
-// EVENTS
-// ==========================================
-
-submitAnswer.addEventListener(
-  "click",
-  handleSubmit
-);
-
-
-nextQuestion.addEventListener(
-  "click",
-  handleNextQuestion
-);
-
-
-// ==========================================
-// INITIALIZE
-// ==========================================
-
-updateMastery();
-
-renderHUD();
-
-renderQuestion();
+renderDashboard();
