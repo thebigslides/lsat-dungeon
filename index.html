@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Loophole Training | LSAT Tutoring</title>
+
+  <link rel="stylesheet" href="loophole.css" />
+</head>
+
+<body>
+
+  <!-- =========================================
+       TOP NAV
+  ========================================== -->
+
+  <header class="topbar">
+
+    <div class="brand-group">
+
+      <a href="../index.html" class="brand">
+        LSAT Tutoring
+      </a>
+
+      <span class="divider">/</span>
+
+      <span class="game-title">
+        Loophole Training
+      </span>
+
+    </div>
+
+    <div class="player-mini">
+
+      <div class="mini-stat">
+        <span class="mini-label">Level</span>
+        <strong id="playerLevel">1</strong>
+      </div>
+
+      <div class="mini-stat">
+        <span class="mini-label">XP</span>
+        <strong id="playerXP">0</strong>
+      </div>
+
+      <div class="mini-stat">
+        <span class="mini-label">Streak</span>
+        <strong id="playerStreak">🔥 0</strong>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================================
+       MAIN APP
+  ========================================== -->
+
+  <main class="app-shell">
+
+    <!-- =========================================
+         SIDEBAR / PROGRESSION
+    ========================================== -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-heading">
+
+        <p class="eyebrow">
+          YOUR PROGRESSION
+        </p>
+
+        <h2>
+          Loophole Path
+        </h2>
+
+      </div>
+
+
+      <nav class="level-list">
+
+        <button
+          class="level-card active"
+          data-level="arguments"
+        >
+
+          <div class="level-icon">
+            01
+          </div>
+
+          <div class="level-info">
+
+            <strong>
+              Arguments
+            </strong>
+
+            <span>
+              Premises + conclusions
+            </span>
+
+          </div>
+
+          <div class="level-status unlocked">
+            PLAY
+          </div>
+
+        </button>
+
+
+        <button
+          class="level-card locked"
+          data-level="inferences"
+          disabled
+        >
+
+          <div class="level-icon">
+            02
+          </div>
+
+          <div class="level-info">
+
+            <strong>
+              Inferences
+            </strong>
+
+            <span>
+              What follows?
+            </span>
+
+          </div>
+
+          <div class="level-status">
+            🔒
+          </div>
+
+        </button>
+
+
+        <button
+          class="level-card locked"
+          data-level="power-players"
+          disabled
+        >
+
+          <div class="level-icon">
+            03
+          </div>
+
+          <div class="level-info">
+
+            <strong>
+              Power Players
+            </strong>
+
+            <span>
+              Must, could, cannot
+            </span>
+
+          </div>
+
+          <div class="level-status">
+            🔒
+          </div>
+
+        </button>
+
+
+        <button
+          class="level-card locked"
+          data-level="loopholes"
+          disabled
+        >
+
+          <div class="level-icon">
+            04
+          </div>
+
+          <div class="level-info">
+
+            <strong>
+              Loopholes
+            </strong>
+
+            <span>
+              Attack the argument
+            </span>
+
+          </div>
+
+          <div class="level-status">
+            🔒
+          </div>
+
+        </button>
+
+
+        <button
+          class="level-card locked"
+          data-level="mixed"
+          disabled
+        >
+
+          <div class="level-icon">
+            05
+          </div>
+
+          <div class="level-info">
+
+            <strong>
+              Mixed Review
+            </strong>
+
+            <span>
+              Put it all together
+            </span>
+
+          </div>
+
+          <div class="level-status">
+            🔒
+          </div>
+
+        </button>
+
+      </nav>
+
+
+      <!-- =========================================
+           MASTERY
+      ========================================== -->
+
+      <section class="mastery-panel">
+
+        <div class="panel-heading">
+
+          <span>
+            Arguments Mastery
+          </span>
+
+          <strong id="masteryPercent">
+            0%
+          </strong>
+
+        </div>
+
+        <div class="progress-bar">
+
+          <div
+            class="progress-fill"
+            id="masteryBar"
+          ></div>
+
+        </div>
+
+        <p class="mastery-note">
+          Complete drills and maintain accuracy to increase mastery.
+        </p>
+
+      </section>
+
+    </aside>
+
+
+    <!-- =========================================
+         GAME AREA
+    ========================================== -->
+
+    <section class="game-area">
+
+      <!-- =========================================
+           GAME HEADER
+      ========================================== -->
+
+      <div class="game-header">
+
+        <div>
+
+          <p class="eyebrow">
+            LEVEL 1
+          </p>
+
+          <h1>
+            Arguments
+          </h1>
+
+          <p class="game-subtitle">
+            Identify premises, conclusions, and what the argument is actually saying.
+          </p>
+
+        </div>
+
+
+        <div class="round-info">
+
+          <div class="round-stat">
+
+            <span>
+              Question
+            </span>
+
+            <strong>
+              <span id="questionNumber">1</span>
+              /
+              <span id="questionTotal">10</span>
+            </strong>
+
+          </div>
+
+
+          <div class="round-stat">
+
+            <span>
+              Accuracy
+            </span>
+
+            <strong id="accuracyDisplay">
+              100%
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================================
+           ROUND PROGRESS
+      ========================================== -->
+
+      <div class="round-progress">
+
+        <div
+          class="round-progress-fill"
+          id="roundProgressBar"
+        ></div>
+
+      </div>
+
+
+      <!-- =========================================
+           QUESTION CARD
+      ========================================== -->
+
+      <article class="question-card">
+
+        <div class="question-meta">
+
+          <span
+            class="question-tag"
+            id="questionTag"
+          >
+            PREMISE + CONCLUSION
+          </span>
+
+          <span
+            class="difficulty"
+            id="difficulty"
+          >
+            Difficulty: Rookie
+          </span>
+
+        </div>
+
+
+        <div class="question-content">
+
+          <p
+            class="stimulus"
+            id="stimulus"
+          >
+            Every player selected for the All-Star team receives an invitation.
+            Luka was selected for the All-Star team.
+          </p>
+
+
+          <h2
+            class="question-prompt"
+            id="questionPrompt"
+          >
+            Which statement must be true?
+          </h2>
+
+        </div>
+
+
+        <!-- =========================================
+             ANSWERS
+        ========================================== -->
+
+        <div
+          class="answers"
+          id="answerContainer"
+        >
+
+          <button
+            class="answer-button"
+            data-answer="A"
+          >
+
+            <span class="answer-letter">
+              A
+            </span>
+
+            <span class="answer-text">
+              Luka received an invitation.
+            </span>
+
+          </button>
+
+
+          <button
+            class="answer-button"
+            data-answer="B"
+          >
+
+            <span class="answer-letter">
+              B
+            </span>
+
+            <span class="answer-text">
+              Luka was the best player selected.
+            </span>
+
+          </button>
+
+
+          <button
+            class="answer-button"
+            data-answer="C"
+          >
+
+            <span class="answer-letter">
+              C
+            </span>
+
+            <span class="answer-text">
+              Every player who received an invitation was selected.
+            </span>
+
+          </button>
+
+
+          <button
+            class="answer-button"
+            data-answer="D"
+          >
+
+            <span class="answer-letter">
+              D
+            </span>
+
+            <span class="answer-text">
+              Luka might not have received an invitation.
+            </span>
+
+          </button>
+
+        </div>
+
+
+        <!-- =========================================
+             SUBMIT
+        ========================================== -->
+
+        <div class="question-actions">
+
+          <button
+            class="submit-button"
+            id="submitAnswer"
+            disabled
+          >
+            Lock In Answer
+          </button>
+
+        </div>
+
+      </article>
+
+
+      <!-- =========================================
+           FEEDBACK PANEL
+      ========================================== -->
+
+      <section
+        class="feedback-panel hidden"
+        id="feedbackPanel"
+      >
+
+        <div class="feedback-icon">
+          ✅
+        </div>
+
+        <div class="feedback-content">
+
+          <p class="feedback-label">
+            BUCKET
+          </p>
+
+          <h3 id="feedbackTitle">
+            That's the inference.
+          </h3>
+
+          <p id="feedbackExplanation">
+            Every selected player receives an invitation.
+            Luka was selected.
+            Therefore Luka must receive an invitation.
+          </p>
+
+
+          <div class="feedback-rewards">
+
+            <span>
+              +40 XP
+            </span>
+
+            <span>
+              🔥 Streak +1
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================================
+           NEXT QUESTION
+      ========================================== -->
+
+      <div class="next-row">
+
+        <button
+          class="next-button hidden"
+          id="nextQuestion"
+        >
+          Next Question →
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
+
+  <footer>
+
+    <a href="../index.html">
+      ← Back to LSAT Tutoring
+    </a>
+
+    <span>
+      Loophole Training Prototype
+    </span>
+
+  </footer>
+
+
+  <!-- =========================================
+       JAVASCRIPT
+  ========================================== -->
+
+  <script src="loophole.js"></script>
+
+</body>
+
+</html>
