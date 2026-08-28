@@ -1,7 +1,21 @@
 /* =========================================================
-   LOOPHOLE TRAINING ENGINE
-   VERSION 2
-   Learn → Interact → Drill → Master
+   LOOPHOLE LEAGUE
+   VERSION 3
+
+   Learn → Check → Shoot → Feedback → Master
+
+   Includes:
+   - Local save system
+   - XP / levels
+   - Streaks
+   - Lesson progression
+   - Concept mastery
+   - Question history
+   - Basketball possessions
+   - Made shots
+   - Bricks
+   - Blocks
+   - Airballs
    ========================================================= */
 
 
@@ -13,7 +27,7 @@ const SAVE_KEY = "loopholeTraining_v2";
 
 
 const DEFAULT_PLAYER = {
-  version: 2,
+  version: 3,
 
   xp: 0,
   level: 1,
@@ -86,9 +100,8 @@ const DEFAULT_PLAYER = {
 };
 
 
-
 /* =========================================================
-   LOAD PLAYER
+   SAVE HELPERS
    ========================================================= */
 
 function cloneDefaultPlayer() {
@@ -114,7 +127,6 @@ function loadPlayer() {
     const parsed =
       JSON.parse(saved);
 
-
     const fresh =
       cloneDefaultPlayer();
 
@@ -122,6 +134,8 @@ function loadPlayer() {
     return {
       ...fresh,
       ...parsed,
+
+      version: 3,
 
       progress: {
         ...fresh.progress,
@@ -174,25 +188,17 @@ function savePlayer() {
 }
 
 
-let player = loadPlayer();
-
+let player =
+  loadPlayer();
 
 
 /* =========================================================
    LESSON DATA
 
-   IMPORTANT:
-   This is our own instructional material.
-
-   We can later expand this lesson-by-lesson as you
-   work through the book.
+   Original instructional material for the game.
    ========================================================= */
 
 const lessons = {
-
-  /* =======================================================
-     LESSON 1.1
-     ======================================================= */
 
   "1-1": {
 
@@ -209,9 +215,9 @@ const lessons = {
 
     steps: [
 
-      /* ---------------------------------------------------
-         STEP 1 — TEACHING
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 1
+         =================================================== */
 
       {
         type: "learn",
@@ -271,9 +277,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 2 — EXAMPLE
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 2
+         =================================================== */
 
       {
         type: "learn",
@@ -319,9 +325,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 3 — INTERACTIVE CHECK
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 3
+         =================================================== */
 
       {
         type: "question",
@@ -359,9 +365,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 4 — TEACHING
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 4
+         =================================================== */
 
       {
         type: "learn",
@@ -421,9 +427,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 5 — INTERACTIVE
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 5
+         =================================================== */
 
       {
         type: "question",
@@ -461,9 +467,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 6 — IMPORTANT DISTINCTION
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 6
+         =================================================== */
 
       {
         type: "learn",
@@ -526,9 +532,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 7 — CHECK
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 7
+         =================================================== */
 
       {
         type: "question",
@@ -566,9 +572,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 8 — MINI DRILL INTRO
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 8
+         =================================================== */
 
       {
         type: "learn",
@@ -611,9 +617,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 9 — MINI DRILL
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 9
+         =================================================== */
 
       {
         type: "question",
@@ -651,9 +657,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 10 — MINI DRILL
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 10
+         =================================================== */
 
       {
         type: "question",
@@ -691,9 +697,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 11 — MINI DRILL
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 11
+         =================================================== */
 
       {
         type: "question",
@@ -731,9 +737,9 @@ const lessons = {
       },
 
 
-      /* ---------------------------------------------------
-         STEP 12 — COMPLETE
-         --------------------------------------------------- */
+      /* ===================================================
+         STEP 12
+         =================================================== */
 
       {
         type: "complete",
@@ -744,15 +750,15 @@ const lessons = {
           <div class="completion-screen">
 
             <div class="completion-symbol">
-              ✓
+              🏀
             </div>
 
             <p class="eyebrow">
-              LESSON COMPLETE
+              FINAL BUZZER
             </p>
 
             <h2>
-              What Is an Argument?
+              Lesson Complete
             </h2>
 
             <p>
@@ -788,9 +794,8 @@ const lessons = {
 };
 
 
-
 /* =========================================================
-   DOM REFERENCES
+   DOM REFERENCES — PLAYER
    ========================================================= */
 
 const playerLevel =
@@ -811,6 +816,10 @@ const overallAccuracy =
 const bestStreak =
   document.querySelector("#bestStreak");
 
+
+/* =========================================================
+   DOM REFERENCES — DASHBOARD
+   ========================================================= */
 
 const courseProgressPercent =
   document.querySelector("#courseProgressPercent");
@@ -833,6 +842,10 @@ const currentObjective =
 const continueTraining =
   document.querySelector("#continueTraining");
 
+
+/* =========================================================
+   DOM REFERENCES — MASTERY
+   ========================================================= */
 
 const argumentsMastery =
   document.querySelector("#argumentsMastery");
@@ -864,6 +877,10 @@ const inferencesMastery =
 const inferencesMasteryBar =
   document.querySelector("#inferencesMasteryBar");
 
+
+/* =========================================================
+   DOM REFERENCES — LESSON
+   ========================================================= */
 
 const lessonScreen =
   document.querySelector("#lessonScreen");
@@ -914,12 +931,50 @@ const stepCounter =
   document.querySelector("#stepCounter");
 
 
+/* =========================================================
+   DOM REFERENCES — CHAPTER TEST
+   ========================================================= */
+
 const chapterTestCard =
   document.querySelector("#chapterTestCard");
 
 const startChapterTest =
   document.querySelector("#startChapterTest");
 
+
+/* =========================================================
+   DOM REFERENCES — BASKETBALL
+   ========================================================= */
+
+const basketballStage =
+  document.querySelector("#basketballStage");
+
+const pixelCourt =
+  document.querySelector("#pixelCourt");
+
+const pixelPlayer =
+  document.querySelector("#pixelPlayer");
+
+const pixelDefender =
+  document.querySelector("#pixelDefender");
+
+const pixelBall =
+  document.querySelector("#pixelBall");
+
+const pixelHoop =
+  document.querySelector("#pixelHoop");
+
+const shotResult =
+  document.querySelector("#shotResult");
+
+const playerScore =
+  document.querySelector("#playerScore");
+
+const opponentScore =
+  document.querySelector("#opponentScore");
+
+const possessionNumber =
+  document.querySelector("#possessionNumber");
 
 
 /* =========================================================
@@ -941,6 +996,35 @@ let lessonCorrect = 0;
 let lessonQuestionsAnswered = 0;
 
 
+/* =========================================================
+   BASKETBALL GAME STATE
+   ========================================================= */
+
+let gamePlayerScore = 0;
+
+let gameOpponentScore = 0;
+
+let gamePossession = 1;
+
+let shotAnimationPlaying = false;
+
+
+/* =========================================================
+   UTILITY
+   ========================================================= */
+
+function wait(milliseconds) {
+
+  return new Promise(resolve => {
+
+    setTimeout(
+      resolve,
+      milliseconds
+    );
+
+  });
+}
+
 
 /* =========================================================
    PLAYER LEVEL
@@ -952,7 +1036,6 @@ function calculatePlayerLevel() {
     player.xp / 500
   ) + 1;
 }
-
 
 
 /* =========================================================
@@ -1007,18 +1090,19 @@ function renderPlayerHUD() {
 }
 
 
-
 /* =========================================================
    CHAPTER PROGRESS
    ========================================================= */
 
 function calculateCompletedLessons() {
 
-  const lessons =
+  const lessonData =
     player.progress.chapter1.lessons;
 
 
-  return Object.values(lessons)
+  return Object.values(
+    lessonData
+  )
     .filter(
       lesson => lesson.completed
     )
@@ -1043,7 +1127,6 @@ function renderChapterProgress() {
   const completed =
     calculateCompletedLessons();
 
-
   const progress =
     calculateChapterProgress();
 
@@ -1067,7 +1150,6 @@ function renderChapterProgress() {
   courseProgressBar.style.width =
     `${progress}%`;
 }
-
 
 
 /* =========================================================
@@ -1116,9 +1198,8 @@ function renderConceptMastery() {
 }
 
 
-
 /* =========================================================
-   LESSON CARD STATES
+   LESSON CARDS
    ========================================================= */
 
 function renderLessonCards() {
@@ -1133,7 +1214,6 @@ function renderLessonCards() {
 
       const id =
         card.dataset.lesson;
-
 
       const progress =
         lessonData[id];
@@ -1156,7 +1236,6 @@ function renderLessonCards() {
           ".lesson-button"
         );
 
-
       const icon =
         card.querySelector(
           ".lesson-status-icon"
@@ -1169,18 +1248,14 @@ function renderLessonCards() {
           "completed"
         );
 
-
         icon.textContent =
           "✓";
-
 
         button.disabled =
           false;
 
-
         button.textContent =
           "Review Lesson";
-
 
         button.dataset.startLesson =
           id;
@@ -1193,16 +1268,16 @@ function renderLessonCards() {
           "available"
         );
 
+        icon.textContent =
+          "▶";
 
         button.disabled =
           false;
-
 
         button.textContent =
           progress.attempts > 0
             ? "Continue Lesson"
             : "Start Lesson";
-
 
         button.dataset.startLesson =
           id;
@@ -1215,17 +1290,17 @@ function renderLessonCards() {
           "locked"
         );
 
+        icon.textContent =
+          "🔒";
 
         button.disabled =
           true;
 
-
         button.textContent =
-          "🔒 Locked";
+          "Locked";
       }
     });
 }
-
 
 
 /* =========================================================
@@ -1276,7 +1351,7 @@ function renderCurrentObjective() {
   ) {
 
     currentObjective.textContent =
-      "Complete the Chapter 1 Assessment";
+      "Complete the Chapter 1 Championship";
 
 
     continueTraining.dataset.lesson =
@@ -1296,7 +1371,6 @@ function renderCurrentObjective() {
 }
 
 
-
 /* =========================================================
    CHAPTER TEST LOCK
    ========================================================= */
@@ -1307,9 +1381,9 @@ function updateChapterTestUnlock() {
     Object.values(
       player.progress.chapter1.lessons
     )
-    .every(
-      lesson => lesson.completed
-    );
+      .every(
+        lesson => lesson.completed
+      );
 
 
   player.progress.chapter1.test.unlocked =
@@ -1322,13 +1396,11 @@ function updateChapterTestUnlock() {
       "locked"
     );
 
-
     startChapterTest.disabled =
       false;
 
-
     startChapterTest.textContent =
-      "Begin Assessment";
+      "Play Championship";
 
   } else {
 
@@ -1336,20 +1408,17 @@ function updateChapterTestUnlock() {
       "locked"
     );
 
-
     startChapterTest.disabled =
       true;
 
-
     startChapterTest.textContent =
-      "🔒 Complete Lessons";
+      "Complete Lessons";
   }
 }
 
 
-
 /* =========================================================
-   RENDER DASHBOARD
+   DASHBOARD
    ========================================================= */
 
 function renderDashboard() {
@@ -1369,6 +1438,412 @@ function renderDashboard() {
   savePlayer();
 }
 
+
+/* =========================================================
+   BASKETBALL COURT RESET
+   ========================================================= */
+
+function resetBasketballCourt() {
+
+  if (!basketballStage) {
+    return;
+  }
+
+
+  pixelPlayer.classList.remove(
+    "shooting",
+    "celebrate"
+  );
+
+
+  pixelDefender.classList.remove(
+    "blocking"
+  );
+
+
+  pixelBall.classList.remove(
+    "shot-made",
+    "shot-miss",
+    "shot-blocked",
+    "shot-airball"
+  );
+
+
+  pixelHoop.classList.remove(
+    "swish"
+  );
+
+
+  shotResult.classList.remove(
+    "result-pop",
+    "made",
+    "missed"
+  );
+
+
+  shotResult.classList.add(
+    "hidden"
+  );
+
+
+  shotResult.textContent =
+    "";
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   SHOW / HIDE COURT
+   ========================================================= */
+
+function showBasketballCourt() {
+
+  if (!basketballStage) {
+    return;
+  }
+
+
+  resetBasketballCourt();
+
+
+  basketballStage.classList.remove(
+    "hidden"
+  );
+
+
+  playerScore.textContent =
+    gamePlayerScore;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  possessionNumber.textContent =
+    gamePossession;
+}
+
+
+function hideBasketballCourt() {
+
+  if (!basketballStage) {
+    return;
+  }
+
+
+  basketballStage.classList.add(
+    "hidden"
+  );
+
+
+  resetBasketballCourt();
+}
+
+
+/* =========================================================
+   SHOT RESULT
+   ========================================================= */
+
+function showShotResult(
+  text,
+  made
+) {
+
+  shotResult.textContent =
+    text;
+
+
+  shotResult.classList.remove(
+    "hidden",
+    "made",
+    "missed",
+    "result-pop"
+  );
+
+
+  shotResult.classList.add(
+    made
+      ? "made"
+      : "missed"
+  );
+
+
+  /*
+    Force browser to restart animation.
+  */
+
+  void shotResult.offsetWidth;
+
+
+  shotResult.classList.add(
+    "result-pop"
+  );
+}
+
+
+/* =========================================================
+   MADE SHOT
+   ========================================================= */
+
+async function playMadeShot() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-made"
+  );
+
+
+  pixelHoop.classList.add(
+    "swish"
+  );
+
+
+  await wait(970);
+
+
+  gamePlayerScore +=
+    2;
+
+
+  playerScore.textContent =
+    gamePlayerScore;
+
+
+  showShotResult(
+    "BUCKET!",
+    true
+  );
+
+
+  pixelPlayer.classList.remove(
+    "shooting"
+  );
+
+
+  pixelPlayer.classList.add(
+    "celebrate"
+  );
+
+
+  await wait(650);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   WRONG SHOT SELECTOR
+   ========================================================= */
+
+async function playMissedShot() {
+
+  const outcomes = [
+    "brick",
+    "block",
+    "airball"
+  ];
+
+
+  const outcome =
+    outcomes[
+      Math.floor(
+        Math.random() *
+        outcomes.length
+      )
+    ];
+
+
+  if (outcome === "block") {
+
+    await playBlockedShot();
+
+    return;
+  }
+
+
+  if (outcome === "airball") {
+
+    await playAirball();
+
+    return;
+  }
+
+
+  await playBrick();
+}
+
+
+/* =========================================================
+   BRICK
+   ========================================================= */
+
+async function playBrick() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-miss"
+  );
+
+
+  await wait(970);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "BRICK!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   BLOCK
+   ========================================================= */
+
+async function playBlockedShot() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(170);
+
+
+  pixelDefender.classList.add(
+    "blocking"
+  );
+
+
+  pixelBall.classList.add(
+    "shot-blocked"
+  );
+
+
+  await wait(680);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "BLOCKED!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   AIRBALL
+   ========================================================= */
+
+async function playAirball() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-airball"
+  );
+
+
+  await wait(970);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "AIRBALL!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
 
 
 /* =========================================================
@@ -1424,6 +1899,21 @@ function openLesson(id) {
     0;
 
 
+  gamePlayerScore =
+    0;
+
+
+  gameOpponentScore =
+    0;
+
+
+  gamePossession =
+    1;
+
+
+  resetBasketballCourt();
+
+
   progress.attempts++;
 
 
@@ -1443,12 +1933,19 @@ function openLesson(id) {
 }
 
 
-
 /* =========================================================
    CLOSE LESSON
    ========================================================= */
 
 function closeLesson() {
+
+  if (shotAnimationPlaying) {
+    return;
+  }
+
+
+  hideBasketballCourt();
+
 
   lessonScreen.classList.add(
     "hidden"
@@ -1473,7 +1970,6 @@ function closeLesson() {
 
   renderDashboard();
 }
-
 
 
 /* =========================================================
@@ -1546,15 +2042,17 @@ function renderLessonStep() {
     currentStepIndex === 0;
 
 
+  hideBasketballCourt();
+
 
   /* =======================================================
-     LEARN STEP
+     LEARN
      ======================================================= */
 
   if (step.type === "learn") {
 
     lessonStageType.textContent =
-      "LEARN";
+      "FILM ROOM";
 
 
     lessonBody.innerHTML =
@@ -1570,16 +2068,18 @@ function renderLessonStep() {
   }
 
 
-
   /* =======================================================
-     QUESTION STEP
+     QUESTION
      ======================================================= */
 
   if (step.type === "question") {
 
+    showBasketballCourt();
+
+
     lessonStageType.textContent =
       step.drill
-        ? "MINI DRILL"
+        ? "LIVE DRILL"
         : "KNOWLEDGE CHECK";
 
 
@@ -1672,19 +2172,18 @@ function renderLessonStep() {
 
 
     nextLessonStep.textContent =
-      "Check Answer";
+      "Shoot";
   }
 
 
-
   /* =======================================================
-     COMPLETION STEP
+     COMPLETE
      ======================================================= */
 
   if (step.type === "complete") {
 
     lessonStageType.textContent =
-      "COMPLETE";
+      "FINAL BUZZER";
 
 
     lessonBody.innerHTML =
@@ -1704,9 +2203,8 @@ function renderLessonStep() {
 }
 
 
-
 /* =========================================================
-   SELECT LESSON ANSWER
+   SELECT ANSWER
    ========================================================= */
 
 function selectLessonAnswer(
@@ -1714,7 +2212,10 @@ function selectLessonAnswer(
   button
 ) {
 
-  if (currentQuestionAnswered) {
+  if (
+    currentQuestionAnswered ||
+    shotAnimationPlaying
+  ) {
     return;
   }
 
@@ -1746,16 +2247,16 @@ function selectLessonAnswer(
 }
 
 
-
 /* =========================================================
-   CHECK LESSON ANSWER
+   CHECK ANSWER + PLAY POSSESSION
    ========================================================= */
 
-function checkLessonAnswer() {
+async function checkLessonAnswer() {
 
   if (
     currentSelection === null ||
-    currentQuestionAnswered
+    currentQuestionAnswered ||
+    shotAnimationPlaying
   ) {
     return;
   }
@@ -1795,38 +2296,25 @@ function checkLessonAnswer() {
     );
 
 
-  options.forEach(
-    (option, index) => {
+  /*
+    Lock the entire interface while the
+    possession animation plays.
+  */
 
-      option.disabled =
-        true;
+  options.forEach(option => {
 
+    option.disabled =
+      true;
 
-      option.classList.remove(
-        "selected"
-      );
-
-
-      if (index === step.correct) {
-
-        option.classList.add(
-          "correct"
-        );
-      }
+  });
 
 
-      if (
-        index === currentSelection &&
-        !correct
-      ) {
+  nextLessonStep.disabled =
+    true;
 
-        option.classList.add(
-          "incorrect"
-        );
-      }
-    }
-  );
 
+  previousLessonStep.disabled =
+    true;
 
 
   /* =======================================================
@@ -1851,13 +2339,8 @@ function checkLessonAnswer() {
       );
 
 
-    showLessonFeedback(
-      true,
-      step.feedbackCorrect
-    );
-
+    await playMadeShot();
   }
-
 
 
   /* =======================================================
@@ -1869,6 +2352,58 @@ function checkLessonAnswer() {
     player.streak =
       0;
 
+
+    await playMissedShot();
+  }
+
+
+  /* =======================================================
+     REVEAL ANSWERS
+     ======================================================= */
+
+  options.forEach(
+    (option, index) => {
+
+      option.classList.remove(
+        "selected"
+      );
+
+
+      if (
+        index === step.correct
+      ) {
+
+        option.classList.add(
+          "correct"
+        );
+      }
+
+
+      if (
+        index === currentSelection &&
+        !correct
+      ) {
+
+        option.classList.add(
+          "incorrect"
+        );
+      }
+    }
+  );
+
+
+  /* =======================================================
+     FEEDBACK
+     ======================================================= */
+
+  if (correct) {
+
+    showLessonFeedback(
+      true,
+      step.feedbackCorrect
+    );
+
+  } else {
 
     showLessonFeedback(
       false,
@@ -1883,18 +2418,28 @@ function checkLessonAnswer() {
   savePlayer();
 
 
+  gamePossession++;
+
+
+  possessionNumber.textContent =
+    gamePossession;
+
+
+  previousLessonStep.disabled =
+    currentStepIndex === 0;
+
+
   nextLessonStep.disabled =
     false;
 
 
   nextLessonStep.textContent =
-    "Continue →";
+    "Next Possession →";
 }
 
 
-
 /* =========================================================
-   SHOW FEEDBACK
+   FEEDBACK
    ========================================================= */
 
 function showLessonFeedback(
@@ -1915,7 +2460,7 @@ function showLessonFeedback(
 
 
     lessonFeedbackIcon.textContent =
-      "✓";
+      "🏀";
 
   } else {
 
@@ -1942,9 +2487,8 @@ function showLessonFeedback(
 }
 
 
-
 /* =========================================================
-   RECORD QUESTION HISTORY
+   QUESTION HISTORY
    ========================================================= */
 
 function recordQuestionAttempt(
@@ -1989,14 +2533,16 @@ function recordQuestionAttempt(
 }
 
 
-
 /* =========================================================
    NEXT STEP
    ========================================================= */
 
 function handleNextStep() {
 
-  if (!activeLesson) {
+  if (
+    !activeLesson ||
+    shotAnimationPlaying
+  ) {
     return;
   }
 
@@ -2007,10 +2553,10 @@ function handleNextStep() {
     ];
 
 
-
-  /* -------------------------------------------------------
-     QUESTION NOT YET CHECKED
-     ------------------------------------------------------- */
+  /*
+    Question selected but possession
+    has not yet been played.
+  */
 
   if (
     step.type === "question" &&
@@ -2023,10 +2569,9 @@ function handleNextStep() {
   }
 
 
-
-  /* -------------------------------------------------------
-     COMPLETION SCREEN
-     ------------------------------------------------------- */
+  /*
+    End of lesson.
+  */
 
   if (step.type === "complete") {
 
@@ -2036,10 +2581,9 @@ function handleNextStep() {
   }
 
 
-
-  /* -------------------------------------------------------
-     MOVE FORWARD
-     ------------------------------------------------------- */
+  /*
+    Advance.
+  */
 
   if (
     currentStepIndex <
@@ -2048,12 +2592,13 @@ function handleNextStep() {
 
     currentStepIndex++;
 
+
     renderLessonStep();
+
 
     scrollLessonTop();
   }
 }
-
 
 
 /* =========================================================
@@ -2064,7 +2609,8 @@ function handlePreviousStep() {
 
   if (
     !activeLesson ||
-    currentStepIndex === 0
+    currentStepIndex === 0 ||
+    shotAnimationPlaying
   ) {
     return;
   }
@@ -2080,9 +2626,8 @@ function handlePreviousStep() {
 }
 
 
-
 /* =========================================================
-   LESSON COMPLETION
+   COMPLETE LESSON
    ========================================================= */
 
 function completeLesson() {
@@ -2095,9 +2640,9 @@ function completeLesson() {
       ];
 
 
-  /* -------------------------------------------------------
-     ONLY AWARD COMPLETION XP ONCE
-     ------------------------------------------------------- */
+  /*
+    Completion rewards only happen once.
+  */
 
   if (!lessonProgressData.completed) {
 
@@ -2109,12 +2654,8 @@ function completeLesson() {
       true;
 
 
-
-    /* -----------------------------------------------------
-       CALCULATE MASTERY
-       ----------------------------------------------------- */
-
-    let mastery = 100;
+    let mastery =
+      100;
 
 
     if (lessonQuestionsAnswered > 0) {
@@ -2133,21 +2674,11 @@ function completeLesson() {
       mastery;
 
 
-
-    /* -----------------------------------------------------
-       UPDATE CONCEPT MASTERY
-       ----------------------------------------------------- */
-
     player.conceptMastery[
       activeLesson.concept
     ] =
       mastery;
 
-
-
-    /* -----------------------------------------------------
-       UNLOCK NEXT LESSON
-       ----------------------------------------------------- */
 
     unlockNextLesson(
       activeLessonID
@@ -2159,8 +2690,10 @@ function completeLesson() {
 
     savePlayer();
   }
-}
 
+
+  renderPlayerHUD();
+}
 
 
 /* =========================================================
@@ -2195,7 +2728,9 @@ function unlockNextLesson(
 
 
   const nextID =
-    order[index + 1];
+    order[
+      index + 1
+    ];
 
 
   player.progress
@@ -2207,9 +2742,8 @@ function unlockNextLesson(
 }
 
 
-
 /* =========================================================
-   SCROLL LESSON TO TOP
+   SCROLL
    ========================================================= */
 
 function scrollLessonTop() {
@@ -2221,9 +2755,8 @@ function scrollLessonTop() {
 }
 
 
-
 /* =========================================================
-   START BUTTON EVENTS
+   LESSON BUTTONS
    ========================================================= */
 
 function bindLessonButtons() {
@@ -2258,7 +2791,6 @@ function bindLessonButtons() {
 }
 
 
-
 /* =========================================================
    CONTINUE TRAINING
    ========================================================= */
@@ -2289,7 +2821,6 @@ continueTraining.addEventListener(
 );
 
 
-
 /* =========================================================
    LESSON CONTROLS
    ========================================================= */
@@ -2312,9 +2843,8 @@ exitLesson.addEventListener(
 );
 
 
-
 /* =========================================================
-   ESCAPE KEY
+   ESCAPE
    ========================================================= */
 
 document.addEventListener(
@@ -2325,7 +2855,8 @@ document.addEventListener(
       event.key === "Escape" &&
       !lessonScreen.classList.contains(
         "hidden"
-      )
+      ) &&
+      !shotAnimationPlaying
     ) {
 
       closeLesson();
@@ -2334,18 +2865,14 @@ document.addEventListener(
 );
 
 
-
 /* =========================================================
    CHAPTER TEST PLACEHOLDER
-
-   We build the actual chapter test once
-   all Chapter 1 lessons exist.
    ========================================================= */
 
 function startAssessmentPlaceholder() {
 
   alert(
-    "Chapter Assessment engine is coming next."
+    "Chapter Championship engine is coming next."
   );
 }
 
@@ -2356,16 +2883,11 @@ startChapterTest.addEventListener(
 );
 
 
-
 /* =========================================================
    DEVELOPMENT RESET
 
-   IMPORTANT:
-   If you ever want to wipe your local progress,
-   open the browser console and run:
-
+   Browser console:
    resetLoopholeProgress()
-
    ========================================================= */
 
 window.resetLoopholeProgress =
@@ -2373,7 +2895,7 @@ window.resetLoopholeProgress =
 
     const confirmed =
       confirm(
-        "Reset all Loophole Training progress?"
+        "Reset all Loophole League progress?"
       );
 
 
@@ -2391,7 +2913,6 @@ window.resetLoopholeProgress =
   };
 
 
-
 /* =========================================================
    INITIALIZE
    ========================================================= */
@@ -2399,3 +2920,5 @@ window.resetLoopholeProgress =
 bindLessonButtons();
 
 renderDashboard();
+
+hideBasketballCourt();
