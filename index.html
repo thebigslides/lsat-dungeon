@@ -14,10 +14,11 @@
   <link rel="stylesheet" href="loophole.css" />
 </head>
 
+
 <body>
 
   <!-- =========================================
-       TOP NAV
+       TOP NAVIGATION
   ========================================== -->
 
   <header class="topbar">
@@ -35,6 +36,7 @@
       </span>
 
     </div>
+
 
     <div class="player-mini">
 
@@ -58,14 +60,16 @@
   </header>
 
 
+
   <!-- =========================================
-       MAIN APP
+       APP
   ========================================== -->
 
   <main class="app-shell">
 
+
     <!-- =========================================
-         SIDEBAR / PROGRESSION
+         LEFT SIDEBAR
     ========================================== -->
 
     <aside class="sidebar">
@@ -73,177 +77,35 @@
       <div class="sidebar-heading">
 
         <p class="eyebrow">
-          YOUR PROGRESSION
+          COURSE PROGRESSION
         </p>
 
         <h2>
-          Loophole Path
+          The Loophole
         </h2>
+
+        <p class="sidebar-description">
+          Learn the concepts, drill the reasoning,
+          and prove mastery.
+        </p>
 
       </div>
 
 
-      <nav class="level-list">
-
-        <button
-          class="level-card active"
-          data-level="arguments"
-        >
-
-          <div class="level-icon">
-            01
-          </div>
-
-          <div class="level-info">
-
-            <strong>
-              Arguments
-            </strong>
-
-            <span>
-              Premises + conclusions
-            </span>
-
-          </div>
-
-          <div class="level-status unlocked">
-            PLAY
-          </div>
-
-        </button>
-
-
-        <button
-          class="level-card locked"
-          data-level="inferences"
-          disabled
-        >
-
-          <div class="level-icon">
-            02
-          </div>
-
-          <div class="level-info">
-
-            <strong>
-              Inferences
-            </strong>
-
-            <span>
-              What follows?
-            </span>
-
-          </div>
-
-          <div class="level-status">
-            🔒
-          </div>
-
-        </button>
-
-
-        <button
-          class="level-card locked"
-          data-level="power-players"
-          disabled
-        >
-
-          <div class="level-icon">
-            03
-          </div>
-
-          <div class="level-info">
-
-            <strong>
-              Power Players
-            </strong>
-
-            <span>
-              Must, could, cannot
-            </span>
-
-          </div>
-
-          <div class="level-status">
-            🔒
-          </div>
-
-        </button>
-
-
-        <button
-          class="level-card locked"
-          data-level="loopholes"
-          disabled
-        >
-
-          <div class="level-icon">
-            04
-          </div>
-
-          <div class="level-info">
-
-            <strong>
-              Loopholes
-            </strong>
-
-            <span>
-              Attack the argument
-            </span>
-
-          </div>
-
-          <div class="level-status">
-            🔒
-          </div>
-
-        </button>
-
-
-        <button
-          class="level-card locked"
-          data-level="mixed"
-          disabled
-        >
-
-          <div class="level-icon">
-            05
-          </div>
-
-          <div class="level-info">
-
-            <strong>
-              Mixed Review
-            </strong>
-
-            <span>
-              Put it all together
-            </span>
-
-          </div>
-
-          <div class="level-status">
-            🔒
-          </div>
-
-        </button>
-
-      </nav>
-
 
       <!-- =========================================
-           MASTERY
+           OVERALL PROGRESS
       ========================================== -->
 
-      <section class="mastery-panel">
+      <section class="overall-progress">
 
         <div class="panel-heading">
 
           <span>
-            Arguments Mastery
+            Course Progress
           </span>
 
-          <strong id="masteryPercent">
+          <strong id="courseProgressPercent">
             0%
           </strong>
 
@@ -253,227 +115,1281 @@
 
           <div
             class="progress-fill"
-            id="masteryBar"
+            id="courseProgressBar"
           ></div>
 
         </div>
 
-        <p class="mastery-note">
-          Complete drills and maintain accuracy to increase mastery.
+      </section>
+
+
+
+      <!-- =========================================
+           CHAPTER NAVIGATION
+      ========================================== -->
+
+      <nav class="chapter-list">
+
+
+        <!-- CHAPTER 1 -->
+
+        <button
+          class="chapter-card active"
+          data-chapter="1"
+        >
+
+          <div class="chapter-number">
+            01
+          </div>
+
+          <div class="chapter-info">
+
+            <strong>
+              Foundations
+            </strong>
+
+            <span>
+              Arguments & reasoning
+            </span>
+
+          </div>
+
+          <div class="chapter-status unlocked">
+            ACTIVE
+          </div>
+
+        </button>
+
+
+
+        <!-- CHAPTER 2 -->
+
+        <button
+          class="chapter-card locked"
+          data-chapter="2"
+          disabled
+        >
+
+          <div class="chapter-number">
+            02
+          </div>
+
+          <div class="chapter-info">
+
+            <strong>
+              Chapter II
+            </strong>
+
+            <span>
+              Locked
+            </span>
+
+          </div>
+
+          <div class="chapter-status">
+            🔒
+          </div>
+
+        </button>
+
+
+
+        <!-- CHAPTER 3 -->
+
+        <button
+          class="chapter-card locked"
+          data-chapter="3"
+          disabled
+        >
+
+          <div class="chapter-number">
+            03
+          </div>
+
+          <div class="chapter-info">
+
+            <strong>
+              Chapter III
+            </strong>
+
+            <span>
+              Locked
+            </span>
+
+          </div>
+
+          <div class="chapter-status">
+            🔒
+          </div>
+
+        </button>
+
+
+
+        <!-- CHAPTER 4 -->
+
+        <button
+          class="chapter-card locked"
+          data-chapter="4"
+          disabled
+        >
+
+          <div class="chapter-number">
+            04
+          </div>
+
+          <div class="chapter-info">
+
+            <strong>
+              Chapter IV
+            </strong>
+
+            <span>
+              Locked
+            </span>
+
+          </div>
+
+          <div class="chapter-status">
+            🔒
+          </div>
+
+        </button>
+
+
+
+        <!-- MORE CHAPTERS -->
+
+        <button
+          class="chapter-card locked"
+          disabled
+        >
+
+          <div class="chapter-number">
+            +
+          </div>
+
+          <div class="chapter-info">
+
+            <strong>
+              More Chapters
+            </strong>
+
+            <span>
+              Continue your training
+            </span>
+
+          </div>
+
+          <div class="chapter-status">
+            🔒
+          </div>
+
+        </button>
+
+      </nav>
+
+
+
+      <!-- =========================================
+           PLAYER RECORD
+      ========================================== -->
+
+      <section class="player-record">
+
+        <p class="eyebrow">
+          PLAYER RECORD
         </p>
+
+
+        <div class="record-row">
+
+          <span>
+            Questions Answered
+          </span>
+
+          <strong id="totalAnswered">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="record-row">
+
+          <span>
+            Accuracy
+          </span>
+
+          <strong id="overallAccuracy">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="record-row">
+
+          <span>
+            Best Streak
+          </span>
+
+          <strong id="bestStreak">
+            0
+          </strong>
+
+        </div>
 
       </section>
 
     </aside>
 
 
+
     <!-- =========================================
-         GAME AREA
+         MAIN COURSE AREA
     ========================================== -->
 
-    <section class="game-area">
+    <section class="course-area">
+
 
       <!-- =========================================
-           GAME HEADER
+           CHAPTER HEADER
       ========================================== -->
 
-      <div class="game-header">
+      <header class="chapter-header">
 
-        <div>
+        <div class="chapter-header-content">
 
           <p class="eyebrow">
-            LEVEL 1
+            CHAPTER 01
           </p>
 
           <h1>
-            Arguments
+            Foundations
           </h1>
 
-          <p class="game-subtitle">
-            Identify premises, conclusions, and what the argument is actually saying.
+          <p class="chapter-description">
+            Build the reasoning foundation you'll use
+            throughout the course. Learn how arguments
+            work before trying to attack them.
           </p>
 
         </div>
 
 
-        <div class="round-info">
+        <div class="chapter-mastery">
 
-          <div class="round-stat">
+          <span class="mastery-label">
+            Chapter Mastery
+          </span>
 
-            <span>
-              Question
-            </span>
+          <strong id="chapterMastery">
+            0%
+          </strong>
 
-            <strong>
-              <span id="questionNumber">1</span>
-              /
-              <span id="questionTotal">10</span>
-            </strong>
+          <div class="progress-bar">
 
-          </div>
-
-
-          <div class="round-stat">
-
-            <span>
-              Accuracy
-            </span>
-
-            <strong id="accuracyDisplay">
-              100%
-            </strong>
+            <div
+              class="progress-fill"
+              id="chapterMasteryBar"
+            ></div>
 
           </div>
 
         </div>
 
-      </div>
+      </header>
+
 
 
       <!-- =========================================
-           ROUND PROGRESS
+           CURRENT OBJECTIVE
       ========================================== -->
 
-      <div class="round-progress">
+      <section class="objective-panel">
+
+        <div class="objective-marker">
+          ▶
+        </div>
+
+        <div class="objective-content">
+
+          <span>
+            CURRENT OBJECTIVE
+          </span>
+
+          <strong id="currentObjective">
+            Complete Lesson 1.1 — What Is an Argument?
+          </strong>
+
+        </div>
+
+        <button
+          class="continue-button"
+          id="continueTraining"
+        >
+          Continue Training
+        </button>
+
+      </section>
+
+
+
+      <!-- =========================================
+           CHAPTER PATH
+      ========================================== -->
+
+      <section class="lesson-path">
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="eyebrow">
+              TRAINING PATH
+            </p>
+
+            <h2>
+              Chapter 1 Lessons
+            </h2>
+
+          </div>
+
+          <span class="section-status" id="lessonProgress">
+            0 / 5 Complete
+          </span>
+
+        </div>
+
+
+
+        <!-- =========================================
+             LESSON 1.1
+        ========================================== -->
+
+        <article
+          class="lesson-card available"
+          data-lesson="1-1"
+        >
+
+          <div class="lesson-status-icon">
+            01
+          </div>
+
+
+          <div class="lesson-content">
+
+            <div class="lesson-type">
+              LESSON 1.1
+            </div>
+
+            <h3>
+              What Is an Argument?
+            </h3>
+
+            <p>
+              Learn the difference between a collection
+              of statements and an actual argument.
+            </p>
+
+
+            <div class="lesson-tags">
+
+              <span>
+                Learn
+              </span>
+
+              <span>
+                Interactive
+              </span>
+
+              <span>
+                Mini Drill
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~7 min
+            </span>
+
+            <button
+              class="lesson-button"
+              data-start-lesson="1-1"
+            >
+              Start Lesson
+            </button>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- CONNECTOR -->
+
+        <div class="path-connector"></div>
+
+
+
+        <!-- =========================================
+             LESSON 1.2
+        ========================================== -->
+
+        <article
+          class="lesson-card locked"
+          data-lesson="1-2"
+        >
+
+          <div class="lesson-status-icon">
+            02
+          </div>
+
+
+          <div class="lesson-content">
+
+            <div class="lesson-type">
+              LESSON 1.2
+            </div>
+
+            <h3>
+              Premises
+            </h3>
+
+            <p>
+              Learn how to identify the statements
+              providing support inside an argument.
+            </p>
+
+
+            <div class="lesson-tags">
+
+              <span>
+                Learn
+              </span>
+
+              <span>
+                Classification
+              </span>
+
+              <span>
+                Mini Drill
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~8 min
+            </span>
+
+            <button
+              class="lesson-button"
+              disabled
+            >
+              🔒 Locked
+            </button>
+
+          </div>
+
+        </article>
+
+
+
+        <div class="path-connector"></div>
+
+
+
+        <!-- =========================================
+             LESSON 1.3
+        ========================================== -->
+
+        <article
+          class="lesson-card locked"
+          data-lesson="1-3"
+        >
+
+          <div class="lesson-status-icon">
+            03
+          </div>
+
+
+          <div class="lesson-content">
+
+            <div class="lesson-type">
+              LESSON 1.3
+            </div>
+
+            <h3>
+              Conclusions
+            </h3>
+
+            <p>
+              Identify the claim the argument is
+              ultimately trying to establish.
+            </p>
+
+
+            <div class="lesson-tags">
+
+              <span>
+                Learn
+              </span>
+
+              <span>
+                Identification
+              </span>
+
+              <span>
+                Mini Drill
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~8 min
+            </span>
+
+            <button
+              class="lesson-button"
+              disabled
+            >
+              🔒 Locked
+            </button>
+
+          </div>
+
+        </article>
+
+
+
+        <div class="path-connector"></div>
+
+
+
+        <!-- =========================================
+             LESSON 1.4
+        ========================================== -->
+
+        <article
+          class="lesson-card locked"
+          data-lesson="1-4"
+        >
+
+          <div class="lesson-status-icon">
+            04
+          </div>
+
+
+          <div class="lesson-content">
+
+            <div class="lesson-type">
+              LESSON 1.4
+            </div>
+
+            <h3>
+              Premise Sets
+            </h3>
+
+            <p>
+              Understand how multiple premises work
+              together to support a conclusion.
+            </p>
+
+
+            <div class="lesson-tags">
+
+              <span>
+                Learn
+              </span>
+
+              <span>
+                Structure
+              </span>
+
+              <span>
+                Mini Drill
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~10 min
+            </span>
+
+            <button
+              class="lesson-button"
+              disabled
+            >
+              🔒 Locked
+            </button>
+
+          </div>
+
+        </article>
+
+
+
+        <div class="path-connector"></div>
+
+
+
+        <!-- =========================================
+             LESSON 1.5
+        ========================================== -->
+
+        <article
+          class="lesson-card locked"
+          data-lesson="1-5"
+        >
+
+          <div class="lesson-status-icon">
+            05
+          </div>
+
+
+          <div class="lesson-content">
+
+            <div class="lesson-type">
+              LESSON 1.5
+            </div>
+
+            <h3>
+              Valid & Invalid Conclusions
+            </h3>
+
+            <p>
+              Determine what can actually be concluded
+              from the information you've been given.
+            </p>
+
+
+            <div class="lesson-tags">
+
+              <span>
+                Learn
+              </span>
+
+              <span>
+                Inference
+              </span>
+
+              <span>
+                Challenge Drill
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~12 min
+            </span>
+
+            <button
+              class="lesson-button"
+              disabled
+            >
+              🔒 Locked
+            </button>
+
+          </div>
+
+        </article>
+
+
+
+        <div class="path-connector final"></div>
+
+
+
+        <!-- =========================================
+             CHAPTER TEST
+        ========================================== -->
+
+        <article
+          class="chapter-test-card locked"
+          id="chapterTestCard"
+        >
+
+          <div class="test-icon">
+            ★
+          </div>
+
+
+          <div class="test-content">
+
+            <div class="lesson-type">
+              FINAL CHECKPOINT
+            </div>
+
+            <h3>
+              Chapter 1 Assessment
+            </h3>
+
+            <p>
+              Put everything together in a mixed
+              assessment covering the entire chapter.
+            </p>
+
+
+            <div class="test-requirements">
+
+              <span>
+                10–15 Questions
+              </span>
+
+              <span>
+                80% to Master
+              </span>
+
+              <span>
+                Mixed Concepts
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="lesson-meta">
+
+            <span class="lesson-time">
+              ~15 min
+            </span>
+
+            <button
+              class="test-button"
+              id="startChapterTest"
+              disabled
+            >
+              🔒 Complete Lessons
+            </button>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+
+      <!-- =========================================
+           CONCEPT MASTERY
+      ========================================== -->
+
+      <section class="concept-section">
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="eyebrow">
+              PERFORMANCE
+            </p>
+
+            <h2>
+              Concept Mastery
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="concept-grid">
+
+
+          <!-- ARGUMENTS -->
+
+          <div class="concept-card">
+
+            <div class="concept-heading">
+
+              <span>
+                Arguments
+              </span>
+
+              <strong id="argumentsMastery">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                id="argumentsMasteryBar"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PREMISES -->
+
+          <div class="concept-card">
+
+            <div class="concept-heading">
+
+              <span>
+                Premises
+              </span>
+
+              <strong id="premisesMastery">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                id="premisesMasteryBar"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- CONCLUSIONS -->
+
+          <div class="concept-card">
+
+            <div class="concept-heading">
+
+              <span>
+                Conclusions
+              </span>
+
+              <strong id="conclusionsMastery">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                id="conclusionsMasteryBar"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PREMISE SETS -->
+
+          <div class="concept-card">
+
+            <div class="concept-heading">
+
+              <span>
+                Premise Sets
+              </span>
+
+              <strong id="premiseSetsMastery">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                id="premiseSetsMasteryBar"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- INFERENCES -->
+
+          <div class="concept-card">
+
+            <div class="concept-heading">
+
+              <span>
+                Valid Inferences
+              </span>
+
+              <strong id="inferencesMastery">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                id="inferencesMasteryBar"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+    </section>
+
+  </main>
+
+
+
+  <!-- =========================================
+       LESSON VIEW
+       Hidden until JS opens a lesson.
+  ========================================== -->
+
+  <section
+    class="lesson-screen hidden"
+    id="lessonScreen"
+  >
+
+    <div class="lesson-screen-shell">
+
+
+      <!-- LESSON TOP BAR -->
+
+      <header class="lesson-screen-header">
+
+        <button
+          class="exit-lesson"
+          id="exitLesson"
+        >
+          ← Exit Lesson
+        </button>
+
+
+        <div class="lesson-screen-progress">
+
+          <span id="lessonProgressText">
+            Lesson 1.1
+          </span>
+
+          <div class="progress-bar">
+
+            <div
+              class="progress-fill"
+              id="lessonScreenProgressBar"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="lesson-xp">
+          +XP Available
+        </div>
+
+      </header>
+
+
+
+      <!-- =========================================
+           LESSON CONTENT
+      ========================================== -->
+
+      <main class="lesson-stage">
+
+
+        <div class="lesson-stage-header">
+
+          <p
+            class="eyebrow"
+            id="lessonStageType"
+          >
+            LEARN
+          </p>
+
+          <h1 id="lessonStageTitle">
+            What Is an Argument?
+          </h1>
+
+        </div>
+
+
 
         <div
-          class="round-progress-fill"
-          id="roundProgressBar"
-        ></div>
+          class="lesson-body"
+          id="lessonBody"
+        >
 
-      </div>
+          <!--
+            JavaScript will inject lesson content here.
+
+            Example:
+
+            <p>
+              An argument requires a support relationship.
+            </p>
+
+            <div class="concept-example">
+              ...
+            </div>
+          -->
+
+        </div>
 
 
-      <!-- =========================================
-           QUESTION CARD
-      ========================================== -->
 
-      <article class="question-card">
+        <!-- =========================================
+             INTERACTIVE AREA
+        ========================================== -->
 
-        <div class="question-meta">
+        <div
+          class="interaction-area"
+          id="interactionArea"
+        >
+
+          <!--
+            JS can dynamically inject:
+
+            multiple choice
+            sentence selection
+            true/false
+            classification
+            premise/conclusion identification
+            mini drills
+          -->
+
+        </div>
+
+
+
+        <!-- =========================================
+             LESSON FEEDBACK
+        ========================================== -->
+
+        <div
+          class="lesson-feedback hidden"
+          id="lessonFeedback"
+        >
+
+          <div
+            class="lesson-feedback-icon"
+            id="lessonFeedbackIcon"
+          >
+            ✓
+          </div>
+
+
+          <div>
+
+            <span
+              class="lesson-feedback-label"
+              id="lessonFeedbackLabel"
+            >
+              CORRECT
+            </span>
+
+            <h3 id="lessonFeedbackTitle">
+              Nice work.
+            </h3>
+
+            <p id="lessonFeedbackText">
+              Feedback will appear here.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             LESSON CONTROLS
+        ========================================== -->
+
+        <div class="lesson-controls">
+
+          <button
+            class="lesson-nav-button secondary"
+            id="previousLessonStep"
+            disabled
+          >
+            ← Previous
+          </button>
+
+
+          <span
+            class="step-counter"
+            id="stepCounter"
+          >
+            1 / 1
+          </span>
+
+
+          <button
+            class="lesson-nav-button primary"
+            id="nextLessonStep"
+          >
+            Continue →
+          </button>
+
+        </div>
+
+
+      </main>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================================
+       CHAPTER TEST SCREEN
+  ========================================== -->
+
+  <section
+    class="test-screen hidden"
+    id="testScreen"
+  >
+
+    <div class="test-screen-shell">
+
+
+      <header class="test-screen-header">
+
+        <button
+          class="exit-test"
+          id="exitTest"
+        >
+          ← Exit Assessment
+        </button>
+
+
+        <div class="test-progress-info">
+
+          <span>
+            Chapter 1 Assessment
+          </span>
+
+          <strong>
+            <span id="testQuestionNumber">1</span>
+            /
+            <span id="testQuestionTotal">10</span>
+          </strong>
+
+        </div>
+
+
+        <div class="test-score-live">
+
+          <span>
+            Correct
+          </span>
+
+          <strong id="testCorrect">
+            0
+          </strong>
+
+        </div>
+
+      </header>
+
+
+
+      <main class="test-stage">
+
+
+        <div class="test-question-meta">
 
           <span
             class="question-tag"
-            id="questionTag"
+            id="testQuestionTag"
           >
-            PREMISE + CONCLUSION
+            ARGUMENTS
           </span>
 
           <span
             class="difficulty"
-            id="difficulty"
+            id="testDifficulty"
           >
-            Difficulty: Rookie
+            Difficulty: Standard
           </span>
 
         </div>
 
 
-        <div class="question-content">
+
+        <div class="test-question-content">
 
           <p
             class="stimulus"
-            id="stimulus"
+            id="testStimulus"
           >
-            Every player selected for the All-Star team receives an invitation.
-            Luka was selected for the All-Star team.
+            Assessment stimulus.
           </p>
 
 
           <h2
             class="question-prompt"
-            id="questionPrompt"
+            id="testQuestionPrompt"
           >
-            Which statement must be true?
+            Assessment question.
           </h2>
 
         </div>
 
 
-        <!-- =========================================
-             ANSWERS
-        ========================================== -->
 
         <div
           class="answers"
-          id="answerContainer"
+          id="testAnswerContainer"
         >
-
-          <button
-            class="answer-button"
-            data-answer="A"
-          >
-
-            <span class="answer-letter">
-              A
-            </span>
-
-            <span class="answer-text">
-              Luka received an invitation.
-            </span>
-
-          </button>
-
-
-          <button
-            class="answer-button"
-            data-answer="B"
-          >
-
-            <span class="answer-letter">
-              B
-            </span>
-
-            <span class="answer-text">
-              Luka was the best player selected.
-            </span>
-
-          </button>
-
-
-          <button
-            class="answer-button"
-            data-answer="C"
-          >
-
-            <span class="answer-letter">
-              C
-            </span>
-
-            <span class="answer-text">
-              Every player who received an invitation was selected.
-            </span>
-
-          </button>
-
-
-          <button
-            class="answer-button"
-            data-answer="D"
-          >
-
-            <span class="answer-letter">
-              D
-            </span>
-
-            <span class="answer-text">
-              Luka might not have received an invitation.
-            </span>
-
-          </button>
-
         </div>
 
 
-        <!-- =========================================
-             SUBMIT
-        ========================================== -->
 
-        <div class="question-actions">
+        <div class="test-actions">
 
           <button
             class="submit-button"
-            id="submitAnswer"
+            id="submitTestAnswer"
             disabled
           >
             Lock In Answer
@@ -481,74 +1397,13 @@
 
         </div>
 
-      </article>
 
+      </main>
 
-      <!-- =========================================
-           FEEDBACK PANEL
-      ========================================== -->
+    </div>
 
-      <section
-        class="feedback-panel hidden"
-        id="feedbackPanel"
-      >
+  </section>
 
-        <div class="feedback-icon">
-          ✅
-        </div>
-
-        <div class="feedback-content">
-
-          <p class="feedback-label">
-            BUCKET
-          </p>
-
-          <h3 id="feedbackTitle">
-            That's the inference.
-          </h3>
-
-          <p id="feedbackExplanation">
-            Every selected player receives an invitation.
-            Luka was selected.
-            Therefore Luka must receive an invitation.
-          </p>
-
-
-          <div class="feedback-rewards">
-
-            <span>
-              +40 XP
-            </span>
-
-            <span>
-              🔥 Streak +1
-            </span>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- =========================================
-           NEXT QUESTION
-      ========================================== -->
-
-      <div class="next-row">
-
-        <button
-          class="next-button hidden"
-          id="nextQuestion"
-        >
-          Next Question →
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
 
 
   <!-- =========================================
@@ -562,10 +1417,11 @@
     </a>
 
     <span>
-      Loophole Training Prototype
+      Loophole Training
     </span>
 
   </footer>
+
 
 
   <!-- =========================================
