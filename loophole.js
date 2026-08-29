@@ -1,3 +1,100 @@
+// ============================================================
+// REASONING LEAGUE — PRIVATE ACCESS GATE
+// ============================================================
+
+// Change this to whatever password you want.
+const ACCESS_CODE = "CHANGE-ME";
+
+// How long access lasts:
+// sessionStorage = stays unlocked until the browser/tab session ends.
+const ACCESS_STORAGE_KEY = "reasoningLeagueAccess";
+
+
+// ------------------------------------------------------------
+// ACCESS GATE ELEMENTS
+// ------------------------------------------------------------
+
+const accessGate = document.getElementById("accessGate");
+const accessForm = document.getElementById("accessForm");
+const accessCodeInput = document.getElementById("accessCode");
+const accessError = document.getElementById("accessError");
+const accessGateCard = document.querySelector(".access-gate-card");
+
+
+// ------------------------------------------------------------
+// CHECK WHETHER THIS SESSION IS ALREADY UNLOCKED
+// ------------------------------------------------------------
+
+const alreadyUnlocked =
+  sessionStorage.getItem(ACCESS_STORAGE_KEY) === "granted";
+
+if (alreadyUnlocked && accessGate) {
+  accessGate.classList.add("hidden");
+}
+
+
+// ------------------------------------------------------------
+// HANDLE PASSWORD SUBMISSION
+// ------------------------------------------------------------
+
+if (accessForm) {
+
+  accessForm.addEventListener("submit", (event) => {
+
+    event.preventDefault();
+
+    const enteredCode = accessCodeInput.value.trim();
+
+
+    // CORRECT PASSWORD
+    if (enteredCode === ACCESS_CODE) {
+
+      sessionStorage.setItem(
+        ACCESS_STORAGE_KEY,
+        "granted"
+      );
+
+      accessError.classList.add("hidden");
+
+      accessGate.classList.add("access-granted");
+
+
+      // Wait for the CSS fade animation before removing gate.
+      setTimeout(() => {
+
+        accessGate.classList.add("hidden");
+
+      }, 300);
+
+      return;
+    }
+
+
+    // WRONG PASSWORD
+    accessError.classList.remove("hidden");
+
+    accessCodeInput.value = "";
+    accessCodeInput.focus();
+
+
+    // Restart shake animation.
+    accessGateCard.classList.remove("access-denied");
+
+    void accessGateCard.offsetWidth;
+
+    accessGateCard.classList.add("access-denied");
+
+
+    setTimeout(() => {
+
+      accessGateCard.classList.remove("access-denied");
+
+    }, 300);
+
+  });
+
+}
+
 /* =========================================================
    LOOPHOLE LEAGUE
    VERSION 3
