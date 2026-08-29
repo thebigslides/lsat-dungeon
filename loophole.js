@@ -1,171 +1,352 @@
-/* =========================================================
-   REASONING LEAGUE — MAIN ENGINE
-   ========================================================= */
+// ============================================================
+// REASONING LEAGUE — PRIVATE ACCESS GATE
+// ============================================================
 
-
-/* =========================================================
-   ACCESS GATE
-   ========================================================= */
-
-const ACCESS_HASH =
-  "fa3ee43681cc1754c37e2bd4fdc3a4067dc7c9c182d9f7a6524e9ff1a94499bd";
+// IMPORTANT:
+// Replace this placeholder with the 64-character SHA-256 hash
+// of your chosen password. Do NOT store the actual password here.
+const ACCESS_HASH = "fa3ee43681cc1754c37e2bd4fdc3a4067dc7c9c182d9f7a6524e9ff1a94499bd";
 
 const ACCESS_STORAGE_KEY = "reasoningLeagueAccess";
 
-const MAX_ACCESS_ATTEMPTS = 5;
-const ACCESS_LOCKOUT_MS = 30000;
+// Basic client-side throttling.
+// This discourages casual password guessing, but it is not
+// a substitute for real server-side authentication.
+const ACCESS_MAX_ATTEMPTS = 5;
+const ACCESS_LOCKOUT_MS = 30_000;
 
-let accessAttempts = 0;
-let accessLockedUntil = 0;
+const ACCESS_ATTEMPTS_KEY = "reasoningLeagueFailedAttempts";
+const ACCESS_LOCKOUT_KEY = "reasoningLeagueLockedUntil";
 
 
-async function hashText(text) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
+// ------------------------------------------------------------
+// ACCESS GATE ELEMENTS
+// ------------------------------------------------------------
 
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+const accessGate = document.getElementById("accessGate");
+const accessForm = document.getElementById("accessForm");
+const accessCodeInput = document.getElementById("accessCode");
+const accessError = document.getElementById("accessError");
+const accessGateCard = document.querySelector(".access-gate-card");
 
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(byte => byte.toString(16).padStart(2, "0"))
+
+// ------------------------------------------------------------
+// SHA-256
+// ------------------------------------------------------------
+
+async function sha256(text) {
+
+  const data =
+    new TextEncoder().encode(text);
+
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
+
+  return Array.from(
+    new Uint8Array(hashBuffer)
+  )
+    .map(byte =>
+      byte
+        .toString(16)
+        .padStart(2, "0")
+    )
     .join("");
 }
 
 
-function getAccessGate() {
-  return document.getElementById("accessGate");
+// ------------------------------------------------------------
+// ACCESS HELPERS
+// ------------------------------------------------------------
+
+function getFailedAttempts() {
+
+  return Number(
+    sessionStorage.getItem(
+      ACCESS_ATTEMPTS_KEY
+    ) || 0
+  );
 }
 
 
-function getAccessInput() {
-  return document.getElementById("accessPassword");
+function setFailedAttempts(count) {
+
+  sessionStorage.setItem(
+    ACCESS_ATTEMPTS_KEY,
+    String(count)
+  );
 }
 
 
-function getAccessError() {
-  return document.getElementById("accessError");
+function getLockedUntil() {
+
+  return Number(
+    sessionStorage.getItem(
+      ACCESS_LOCKOUT_KEY
+    ) || 0
+  );
 }
 
 
-function unlockSite() {
-  const gate = getAccessGate();
+function clearAccessFailures() {
 
-  if (gate) {
-    gate.classList.add("hidden");
-  }
-
-  document.body.classList.remove("access-locked");
-
-  sessionStorage.setItem(ACCESS_STORAGE_KEY, "granted");
-}
-
-
-function lockSite() {
-  const gate = getAccessGate();
-
-  if (gate) {
-    gate.classList.remove("hidden");
-  }
-
-  document.body.classList.add("access-locked");
-}
-
-
-function updateAccessError(message = "") {
-  const error = getAccessError();
-
-  if (error) {
-    error.textContent = message;
-  }
-}
-
-
-async function attemptAccess() {
-  const input = getAccessInput();
-
-  if (!input) return;
-
-  const now = Date.now();
-
-  if (now < accessLockedUntil) {
-    const seconds = Math.ceil((accessLockedUntil - now) / 1000);
-
-    updateAccessError(
-      `Too many attempts. Try again in ${seconds} second${seconds === 1 ? "" : "s"}.`
-    );
-
-    return;
-  }
-
-  const enteredPassword = input.value;
-
-  if (!enteredPassword) {
-    updateAccessError("Enter the access password.");
-    return;
-  }
-
-  const enteredHash = await hashText(enteredPassword);
-
-  if (enteredHash === ACCESS_HASH) {
-    accessAttempts = 0;
-    accessLockedUntil = 0;
-
-    updateAccessError("");
-    unlockSite();
-
-    input.value = "";
-
-    return;
-  }
-
-  accessAttempts += 1;
-
-  if (accessAttempts >= MAX_ACCESS_ATTEMPTS) {
-    accessAttempts = 0;
-    accessLockedUntil = Date.now() + ACCESS_LOCKOUT_MS;
-
-    updateAccessError("Too many attempts. Locked for 30 seconds.");
-
-    return;
-  }
-
-  const remaining = MAX_ACCESS_ATTEMPTS - accessAttempts;
-
-  updateAccessError(
-    `Incorrect password. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`
+  sessionStorage.removeItem(
+    ACCESS_ATTEMPTS_KEY
   );
 
-  input.select();
+  sessionStorage.removeItem(
+    ACCESS_LOCKOUT_KEY
+  );
 }
 
 
-function initializeAccessGate() {
-  const gate = getAccessGate();
-  const input = getAccessInput();
-  const button = document.getElementById("accessSubmit");
+function showAccessError(message) {
 
-  if (!gate) return;
-
-  const alreadyGranted =
-    sessionStorage.getItem(ACCESS_STORAGE_KEY) === "granted";
-
-  if (alreadyGranted) {
-    unlockSite();
-  } else {
-    lockSite();
-
-    setTimeout(() => {
-      input?.focus();
-    }, 100);
+  if (!accessError) {
+    return;
   }
 
-  button?.addEventListener("click", attemptAccess);
+  accessError.textContent =
+    message;
 
-  input?.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      attemptAccess();
-    }
-  });
+  accessError.classList.remove(
+    "hidden"
+  );
 }
+
+
+function shakeAccessGate() {
+
+  if (!accessGateCard) {
+    return;
+  }
+
+  accessGateCard.classList.remove(
+    "access-denied"
+  );
+
+  void accessGateCard.offsetWidth;
+
+  accessGateCard.classList.add(
+    "access-denied"
+  );
+
+  setTimeout(() => {
+
+    accessGateCard.classList.remove(
+      "access-denied"
+    );
+
+  }, 300);
+}
+
+
+function unlockAccessGate() {
+
+  sessionStorage.setItem(
+    ACCESS_STORAGE_KEY,
+    "granted"
+  );
+
+  clearAccessFailures();
+
+  if (accessError) {
+    accessError.classList.add(
+      "hidden"
+    );
+  }
+
+  if (!accessGate) {
+    return;
+  }
+
+  accessGate.classList.add(
+    "access-granted"
+  );
+
+  setTimeout(() => {
+
+    accessGate.classList.add(
+      "hidden"
+    );
+
+  }, 300);
+}
+
+
+// ------------------------------------------------------------
+// ALREADY UNLOCKED?
+// ------------------------------------------------------------
+
+const alreadyUnlocked =
+  sessionStorage.getItem(
+    ACCESS_STORAGE_KEY
+  ) === "granted";
+
+if (alreadyUnlocked && accessGate) {
+
+  accessGate.classList.add(
+    "hidden"
+  );
+}
+
+
+// ------------------------------------------------------------
+// HANDLE PASSWORD SUBMISSION
+// ------------------------------------------------------------
+
+if (accessForm) {
+
+  accessForm.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+
+      // If the hash has not been configured yet,
+      // fail closed instead of accidentally allowing access.
+      if (
+        ACCESS_HASH ===
+        "PASTE-YOUR-64-CHARACTER-SHA256-HASH-HERE"
+      ) {
+
+        showAccessError(
+          "ACCESS HASH NOT CONFIGURED"
+        );
+
+        shakeAccessGate();
+
+        return;
+      }
+
+
+      const now =
+        Date.now();
+
+      const lockedUntil =
+        getLockedUntil();
+
+
+      // Still in a temporary lockout.
+      if (lockedUntil > now) {
+
+        const secondsRemaining =
+          Math.ceil(
+            (lockedUntil - now) / 1000
+          );
+
+        showAccessError(
+          `TOO MANY ATTEMPTS — TRY AGAIN IN ${secondsRemaining}s`
+        );
+
+        shakeAccessGate();
+
+        return;
+      }
+
+
+      // Expired lockout: reset the counter.
+      if (lockedUntil !== 0) {
+
+        clearAccessFailures();
+      }
+
+
+      const enteredCode =
+        accessCodeInput.value.trim();
+
+      const enteredHash =
+        await sha256(
+          enteredCode
+        );
+
+
+      // CORRECT PASSWORD
+      if (enteredHash === ACCESS_HASH) {
+
+        accessCodeInput.value =
+          "";
+
+        unlockAccessGate();
+
+        return;
+      }
+
+
+      // WRONG PASSWORD
+      const failedAttempts =
+        getFailedAttempts() + 1;
+
+      setFailedAttempts(
+        failedAttempts
+      );
+
+      accessCodeInput.value =
+        "";
+
+      accessCodeInput.focus();
+
+      shakeAccessGate();
+
+
+      // Temporary lockout after repeated failures.
+      if (
+        failedAttempts >=
+        ACCESS_MAX_ATTEMPTS
+      ) {
+
+        const newLockedUntil =
+          Date.now() +
+          ACCESS_LOCKOUT_MS;
+
+        sessionStorage.setItem(
+          ACCESS_LOCKOUT_KEY,
+          String(newLockedUntil)
+        );
+
+        showAccessError(
+          "TOO MANY ATTEMPTS — LOCKED FOR 30 SECONDS"
+        );
+
+        return;
+      }
+
+
+      const attemptsRemaining =
+        ACCESS_MAX_ATTEMPTS -
+        failedAttempts;
+
+      showAccessError(
+        `ACCESS DENIED — ${attemptsRemaining} ATTEMPT${attemptsRemaining === 1 ? "" : "S"} REMAINING`
+      );
+
+    }
+  );
+}
+
+
+/* =========================================================
+   REASONING LEAGUE
+   VERSION 3
+
+   Learn → Check → Shoot → Feedback → Master
+
+   Includes:
+   - Local save system
+   - XP / levels
+   - Streaks
+   - Lesson progression
+   - Concept mastery
+   - Question history
+   - Basketball possessions
+   - Made shots
+   - Bricks
+   - Blocks
+   - Airballs
+   ========================================================= */
 
 
 /* =========================================================
@@ -179,60 +360,61 @@ const DEFAULT_PLAYER = {
   version: 3,
 
   xp: 0,
+  level: 1,
 
   streak: 0,
-
   bestStreak: 0,
 
-  totalQuestions: 0,
-
+  totalAnswered: 0,
   totalCorrect: 0,
 
-  lessonsCompleted: 0,
+  currentChapter: 1,
 
-  chapter1: {
-    lessons: {
-      "1-1": {
-        unlocked: true,
-        completed: false,
-        currentStep: 0,
-        bestMastery: 0
+  progress: {
+    chapter1: {
+      lessons: {
+        "1-1": {
+          unlocked: true,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-2": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-3": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-4": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        },
+
+        "1-5": {
+          unlocked: false,
+          completed: false,
+          mastery: 0,
+          attempts: 0
+        }
       },
 
-      "1-2": {
+      test: {
         unlocked: false,
-        completed: false,
-        currentStep: 0,
-        bestMastery: 0
-      },
-
-      "1-3": {
-        unlocked: false,
-        completed: false,
-        currentStep: 0,
-        bestMastery: 0
-      },
-
-      "1-4": {
-        unlocked: false,
-        completed: false,
-        currentStep: 0,
-        bestMastery: 0
-      },
-
-      "1-5": {
-        unlocked: false,
-        completed: false,
-        currentStep: 0,
-        bestMastery: 0
+        attempts: 0,
+        bestScore: 0,
+        passed: false
       }
-    },
-
-    test: {
-      unlocked: false,
-      attempts: 0,
-      bestScore: 0,
-      passed: false
     }
   },
 
@@ -244,95 +426,107 @@ const DEFAULT_PLAYER = {
     inferences: 0
   },
 
-  questionHistory: []
+  questionHistory: {}
 };
 
 
+/* =========================================================
+   SAVE HELPERS
+   ========================================================= */
+
 function cloneDefaultPlayer() {
-  return JSON.parse(JSON.stringify(DEFAULT_PLAYER));
+  return JSON.parse(
+    JSON.stringify(DEFAULT_PLAYER)
+  );
 }
 
 
 function loadPlayer() {
-  const freshPlayer = cloneDefaultPlayer();
+
+  const saved =
+    localStorage.getItem(SAVE_KEY);
+
+
+  if (!saved) {
+    return cloneDefaultPlayer();
+  }
+
 
   try {
-    const rawSave = localStorage.getItem(SAVE_KEY);
 
-    if (!rawSave) {
-      return freshPlayer;
-    }
+    const parsed =
+      JSON.parse(saved);
 
-    const saved = JSON.parse(rawSave);
+    const fresh =
+      cloneDefaultPlayer();
 
-    const merged = {
-      ...freshPlayer,
-      ...saved,
 
-      chapter1: {
-        ...freshPlayer.chapter1,
-        ...(saved.chapter1 || {}),
+    return {
+      ...fresh,
+      ...parsed,
 
-        lessons: {
-          ...freshPlayer.chapter1.lessons,
-          ...(saved.chapter1?.lessons || {})
-        },
+      version: 3,
 
-        test: {
-          ...freshPlayer.chapter1.test,
-          ...(saved.chapter1?.test || {})
+      progress: {
+        ...fresh.progress,
+        ...(parsed.progress || {}),
+
+        chapter1: {
+          ...fresh.progress.chapter1,
+          ...(parsed.progress?.chapter1 || {}),
+
+          lessons: {
+            ...fresh.progress.chapter1.lessons,
+            ...(parsed.progress?.chapter1?.lessons || {})
+          },
+
+          test: {
+            ...fresh.progress.chapter1.test,
+            ...(parsed.progress?.chapter1?.test || {})
+          }
         }
       },
 
       conceptMastery: {
-        ...freshPlayer.conceptMastery,
-        ...(saved.conceptMastery || {})
+        ...fresh.conceptMastery,
+        ...(parsed.conceptMastery || {})
       },
 
-      questionHistory: Array.isArray(saved.questionHistory)
-        ? saved.questionHistory
-        : []
+      questionHistory: {
+        ...(parsed.questionHistory || {})
+      }
     };
 
-    for (const lessonID of Object.keys(freshPlayer.chapter1.lessons)) {
-      merged.chapter1.lessons[lessonID] = {
-        ...freshPlayer.chapter1.lessons[lessonID],
-        ...(saved.chapter1?.lessons?.[lessonID] || {})
-      };
-    }
-
-    return merged;
-
   } catch (error) {
-    console.error("Could not load Reasoning League save:", error);
 
-    return freshPlayer;
+    console.error(
+      "Could not load save:",
+      error
+    );
+
+    return cloneDefaultPlayer();
   }
 }
 
 
 function savePlayer() {
-  try {
-    localStorage.setItem(
-      SAVE_KEY,
-      JSON.stringify(player)
-    );
-  } catch (error) {
-    console.error("Could not save Reasoning League progress:", error);
-  }
+
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify(player)
+  );
 }
 
 
-let player = loadPlayer();
+let player =
+  loadPlayer();
 
 
 /* =========================================================
    LESSON DATA
 
-   Lesson content now lives in separate chapter files.
-
-   IMPORTANT:
-   js/lessons/chapter1.js must load BEFORE loophole.js.
+   Lesson content lives in separate chapter files.
+   chapter1.js must load BEFORE loophole.js.
    ========================================================= */
 
 const lessons = {
@@ -340,225 +534,626 @@ const lessons = {
 };
 
 
-if (!window.chapter1Lessons) {
-  console.warn(
-    "Reasoning League: chapter1.js was not loaded before loophole.js."
-  );
-}
-
-
 /* =========================================================
-   DOM REFERENCES
+   DOM REFERENCES — PLAYER
    ========================================================= */
 
-const dashboardScreen =
-  document.getElementById("dashboardScreen");
-
-const lessonScreen =
-  document.getElementById("lessonScreen");
+const playerLevel =
+  document.querySelector("#playerLevel");
 
 const playerXP =
-  document.getElementById("playerXP");
+  document.querySelector("#playerXP");
 
 const playerStreak =
-  document.getElementById("playerStreak");
+  document.querySelector("#playerStreak");
 
-const playerAccuracy =
-  document.getElementById("playerAccuracy");
+const totalAnswered =
+  document.querySelector("#totalAnswered");
 
-const playerLessons =
-  document.getElementById("playerLessons");
+const overallAccuracy =
+  document.querySelector("#overallAccuracy");
 
-const currentObjective =
-  document.getElementById("currentObjective");
-
-const lessonCards =
-  document.querySelectorAll(".lesson-card");
-
-const chapterTestCard =
-  document.getElementById("chapterTestCard");
-
-const startChapterTest =
-  document.getElementById("startChapterTest");
-
-const lessonEyebrow =
-  document.getElementById("lessonEyebrow");
-
-const lessonTitle =
-  document.getElementById("lessonTitle");
-
-const lessonProgressText =
-  document.getElementById("lessonProgressText");
-
-const lessonProgressFill =
-  document.getElementById("lessonProgressFill");
-
-const lessonBody =
-  document.getElementById("lessonBody");
-
-const lessonBackButton =
-  document.getElementById("lessonBackButton");
-
-const lessonNextButton =
-  document.getElementById("lessonNextButton");
-
-const basketballCourt =
-  document.getElementById("basketballCourt");
-
-const basketballBall =
-  document.getElementById("basketballBall");
-
-const basketballFeedback =
-  document.getElementById("basketballFeedback");
-
-const basketballFeedbackLabel =
-  document.getElementById("basketballFeedbackLabel");
-
-const basketballFeedbackTitle =
-  document.getElementById("basketballFeedbackTitle");
-
-const basketballFeedbackText =
-  document.getElementById("basketballFeedbackText");
-
-const basketballShootButton =
-  document.getElementById("basketballShootButton");
-
-const basketballNextButton =
-  document.getElementById("basketballNextButton");
-
-const answerContainer =
-  document.getElementById("answerContainer");
-
-const questionPrompt =
-  document.getElementById("questionPrompt");
-
-const questionStimulus =
-  document.getElementById("questionStimulus");
+const bestStreak =
+  document.querySelector("#bestStreak");
 
 
 /* =========================================================
-   ACTIVE LESSON STATE
+   DOM REFERENCES — DASHBOARD
+   ========================================================= */
+
+const courseProgressPercent =
+  document.querySelector("#courseProgressPercent");
+
+const courseProgressBar =
+  document.querySelector("#courseProgressBar");
+
+const chapterMastery =
+  document.querySelector("#chapterMastery");
+
+const chapterMasteryBar =
+  document.querySelector("#chapterMasteryBar");
+
+const lessonProgress =
+  document.querySelector("#lessonProgress");
+
+const currentObjective =
+  document.querySelector("#currentObjective");
+
+const continueTraining =
+  document.querySelector("#continueTraining");
+
+
+/* =========================================================
+   DOM REFERENCES — MASTERY
+   ========================================================= */
+
+const argumentsMastery =
+  document.querySelector("#argumentsMastery");
+
+const argumentsMasteryBar =
+  document.querySelector("#argumentsMasteryBar");
+
+const premisesMastery =
+  document.querySelector("#premisesMastery");
+
+const premisesMasteryBar =
+  document.querySelector("#premisesMasteryBar");
+
+const conclusionsMastery =
+  document.querySelector("#conclusionsMastery");
+
+const conclusionsMasteryBar =
+  document.querySelector("#conclusionsMasteryBar");
+
+const premiseSetsMastery =
+  document.querySelector("#premiseSetsMastery");
+
+const premiseSetsMasteryBar =
+  document.querySelector("#premiseSetsMasteryBar");
+
+const inferencesMastery =
+  document.querySelector("#inferencesMastery");
+
+const inferencesMasteryBar =
+  document.querySelector("#inferencesMasteryBar");
+
+
+/* =========================================================
+   DOM REFERENCES — LESSON
+   ========================================================= */
+
+const lessonScreen =
+  document.querySelector("#lessonScreen");
+
+const exitLesson =
+  document.querySelector("#exitLesson");
+
+const lessonProgressText =
+  document.querySelector("#lessonProgressText");
+
+const lessonScreenProgressBar =
+  document.querySelector("#lessonScreenProgressBar");
+
+const lessonStageType =
+  document.querySelector("#lessonStageType");
+
+const lessonStageTitle =
+  document.querySelector("#lessonStageTitle");
+
+const lessonBody =
+  document.querySelector("#lessonBody");
+
+const interactionArea =
+  document.querySelector("#interactionArea");
+
+const lessonFeedback =
+  document.querySelector("#lessonFeedback");
+
+const lessonFeedbackIcon =
+  document.querySelector("#lessonFeedbackIcon");
+
+const lessonFeedbackLabel =
+  document.querySelector("#lessonFeedbackLabel");
+
+const lessonFeedbackTitle =
+  document.querySelector("#lessonFeedbackTitle");
+
+const lessonFeedbackText =
+  document.querySelector("#lessonFeedbackText");
+
+const previousLessonStep =
+  document.querySelector("#previousLessonStep");
+
+const nextLessonStep =
+  document.querySelector("#nextLessonStep");
+
+const stepCounter =
+  document.querySelector("#stepCounter");
+
+
+/* =========================================================
+   DOM REFERENCES — CHAPTER TEST
+   ========================================================= */
+
+const chapterTestCard =
+  document.querySelector("#chapterTestCard");
+
+const startChapterTest =
+  document.querySelector("#startChapterTest");
+
+
+/* =========================================================
+   DOM REFERENCES — BASKETBALL
+   ========================================================= */
+
+const basketballStage =
+  document.querySelector("#basketballStage");
+
+const pixelCourt =
+  document.querySelector("#pixelCourt");
+
+const pixelPlayer =
+  document.querySelector("#pixelPlayer");
+
+const pixelDefender =
+  document.querySelector("#pixelDefender");
+
+const pixelBall =
+  document.querySelector("#pixelBall");
+
+const pixelHoop =
+  document.querySelector("#pixelHoop");
+
+const shotResult =
+  document.querySelector("#shotResult");
+
+const playerScore =
+  document.querySelector("#playerScore");
+
+const opponentScore =
+  document.querySelector("#opponentScore");
+
+const possessionNumber =
+  document.querySelector("#possessionNumber");
+
+
+/* =========================================================
+   CURRENT LESSON STATE
    ========================================================= */
 
 let activeLessonID = null;
 
 let activeLesson = null;
 
-let activeStepIndex = 0;
+let currentStepIndex = 0;
 
-let activeLessonCorrect = 0;
+let currentSelection = null;
 
-let activeLessonQuestions = 0;
+let currentQuestionAnswered = false;
 
-let selectedAnswerIndex = null;
+let lessonCorrect = 0;
 
-let questionLocked = false;
+let lessonQuestionsAnswered = 0;
 
 
 /* =========================================================
-   GENERAL HELPERS
+   BASKETBALL GAME STATE
    ========================================================= */
 
-function clamp(value, min, max) {
-  return Math.min(
-    Math.max(value, min),
-    max
-  );
+let gamePlayerScore = 0;
+
+let gameOpponentScore = 0;
+
+let gamePossession = 1;
+
+let shotAnimationPlaying = false;
+
+
+/* =========================================================
+   UTILITY
+   ========================================================= */
+
+function wait(milliseconds) {
+
+  return new Promise(resolve => {
+
+    setTimeout(
+      resolve,
+      milliseconds
+    );
+
+  });
 }
 
 
-function calculateAccuracy() {
-  if (player.totalQuestions === 0) {
-    return 0;
+/* =========================================================
+   PLAYER LEVEL
+   ========================================================= */
+
+function calculatePlayerLevel() {
+
+  return Math.floor(
+    player.xp / 500
+  ) + 1;
+}
+
+
+/* =========================================================
+   PLAYER HUD
+   ========================================================= */
+
+function renderPlayerHUD() {
+
+  player.level =
+    calculatePlayerLevel();
+
+
+  playerLevel.textContent =
+    player.level;
+
+
+  playerXP.textContent =
+    player.xp.toLocaleString();
+
+
+  playerStreak.textContent =
+    `🔥 ${player.streak}`;
+
+
+  totalAnswered.textContent =
+    player.totalAnswered;
+
+
+  bestStreak.textContent =
+    player.bestStreak;
+
+
+  if (player.totalAnswered === 0) {
+
+    overallAccuracy.textContent =
+      "—";
+
+  } else {
+
+    const accuracy =
+      Math.round(
+        (
+          player.totalCorrect /
+          player.totalAnswered
+        ) * 100
+      );
+
+
+    overallAccuracy.textContent =
+      `${accuracy}%`;
   }
+}
+
+
+/* =========================================================
+   CHAPTER PROGRESS
+   ========================================================= */
+
+function calculateCompletedLessons() {
+
+  const lessonData =
+    player.progress.chapter1.lessons;
+
+
+  return Object.values(
+    lessonData
+  )
+    .filter(
+      lesson => lesson.completed
+    )
+    .length;
+}
+
+
+function calculateChapterProgress() {
+
+  const completed =
+    calculateCompletedLessons();
+
 
   return Math.round(
-    (player.totalCorrect / player.totalQuestions) * 100
+    (completed / 5) * 100
   );
 }
 
 
-function calculateLessonMastery() {
-  if (activeLessonQuestions === 0) {
-    return 100;
-  }
+function renderChapterProgress() {
 
-  return Math.round(
-    (activeLessonCorrect / activeLessonQuestions) * 100
-  );
+  const completed =
+    calculateCompletedLessons();
+
+  const progress =
+    calculateChapterProgress();
+
+
+  lessonProgress.textContent =
+    `${completed} / 5 Complete`;
+
+
+  chapterMastery.textContent =
+    `${progress}%`;
+
+
+  chapterMasteryBar.style.width =
+    `${progress}%`;
+
+
+  courseProgressPercent.textContent =
+    `${progress}%`;
+
+
+  courseProgressBar.style.width =
+    `${progress}%`;
 }
 
 
-function getLessonProgress(id) {
-  return player.chapter1.lessons[id];
+/* =========================================================
+   CONCEPT MASTERY
+   ========================================================= */
+
+function renderConceptMastery() {
+
+  const mastery =
+    player.conceptMastery;
+
+
+  argumentsMastery.textContent =
+    `${mastery.arguments}%`;
+
+  argumentsMasteryBar.style.width =
+    `${mastery.arguments}%`;
+
+
+  premisesMastery.textContent =
+    `${mastery.premises}%`;
+
+  premisesMasteryBar.style.width =
+    `${mastery.premises}%`;
+
+
+  conclusionsMastery.textContent =
+    `${mastery.conclusions}%`;
+
+  conclusionsMasteryBar.style.width =
+    `${mastery.conclusions}%`;
+
+
+  premiseSetsMastery.textContent =
+    `${mastery.premiseSets}%`;
+
+  premiseSetsMasteryBar.style.width =
+    `${mastery.premiseSets}%`;
+
+
+  inferencesMastery.textContent =
+    `${mastery.inferences}%`;
+
+  inferencesMasteryBar.style.width =
+    `${mastery.inferences}%`;
 }
 
 
-function getLessonTitle(id) {
-  return lessons[id]?.title || id;
+/* =========================================================
+   LESSON CARDS
+   ========================================================= */
+
+function renderLessonCards() {
+
+  const lessonData =
+    player.progress.chapter1.lessons;
+
+
+  document
+    .querySelectorAll(".lesson-card")
+    .forEach(card => {
+
+      const id =
+        card.dataset.lesson;
+
+      const progress =
+        lessonData[id];
+
+
+      if (!progress) {
+        return;
+      }
+
+
+      card.classList.remove(
+        "available",
+        "locked",
+        "completed"
+      );
+
+
+      const button =
+        card.querySelector(
+          ".lesson-button"
+        );
+
+      const icon =
+        card.querySelector(
+          ".lesson-status-icon"
+        );
+
+
+      if (progress.completed) {
+
+        card.classList.add(
+          "completed"
+        );
+
+        icon.textContent =
+          "✓";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Review Lesson";
+
+        button.dataset.startLesson =
+          id;
+
+      }
+
+      else if (progress.unlocked) {
+
+        card.classList.add(
+          "available"
+        );
+
+        icon.textContent =
+          "▶";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          progress.attempts > 0
+            ? "Continue Lesson"
+            : "Start Lesson";
+
+        button.dataset.startLesson =
+          id;
+
+      }
+
+      else {
+
+        card.classList.add(
+          "locked"
+        );
+
+        icon.textContent =
+          "🔒";
+
+        button.disabled =
+          true;
+
+        button.textContent =
+          "Locked";
+      }
+    });
 }
 
 
-function getLessonNumber(id) {
-  return lessons[id]?.number || id;
-}
+/* =========================================================
+   CURRENT OBJECTIVE
+   ========================================================= */
+
+function renderCurrentObjective() {
+
+  const lessonData =
+    player.progress.chapter1.lessons;
 
 
-function getCurrentUnlockedLesson() {
   const order = [
-    "1-1",
-    "1-2",
-    "1-3",
-    "1-4",
-    "1-5"
+    ["1-1", "What Is an Argument?"],
+    ["1-2", "Premises"],
+    ["1-3", "Conclusions"],
+    ["1-4", "Premise Sets"],
+    ["1-5", "Valid & Invalid Conclusions"]
   ];
 
-  for (const id of order) {
-    const progress = getLessonProgress(id);
+
+  for (const [id, title] of order) {
 
     if (
-      progress &&
-      progress.unlocked &&
-      !progress.completed
+      lessonData[id].unlocked &&
+      !lessonData[id].completed
     ) {
-      return id;
+
+      currentObjective.textContent =
+        `Complete Lesson ${id.replace("-", ".")} — ${title}`;
+
+
+      continueTraining.dataset.lesson =
+        id;
+
+
+      continueTraining.disabled =
+        !lessons[id];
+
+
+      return;
     }
   }
 
-  return null;
+
+  if (
+    player.progress.chapter1.test.unlocked
+  ) {
+
+    currentObjective.textContent =
+      "Complete the Chapter 1 Championship";
+
+
+    continueTraining.dataset.lesson =
+      "";
+
+
+    continueTraining.disabled =
+      false;
+
+
+    return;
+  }
+
+
+  currentObjective.textContent =
+    "Chapter 1 Complete";
 }
 
 
 /* =========================================================
-   SCREEN CONTROL
+   CHAPTER TEST LOCK
    ========================================================= */
 
-function showDashboard() {
-  dashboardScreen?.classList.remove("hidden");
+function updateChapterTestUnlock() {
 
-  lessonScreen?.classList.add("hidden");
-
-  activeLessonID = null;
-  activeLesson = null;
-
-  renderDashboard();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
+  const allComplete =
+    Object.values(
+      player.progress.chapter1.lessons
+    )
+      .every(
+        lesson => lesson.completed
+      );
 
 
-function showLessonScreen() {
-  dashboardScreen?.classList.add("hidden");
+  player.progress.chapter1.test.unlocked =
+    allComplete;
 
-  lessonScreen?.classList.remove("hidden");
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  if (allComplete) {
+
+    chapterTestCard.classList.remove(
+      "locked"
+    );
+
+    startChapterTest.disabled =
+      false;
+
+    startChapterTest.textContent =
+      "Play Championship";
+
+  } else {
+
+    chapterTestCard.classList.add(
+      "locked"
+    );
+
+    startChapterTest.disabled =
+      true;
+
+    startChapterTest.textContent =
+      "Complete Lessons";
+  }
 }
 
 
@@ -567,228 +1162,434 @@ function showLessonScreen() {
    ========================================================= */
 
 function renderDashboard() {
-  renderPlayerStats();
+
+  renderPlayerHUD();
+
+  renderChapterProgress();
+
+  renderConceptMastery();
 
   renderLessonCards();
 
-  renderCurrentObjective();
-
   updateChapterTestUnlock();
 
-  renderChapterTest();
-}
+  renderCurrentObjective();
 
-
-function renderPlayerStats() {
-  if (playerXP) {
-    playerXP.textContent = player.xp;
-  }
-
-  if (playerStreak) {
-    playerStreak.textContent = player.streak;
-  }
-
-  if (playerAccuracy) {
-    playerAccuracy.textContent =
-      `${calculateAccuracy()}%`;
-  }
-
-  if (playerLessons) {
-    playerLessons.textContent =
-      player.lessonsCompleted;
-  }
-}
-
-
-function renderCurrentObjective() {
-  if (!currentObjective) return;
-
-  const nextLesson = getCurrentUnlockedLesson();
-
-  if (nextLesson) {
-    const title = getLessonTitle(nextLesson);
-
-    currentObjective.innerHTML = `
-      <span class="objective-label">
-        CURRENT OBJECTIVE
-      </span>
-
-      <strong>
-        ${getLessonNumber(nextLesson)} —
-        ${title}
-      </strong>
-    `;
-
-    return;
-  }
-
-  if (player.chapter1.test.unlocked) {
-    currentObjective.innerHTML = `
-      <span class="objective-label">
-        CURRENT OBJECTIVE
-      </span>
-
-      <strong>
-        Chapter 1 Championship
-      </strong>
-    `;
-
-    return;
-  }
-
-  currentObjective.innerHTML = `
-    <span class="objective-label">
-      CURRENT OBJECTIVE
-    </span>
-
-    <strong>
-      Complete Chapter 1
-    </strong>
-  `;
-}
-
-
-function renderLessonCards() {
-  lessonCards.forEach(card => {
-    const id =
-      card.dataset.lesson ||
-      card.dataset.lessonId ||
-      card.getAttribute("data-lesson");
-
-    if (!id) return;
-
-    const progress = getLessonProgress(id);
-
-    if (!progress) return;
-
-    card.classList.remove(
-      "locked",
-      "available",
-      "completed"
-    );
-
-    if (progress.completed) {
-      card.classList.add("completed");
-    } else if (progress.unlocked) {
-      card.classList.add("available");
-    } else {
-      card.classList.add("locked");
-    }
-
-    const button =
-      card.querySelector("[data-start-lesson]") ||
-      card.querySelector("button");
-
-    if (button) {
-      button.disabled =
-        !progress.unlocked &&
-        !progress.completed;
-
-      if (progress.completed) {
-        button.textContent = "Review";
-      } else if (
-        progress.currentStep &&
-        progress.currentStep > 0
-      ) {
-        button.textContent = "Continue";
-      } else if (progress.unlocked) {
-        button.textContent = "Start";
-      } else {
-        button.textContent = "Locked";
-      }
-    }
-
-    const mastery =
-      card.querySelector(
-        "[data-lesson-mastery]"
-      );
-
-    if (mastery) {
-      mastery.textContent =
-        `${progress.bestMastery || 0}%`;
-    }
-  });
+  savePlayer();
 }
 
 
 /* =========================================================
-   CHAPTER TEST
+   BASKETBALL COURT RESET
    ========================================================= */
 
-function updateChapterTestUnlock() {
-  const requiredLessons = [
-    "1-1",
-    "1-2",
-    "1-3",
-    "1-4",
-    "1-5"
-  ];
+function resetBasketballCourt() {
 
-  const allComplete =
-    requiredLessons.every(id =>
-      player.chapter1.lessons[id]?.completed
-    );
-
-  if (allComplete) {
-    player.chapter1.test.unlocked = true;
-
-    savePlayer();
+  if (!basketballStage) {
+    return;
   }
+
+
+  pixelPlayer.classList.remove(
+    "shooting",
+    "celebrate"
+  );
+
+
+  pixelDefender.classList.remove(
+    "blocking"
+  );
+
+
+  pixelBall.classList.remove(
+    "shot-made",
+    "shot-miss",
+    "shot-blocked",
+    "shot-airball"
+  );
+
+
+  pixelHoop.classList.remove(
+    "swish"
+  );
+
+
+  shotResult.classList.remove(
+    "result-pop",
+    "made",
+    "missed"
+  );
+
+
+  shotResult.classList.add(
+    "hidden"
+  );
+
+
+  shotResult.textContent =
+    "";
+
+
+  shotAnimationPlaying =
+    false;
 }
 
 
-function renderChapterTest() {
-  if (!chapterTestCard) return;
+/* =========================================================
+   SHOW / HIDE COURT
+   ========================================================= */
 
-  const test =
-    player.chapter1.test;
+function showBasketballCourt() {
 
-  chapterTestCard.classList.toggle(
-    "locked",
-    !test.unlocked
-  );
-
-  chapterTestCard.classList.toggle(
-    "available",
-    test.unlocked && !test.passed
-  );
-
-  chapterTestCard.classList.toggle(
-    "completed",
-    test.passed
-  );
-
-  if (startChapterTest) {
-    startChapterTest.disabled =
-      !test.unlocked;
-
-    if (test.passed) {
-      startChapterTest.textContent =
-        "Replay Championship";
-    } else if (test.unlocked) {
-      startChapterTest.textContent =
-        "Start Championship";
-    } else {
-      startChapterTest.textContent =
-        "Locked";
-    }
+  if (!basketballStage) {
+    return;
   }
+
+
+  resetBasketballCourt();
+
+
+  basketballStage.classList.remove(
+    "hidden"
+  );
+
+
+  playerScore.textContent =
+    gamePlayerScore;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  possessionNumber.textContent =
+    gamePossession;
 }
 
 
-function startAssessmentPlaceholder() {
-  alert(
-    "Chapter Championship engine is coming next."
+function hideBasketballCourt() {
+
+  if (!basketballStage) {
+    return;
+  }
+
+
+  basketballStage.classList.add(
+    "hidden"
+  );
+
+
+  resetBasketballCourt();
+}
+
+
+/* =========================================================
+   SHOT RESULT
+   ========================================================= */
+
+function showShotResult(
+  text,
+  made
+) {
+
+  shotResult.textContent =
+    text;
+
+
+  shotResult.classList.remove(
+    "hidden",
+    "made",
+    "missed",
+    "result-pop"
+  );
+
+
+  shotResult.classList.add(
+    made
+      ? "made"
+      : "missed"
+  );
+
+
+  void shotResult.offsetWidth;
+
+
+  shotResult.classList.add(
+    "result-pop"
   );
 }
 
 
 /* =========================================================
-   LESSON OPENING
+   MADE SHOT
+   ========================================================= */
+
+async function playMadeShot() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-made"
+  );
+
+
+  pixelHoop.classList.add(
+    "swish"
+  );
+
+
+  await wait(970);
+
+
+  gamePlayerScore +=
+    2;
+
+
+  playerScore.textContent =
+    gamePlayerScore;
+
+
+  showShotResult(
+    "BUCKET!",
+    true
+  );
+
+
+  pixelPlayer.classList.remove(
+    "shooting"
+  );
+
+
+  pixelPlayer.classList.add(
+    "celebrate"
+  );
+
+
+  await wait(650);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   WRONG SHOT SELECTOR
+   ========================================================= */
+
+async function playMissedShot() {
+
+  const outcomes = [
+    "brick",
+    "block",
+    "airball"
+  ];
+
+
+  const outcome =
+    outcomes[
+      Math.floor(
+        Math.random() *
+        outcomes.length
+      )
+    ];
+
+
+  if (outcome === "block") {
+
+    await playBlockedShot();
+
+    return;
+  }
+
+
+  if (outcome === "airball") {
+
+    await playAirball();
+
+    return;
+  }
+
+
+  await playBrick();
+}
+
+
+/* =========================================================
+   BRICK
+   ========================================================= */
+
+async function playBrick() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-miss"
+  );
+
+
+  await wait(970);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "BRICK!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   BLOCK
+   ========================================================= */
+
+async function playBlockedShot() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(170);
+
+
+  pixelDefender.classList.add(
+    "blocking"
+  );
+
+
+  pixelBall.classList.add(
+    "shot-blocked"
+  );
+
+
+  await wait(680);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "BLOCKED!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   AIRBALL
+   ========================================================= */
+
+async function playAirball() {
+
+  resetBasketballCourt();
+
+  shotAnimationPlaying =
+    true;
+
+
+  pixelPlayer.classList.add(
+    "shooting"
+  );
+
+
+  await wait(180);
+
+
+  pixelBall.classList.add(
+    "shot-airball"
+  );
+
+
+  await wait(970);
+
+
+  gameOpponentScore +=
+    2;
+
+
+  opponentScore.textContent =
+    gameOpponentScore;
+
+
+  showShotResult(
+    "AIRBALL!",
+    false
+  );
+
+
+  await wait(600);
+
+
+  shotAnimationPlaying =
+    false;
+}
+
+
+/* =========================================================
+   OPEN LESSON
    ========================================================= */
 
 function openLesson(id) {
+
   if (!lessons[id]) {
+
     alert(
       "This lesson hasn't been built yet."
     );
@@ -796,704 +1597,799 @@ function openLesson(id) {
     return;
   }
 
-  const progress =
-    getLessonProgress(id);
 
-  if (
-    !progress?.unlocked &&
-    !progress?.completed
-  ) {
+  const progress =
+    player.progress.chapter1.lessons[id];
+
+
+  if (!progress.unlocked) {
     return;
   }
 
-  activeLessonID = id;
-  activeLesson = lessons[id];
 
-  activeLessonCorrect = 0;
-  activeLessonQuestions = 0;
+  activeLessonID =
+    id;
 
-  selectedAnswerIndex = null;
-  questionLocked = false;
 
-  if (progress.completed) {
-    activeStepIndex = 0;
-  } else {
-    activeStepIndex =
-      clamp(
-        progress.currentStep || 0,
-        0,
-        activeLesson.steps.length - 1
-      );
-  }
+  activeLesson =
+    lessons[id];
 
-  showLessonScreen();
+
+  currentStepIndex =
+    0;
+
+
+  currentSelection =
+    null;
+
+
+  currentQuestionAnswered =
+    false;
+
+
+  lessonCorrect =
+    0;
+
+
+  lessonQuestionsAnswered =
+    0;
+
+
+  gamePlayerScore =
+    0;
+
+
+  gameOpponentScore =
+    0;
+
+
+  gamePossession =
+    1;
+
+
+  resetBasketballCourt();
+
+
+  progress.attempts++;
+
+
+  savePlayer();
+
+
+  lessonScreen.classList.remove(
+    "hidden"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
 
   renderLessonStep();
 }
 
 
 /* =========================================================
-   LESSON RENDERING
+   CLOSE LESSON
    ========================================================= */
 
-function renderLessonStep() {
-  if (
-    !activeLesson ||
-    !activeLesson.steps?.length
-  ) {
+function closeLesson() {
+
+  if (shotAnimationPlaying) {
     return;
   }
 
-  const step =
-    activeLesson.steps[activeStepIndex];
 
-  if (!step) return;
-
-  renderLessonHeader(step);
-
-  resetQuestionUI();
-
-  switch (step.type) {
-    case "learn":
-      renderLearnStep(step);
-      break;
-
-    case "question":
-      renderQuestionStep(step);
-      break;
-
-    case "complete":
-      renderCompleteStep(step);
-      break;
-
-    default:
-      console.warn(
-        "Unknown lesson step type:",
-        step.type
-      );
-  }
-
-  saveCurrentLessonStep();
-}
+  hideBasketballCourt();
 
 
-function renderLessonHeader(step) {
-  if (lessonEyebrow) {
-    lessonEyebrow.textContent =
-      `LESSON ${activeLesson.number}`;
-  }
-
-  if (lessonTitle) {
-    lessonTitle.textContent =
-      activeLesson.title;
-  }
-
-  const current =
-    activeStepIndex + 1;
-
-  const total =
-    activeLesson.steps.length;
-
-  if (lessonProgressText) {
-    lessonProgressText.textContent =
-      `${current} / ${total}`;
-  }
-
-  if (lessonProgressFill) {
-    const percentage =
-      (current / total) * 100;
-
-    lessonProgressFill.style.width =
-      `${percentage}%`;
-  }
-
-  if (lessonBackButton) {
-    lessonBackButton.disabled =
-      activeStepIndex === 0;
-  }
-
-  if (lessonNextButton) {
-    lessonNextButton.classList.add(
-      "hidden"
-    );
-  }
-}
-
-
-function renderLearnStep(step) {
-  if (!lessonBody) return;
-
-  lessonBody.innerHTML = `
-    <div class="lesson-content">
-      <p class="eyebrow">
-        FILM ROOM
-      </p>
-
-      <h2>
-        ${step.title || ""}
-      </h2>
-
-      <div class="lesson-copy">
-        ${step.html || ""}
-      </div>
-
-      <button
-        class="primary-button lesson-continue-button"
-        type="button"
-      >
-        Continue
-      </button>
-    </div>
-  `;
-
-  const button =
-    lessonBody.querySelector(
-      ".lesson-continue-button"
-    );
-
-  button?.addEventListener(
-    "click",
-    nextLessonStep
+  lessonScreen.classList.add(
+    "hidden"
   );
-}
 
 
-function renderQuestionStep(step) {
-  if (!lessonBody) return;
-
-  selectedAnswerIndex = null;
-  questionLocked = false;
-
-  const answers =
-    Array.isArray(step.answers)
-      ? step.answers
-      : [];
-
-  lessonBody.innerHTML = `
-    <div class="lesson-content question-step">
-
-      <p class="eyebrow">
-        ${
-          step.drill
-            ? "GAME SITUATION"
-            : "KNOWLEDGE CHECK"
-        }
-      </p>
-
-      <h2>
-        ${step.title || ""}
-      </h2>
-
-      <div class="question-card">
-
-        <p class="question-prompt">
-          ${step.prompt || ""}
-        </p>
-
-        ${
-          step.stimulus
-            ? `
-              <div class="stimulus-box">
-                ${step.stimulus}
-              </div>
-            `
-            : ""
-        }
-
-        <div class="answer-list">
-
-          ${answers
-            .map(
-              (answer, index) => `
-                <button
-                  class="answer-choice"
-                  type="button"
-                  data-answer-index="${index}"
-                >
-                  <span class="answer-letter">
-                    ${String.fromCharCode(65 + index)}
-                  </span>
-
-                  <span class="answer-text">
-                    ${answer}
-                  </span>
-                </button>
-              `
-            )
-            .join("")}
-
-        </div>
-
-        <button
-          class="primary-button shoot-answer-button"
-          type="button"
-          disabled
-        >
-          Shoot
-        </button>
-
-        <div
-          class="question-feedback hidden"
-          aria-live="polite"
-        >
-          <span class="feedback-label"></span>
-
-          <h3 class="feedback-title"></h3>
-
-          <p class="feedback-text"></p>
-
-          <button
-            class="primary-button next-possession-button"
-            type="button"
-          >
-            Next Possession
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  const choices =
-    lessonBody.querySelectorAll(
-      ".answer-choice"
-    );
-
-  const shootButton =
-    lessonBody.querySelector(
-      ".shoot-answer-button"
-    );
-
-  choices.forEach(choice => {
-    choice.addEventListener(
-      "click",
-      () => {
-        if (questionLocked) return;
-
-        choices.forEach(item =>
-          item.classList.remove("selected")
-        );
-
-        choice.classList.add("selected");
-
-        selectedAnswerIndex =
-          Number(
-            choice.dataset.answerIndex
-          );
-
-        shootButton.disabled = false;
-      }
-    );
-  });
-
-  shootButton?.addEventListener(
-    "click",
-    () => submitQuestion(step)
-  );
-}
+  document.body.style.overflow =
+    "";
 
 
-function renderCompleteStep(step) {
-  completeLesson();
+  activeLessonID =
+    null;
 
-  if (!lessonBody) return;
 
-  lessonBody.innerHTML = `
-    <div class="lesson-content">
-      ${step.html || ""}
+  activeLesson =
+    null;
 
-      <button
-        class="primary-button return-dashboard-button"
-        type="button"
-      >
-        Return to Chapter
-      </button>
-    </div>
-  `;
 
-  const button =
-    lessonBody.querySelector(
-      ".return-dashboard-button"
-    );
+  currentStepIndex =
+    0;
 
-  button?.addEventListener(
-    "click",
-    showDashboard
-  );
+
+  renderDashboard();
 }
 
 
 /* =========================================================
-   QUESTION SUBMISSION
+   RENDER LESSON STEP
    ========================================================= */
 
-function submitQuestion(step) {
+function renderLessonStep() {
+
+  if (!activeLesson) {
+    return;
+  }
+
+
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
+
+
+  const totalSteps =
+    activeLesson.steps.length;
+
+
+  const progress =
+    (
+      (currentStepIndex + 1) /
+      totalSteps
+    ) * 100;
+
+
+  lessonProgressText.textContent =
+    `Lesson ${activeLesson.number}`;
+
+
+  lessonScreenProgressBar.style.width =
+    `${progress}%`;
+
+
+  stepCounter.textContent =
+    `${currentStepIndex + 1} / ${totalSteps}`;
+
+
+  lessonStageTitle.textContent =
+    step.title;
+
+
+  lessonFeedback.classList.add(
+    "hidden"
+  );
+
+
+  lessonFeedback.classList.remove(
+    "wrong"
+  );
+
+
+  currentSelection =
+    null;
+
+
+  currentQuestionAnswered =
+    false;
+
+
+  interactionArea.innerHTML =
+    "";
+
+
+  previousLessonStep.disabled =
+    currentStepIndex === 0;
+
+
+  hideBasketballCourt();
+
+
+  if (step.type === "learn") {
+
+    lessonStageType.textContent =
+      "FILM ROOM";
+
+
+    lessonBody.innerHTML =
+      step.html;
+
+
+    nextLessonStep.disabled =
+      false;
+
+
+    nextLessonStep.textContent =
+      "Continue →";
+  }
+
+
+  if (step.type === "question") {
+
+    showBasketballCourt();
+
+
+    lessonStageType.textContent =
+      step.drill
+        ? "LIVE DRILL"
+        : "KNOWLEDGE CHECK";
+
+
+    lessonBody.innerHTML = `
+
+      <div class="lesson-question-block">
+
+        <p class="lesson-stimulus">
+          ${step.stimulus}
+        </p>
+
+        <h3 class="interaction-question">
+          ${step.prompt}
+        </h3>
+
+      </div>
+
+    `;
+
+
+    const options =
+      document.createElement("div");
+
+
+    options.className =
+      "interaction-options";
+
+
+    step.answers.forEach(
+      (answer, index) => {
+
+        const button =
+          document.createElement("button");
+
+
+        button.className =
+          "interaction-option";
+
+
+        button.dataset.answer =
+          index;
+
+
+        const letter =
+          String.fromCharCode(
+            65 + index
+          );
+
+
+        button.innerHTML = `
+
+          <span class="answer-letter">
+            ${letter}
+          </span>
+
+          <span>
+            ${answer}
+          </span>
+
+        `;
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectLessonAnswer(
+              index,
+              button
+            );
+
+          }
+        );
+
+
+        options.appendChild(
+          button
+        );
+      }
+    );
+
+
+    interactionArea.appendChild(
+      options
+    );
+
+
+    nextLessonStep.disabled =
+      true;
+
+
+    nextLessonStep.textContent =
+      "Shoot";
+  }
+
+
+  if (step.type === "complete") {
+
+    lessonStageType.textContent =
+      "FINAL BUZZER";
+
+
+    lessonBody.innerHTML =
+      step.html;
+
+
+    completeLesson();
+
+
+    nextLessonStep.disabled =
+      false;
+
+
+    nextLessonStep.textContent =
+      "Return to Chapter";
+  }
+}
+
+
+/* =========================================================
+   SELECT ANSWER
+   ========================================================= */
+
+function selectLessonAnswer(
+  index,
+  button
+) {
+
   if (
-    questionLocked ||
-    selectedAnswerIndex === null
+    currentQuestionAnswered ||
+    shotAnimationPlaying
   ) {
     return;
   }
 
-  questionLocked = true;
 
-  activeLessonQuestions += 1;
+  currentSelection =
+    index;
 
-  player.totalQuestions += 1;
+
+  document
+    .querySelectorAll(
+      ".interaction-option"
+    )
+    .forEach(option => {
+
+      option.classList.remove(
+        "selected"
+      );
+
+    });
+
+
+  button.classList.add(
+    "selected"
+  );
+
+
+  nextLessonStep.disabled =
+    false;
+}
+
+
+/* =========================================================
+   CHECK ANSWER + PLAY POSSESSION
+   ========================================================= */
+
+async function checkLessonAnswer() {
+
+  if (
+    currentSelection === null ||
+    currentQuestionAnswered ||
+    shotAnimationPlaying
+  ) {
+    return;
+  }
+
+
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
+
 
   const correct =
-    selectedAnswerIndex === step.correct;
+    currentSelection ===
+    step.correct;
+
+
+  currentQuestionAnswered =
+    true;
+
+
+  lessonQuestionsAnswered++;
+
+
+  player.totalAnswered++;
+
+
+  recordQuestionAttempt(
+    activeLessonID,
+    currentStepIndex,
+    correct
+  );
+
+
+  const options =
+    document.querySelectorAll(
+      ".interaction-option"
+    );
+
+
+  options.forEach(option => {
+
+    option.disabled =
+      true;
+
+  });
+
+
+  nextLessonStep.disabled =
+    true;
+
+
+  previousLessonStep.disabled =
+    true;
+
 
   if (correct) {
-    activeLessonCorrect += 1;
 
-    player.totalCorrect += 1;
+    lessonCorrect++;
 
-    player.streak += 1;
+
+    player.totalCorrect++;
+
+
+    player.streak++;
+
 
     player.bestStreak =
       Math.max(
         player.bestStreak,
         player.streak
       );
-  } else {
-    player.streak = 0;
+
+
+    await playMadeShot();
   }
 
-  player.questionHistory.push({
-    lesson: activeLessonID,
-    step: activeStepIndex,
-    selected: selectedAnswerIndex,
-    correctAnswer: step.correct,
-    correct,
-    timestamp: Date.now()
-  });
 
-  if (
-    player.questionHistory.length > 200
-  ) {
-    player.questionHistory =
-      player.questionHistory.slice(-200);
+  else {
+
+    player.streak =
+      0;
+
+
+    await playMissedShot();
   }
 
-  savePlayer();
 
-  disableQuestionChoices();
+  options.forEach(
+    (option, index) => {
 
-  playBasketballResult(
-    correct,
-    () => showQuestionFeedback(
-      step,
-      correct
-    )
-  );
-}
+      option.classList.remove(
+        "selected"
+      );
 
 
-function disableQuestionChoices() {
-  if (!lessonBody) return;
+      if (
+        index === step.correct
+      ) {
 
-  lessonBody
-    .querySelectorAll(".answer-choice")
-    .forEach(choice => {
-      choice.disabled = true;
-    });
-
-  const shootButton =
-    lessonBody.querySelector(
-      ".shoot-answer-button"
-    );
-
-  if (shootButton) {
-    shootButton.disabled = true;
-  }
-}
+        option.classList.add(
+          "correct"
+        );
+      }
 
 
-function showQuestionFeedback(
-  step,
-  correct
-) {
-  if (!lessonBody) return;
+      if (
+        index === currentSelection &&
+        !correct
+      ) {
 
-  const feedbackBox =
-    lessonBody.querySelector(
-      ".question-feedback"
-    );
-
-  if (!feedbackBox) {
-    nextLessonStep();
-    return;
-  }
-
-  const feedback =
-    correct
-      ? step.feedbackCorrect
-      : step.feedbackWrong;
-
-  const label =
-    feedbackBox.querySelector(
-      ".feedback-label"
-    );
-
-  const title =
-    feedbackBox.querySelector(
-      ".feedback-title"
-    );
-
-  const text =
-    feedbackBox.querySelector(
-      ".feedback-text"
-    );
-
-  if (label) {
-    label.textContent =
-      feedback?.label ||
-      (correct ? "BUCKET" : "MISSED");
-  }
-
-  if (title) {
-    title.textContent =
-      feedback?.title ||
-      (correct ? "Correct." : "Not quite.");
-  }
-
-  if (text) {
-    text.textContent =
-      feedback?.text || "";
-  }
-
-  feedbackBox.classList.remove(
-    "hidden"
-  );
-
-  const nextButton =
-    feedbackBox.querySelector(
-      ".next-possession-button"
-    );
-
-  nextButton?.addEventListener(
-    "click",
-    nextLessonStep,
-    {
-      once: true
+        option.classList.add(
+          "incorrect"
+        );
+      }
     }
   );
 
-  renderPlayerStats();
-}
-
-
-/* =========================================================
-   BASKETBALL ANIMATION
-   ========================================================= */
-
-function playBasketballResult(
-  correct,
-  callback
-) {
-  const court =
-    basketballCourt ||
-    document.querySelector(
-      ".basketball-court"
-    );
-
-  const ball =
-    basketballBall ||
-    document.querySelector(
-      ".basketball-ball"
-    );
-
-  if (!court || !ball) {
-    setTimeout(callback, 200);
-    return;
-  }
-
-  court.classList.remove(
-    "shot-made",
-    "shot-brick",
-    "shot-blocked",
-    "shot-airball"
-  );
-
-  ball.classList.remove(
-    "shooting"
-  );
-
-  void court.offsetWidth;
-
-  let resultClass;
 
   if (correct) {
-    resultClass = "shot-made";
-  } else {
-    const misses = [
-      "shot-brick",
-      "shot-blocked",
-      "shot-airball"
-    ];
 
-    resultClass =
-      misses[
-        Math.floor(
-          Math.random() *
-          misses.length
-        )
-      ];
-  }
-
-  court.classList.add(
-    resultClass
-  );
-
-  ball.classList.add(
-    "shooting"
-  );
-
-  setTimeout(() => {
-    ball.classList.remove(
-      "shooting"
+    showLessonFeedback(
+      true,
+      step.feedbackCorrect
     );
 
-    callback();
-  }, 850);
-}
+  } else {
 
-
-/* =========================================================
-   LESSON NAVIGATION
-   ========================================================= */
-
-function nextLessonStep() {
-  if (!activeLesson) return;
-
-  if (
-    activeStepIndex >=
-    activeLesson.steps.length - 1
-  ) {
-    return;
+    showLessonFeedback(
+      false,
+      step.feedbackWrong
+    );
   }
 
-  activeStepIndex += 1;
 
-  selectedAnswerIndex = null;
-  questionLocked = false;
+  renderPlayerHUD();
 
-  saveCurrentLessonStep();
-
-  renderLessonStep();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-function previousLessonStep() {
-  if (
-    !activeLesson ||
-    activeStepIndex <= 0
-  ) {
-    return;
-  }
-
-  activeStepIndex -= 1;
-
-  selectedAnswerIndex = null;
-  questionLocked = false;
-
-  saveCurrentLessonStep();
-
-  renderLessonStep();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-function saveCurrentLessonStep() {
-  if (!activeLessonID) return;
-
-  const progress =
-    getLessonProgress(activeLessonID);
-
-  if (!progress) return;
-
-  if (!progress.completed) {
-    progress.currentStep =
-      activeStepIndex;
-  }
 
   savePlayer();
+
+
+  gamePossession++;
+
+
+  possessionNumber.textContent =
+    gamePossession;
+
+
+  previousLessonStep.disabled =
+    currentStepIndex === 0;
+
+
+  nextLessonStep.disabled =
+    false;
+
+
+  nextLessonStep.textContent =
+    "Next Possession →";
 }
 
 
 /* =========================================================
-   LESSON COMPLETION
+   FEEDBACK
+   ========================================================= */
+
+function showLessonFeedback(
+  correct,
+  feedback
+) {
+
+  lessonFeedback.classList.remove(
+    "hidden"
+  );
+
+
+  if (correct) {
+
+    lessonFeedback.classList.remove(
+      "wrong"
+    );
+
+
+    lessonFeedbackIcon.textContent =
+      "🏀";
+
+  } else {
+
+    lessonFeedback.classList.add(
+      "wrong"
+    );
+
+
+    lessonFeedbackIcon.textContent =
+      "✕";
+  }
+
+
+  lessonFeedbackLabel.textContent =
+    feedback.label;
+
+
+  lessonFeedbackTitle.textContent =
+    feedback.title;
+
+
+  lessonFeedbackText.textContent =
+    feedback.text;
+}
+
+
+/* =========================================================
+   QUESTION HISTORY
+   ========================================================= */
+
+function recordQuestionAttempt(
+  lessonID,
+  stepIndex,
+  correct
+) {
+
+  const id =
+    `${lessonID}-step-${stepIndex}`;
+
+
+  if (!player.questionHistory[id]) {
+
+    player.questionHistory[id] = {
+      attempts: 0,
+      correct: 0,
+      incorrect: 0
+    };
+  }
+
+
+  const history =
+    player.questionHistory[id];
+
+
+  history.attempts++;
+
+
+  if (correct) {
+
+    history.correct++;
+
+  } else {
+
+    history.incorrect++;
+  }
+
+
+  history.lastAttempt =
+    new Date().toISOString();
+}
+
+
+/* =========================================================
+   NEXT STEP
+   ========================================================= */
+
+function handleNextStep() {
+
+  if (
+    !activeLesson ||
+    shotAnimationPlaying
+  ) {
+    return;
+  }
+
+
+  const step =
+    activeLesson.steps[
+      currentStepIndex
+    ];
+
+
+  if (
+    step.type === "question" &&
+    !currentQuestionAnswered
+  ) {
+
+    checkLessonAnswer();
+
+    return;
+  }
+
+
+  if (step.type === "complete") {
+
+    closeLesson();
+
+    return;
+  }
+
+
+  if (
+    currentStepIndex <
+    activeLesson.steps.length - 1
+  ) {
+
+    currentStepIndex++;
+
+
+    renderLessonStep();
+
+
+    scrollLessonTop();
+  }
+}
+
+
+/* =========================================================
+   PREVIOUS STEP
+   ========================================================= */
+
+function handlePreviousStep() {
+
+  if (
+    !activeLesson ||
+    currentStepIndex === 0 ||
+    shotAnimationPlaying
+  ) {
+    return;
+  }
+
+
+  currentStepIndex--;
+
+
+  renderLessonStep();
+
+
+  scrollLessonTop();
+}
+
+
+/* =========================================================
+   COMPLETE LESSON
    ========================================================= */
 
 function completeLesson() {
-  if (
-    !activeLesson ||
-    !activeLessonID
-  ) {
-    return;
-  }
 
-  const progress =
-    getLessonProgress(activeLessonID);
+  const lessonProgressData =
+    player.progress
+      .chapter1
+      .lessons[
+        activeLessonID
+      ];
 
-  if (!progress) return;
 
-  const mastery =
-    calculateLessonMastery();
-
-  progress.bestMastery =
-    Math.max(
-      progress.bestMastery || 0,
-      mastery
-    );
-
-  player.conceptMastery[
-    activeLesson.concept
-  ] = Math.max(
-    player.conceptMastery[
-      activeLesson.concept
-    ] || 0,
-    mastery
-  );
-
-  if (!progress.completed) {
-    progress.completed = true;
-
-    progress.currentStep =
-      activeLesson.steps.length - 1;
-
-    player.lessonsCompleted += 1;
+  if (!lessonProgressData.completed) {
 
     player.xp +=
-      activeLesson.xpReward || 0;
+      activeLesson.xpReward;
+
+
+    lessonProgressData.completed =
+      true;
+
+
+    let mastery =
+      100;
+
+
+    if (lessonQuestionsAnswered > 0) {
+
+      mastery =
+        Math.round(
+          (
+            lessonCorrect /
+            lessonQuestionsAnswered
+          ) * 100
+        );
+    }
+
+
+    lessonProgressData.mastery =
+      mastery;
+
+
+    player.conceptMastery[
+      activeLesson.concept
+    ] =
+      mastery;
+
 
     unlockNextLesson(
       activeLessonID
     );
+
+
+    updateChapterTestUnlock();
+
+
+    savePlayer();
   }
 
-  updateChapterTestUnlock();
 
-  savePlayer();
-
-  renderPlayerStats();
+  renderPlayerHUD();
 }
 
 
+/* =========================================================
+   UNLOCK NEXT LESSON
+   ========================================================= */
+
 function unlockNextLesson(
-  completedLessonID
+  completedID
 ) {
+
   const order = [
     "1-1",
     "1-2",
@@ -1502,52 +2398,81 @@ function unlockNextLesson(
     "1-5"
   ];
 
+
   const index =
     order.indexOf(
-      completedLessonID
+      completedID
     );
+
 
   if (
     index === -1 ||
-    index >= order.length - 1
+    index === order.length - 1
   ) {
     return;
   }
 
-  const nextID =
-    order[index + 1];
 
-  if (
-    player.chapter1.lessons[nextID]
-  ) {
-    player.chapter1.lessons[
+  const nextID =
+    order[
+      index + 1
+    ];
+
+
+  player.progress
+    .chapter1
+    .lessons[
       nextID
-    ].unlocked = true;
-  }
+    ]
+    .unlocked = true;
 }
 
 
 /* =========================================================
-   QUESTION UI RESET
+   SCROLL
    ========================================================= */
 
-function resetQuestionUI() {
-  selectedAnswerIndex = null;
-  questionLocked = false;
+function scrollLessonTop() {
 
-  basketballCourt?.classList.remove(
-    "shot-made",
-    "shot-brick",
-    "shot-blocked",
-    "shot-airball"
-  );
+  lessonScreen.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
 
-  basketballBall?.classList.remove(
-    "shooting"
-  );
 
-  basketballFeedback?.classList.add(
-    "hidden"
+/* =========================================================
+   LESSON BUTTONS
+   ========================================================= */
+
+function bindLessonButtons() {
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          "[data-start-lesson]"
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      const id =
+        button.dataset.startLesson;
+
+
+      if (!id) {
+        return;
+      }
+
+
+      openLesson(id);
+    }
   );
 }
 
@@ -1556,100 +2481,26 @@ function resetQuestionUI() {
    CONTINUE TRAINING
    ========================================================= */
 
-function continueTraining() {
-  const lesson =
-    getCurrentUnlockedLesson();
-
-  if (lesson) {
-    openLesson(lesson);
-    return;
-  }
-
-  if (player.chapter1.test.unlocked) {
-    startAssessmentPlaceholder();
-    return;
-  }
-
-  openLesson("1-1");
-}
-
-
-/* =========================================================
-   EVENT DELEGATION
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  event => {
-
-    const lessonButton =
-      event.target.closest(
-        "[data-start-lesson]"
-      );
-
-    if (lessonButton) {
-      const id =
-        lessonButton.dataset.startLesson ||
-        lessonButton.dataset.lesson ||
-        lessonButton
-          .closest("[data-lesson]")
-          ?.dataset.lesson;
-
-      if (id) {
-        openLesson(id);
-      }
-
-      return;
-    }
-
-
-    const continueButton =
-      event.target.closest(
-        "[data-continue-training]"
-      );
-
-    if (continueButton) {
-      continueTraining();
-      return;
-    }
-
-
-    const dashboardButton =
-      event.target.closest(
-        "[data-return-dashboard]"
-      );
-
-    if (dashboardButton) {
-      showDashboard();
-      return;
-    }
-
-  }
-);
-
-
-/* =========================================================
-   DIRECT BUTTON EVENTS
-   ========================================================= */
-
-lessonBackButton?.addEventListener(
-  "click",
-  previousLessonStep
-);
-
-
-lessonNextButton?.addEventListener(
-  "click",
-  nextLessonStep
-);
-
-
-startChapterTest?.addEventListener(
+continueTraining.addEventListener(
   "click",
   () => {
+
+    const id =
+      continueTraining.dataset.lesson;
+
+
+    if (id) {
+
+      openLesson(id);
+
+      return;
+    }
+
+
     if (
-      player.chapter1.test.unlocked
+      player.progress.chapter1.test.unlocked
     ) {
+
       startAssessmentPlaceholder();
     }
   }
@@ -1657,7 +2508,72 @@ startChapterTest?.addEventListener(
 
 
 /* =========================================================
+   LESSON CONTROLS
+   ========================================================= */
+
+nextLessonStep.addEventListener(
+  "click",
+  handleNextStep
+);
+
+
+previousLessonStep.addEventListener(
+  "click",
+  handlePreviousStep
+);
+
+
+exitLesson.addEventListener(
+  "click",
+  closeLesson
+);
+
+
+/* =========================================================
+   ESCAPE
+   ========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      !lessonScreen.classList.contains(
+        "hidden"
+      ) &&
+      !shotAnimationPlaying
+    ) {
+
+      closeLesson();
+    }
+  }
+);
+
+
+/* =========================================================
+   CHAPTER TEST PLACEHOLDER
+   ========================================================= */
+
+function startAssessmentPlaceholder() {
+
+  alert(
+    "Chapter Championship engine is coming next."
+  );
+}
+
+
+startChapterTest.addEventListener(
+  "click",
+  startAssessmentPlaceholder
+);
+
+
+/* =========================================================
    DEVELOPMENT RESET
+
+   Browser console:
+   resetReasoningLeagueProgress()
    ========================================================= */
 
 window.resetReasoningLeagueProgress =
@@ -1668,82 +2584,27 @@ window.resetReasoningLeagueProgress =
         "Reset all Reasoning League progress?"
       );
 
+
     if (!confirmed) {
       return;
     }
 
+
     localStorage.removeItem(
       SAVE_KEY
     );
+
 
     location.reload();
   };
 
 
 /* =========================================================
-   DEBUG HELPERS
+   INITIALIZE
    ========================================================= */
 
-window.reasoningLeague =
-  window.reasoningLeague || {};
+bindLessonButtons();
 
+renderDashboard();
 
-window.reasoningLeague.getPlayer =
-  function () {
-    return player;
-  };
-
-
-window.reasoningLeague.getLessons =
-  function () {
-    return lessons;
-  };
-
-
-window.reasoningLeague.openLesson =
-  function (id) {
-    openLesson(id);
-  };
-
-
-window.reasoningLeague.save =
-  function () {
-    savePlayer();
-  };
-
-
-/* =========================================================
-   INITIALIZATION
-   ========================================================= */
-
-function initializeReasoningLeague() {
-  initializeAccessGate();
-
-  updateChapterTestUnlock();
-
-  renderDashboard();
-
-  console.log(
-    `Reasoning League loaded ${Object.keys(lessons).length} lesson(s).`
-  );
-
-  if (
-    Object.keys(lessons).length === 0
-  ) {
-    console.error(
-      "NO LESSON DATA FOUND. Make sure chapter1.js is loaded before loophole.js in index.html."
-    );
-  }
-}
-
-
-if (
-  document.readyState === "loading"
-) {
-  document.addEventListener(
-    "DOMContentLoaded",
-    initializeReasoningLeague
-  );
-} else {
-  initializeReasoningLeague();
-}
+hideBasketballCourt();
