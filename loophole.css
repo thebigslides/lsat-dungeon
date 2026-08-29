@@ -5264,3 +5264,1194 @@ body {
   }
 
 }
+
+/* =========================================================
+   LOOPHOLE LEAGUE — PLAYER SPRITE REBUILD
+   ========================================================= */
+
+
+/* =========================================================
+   COURT CAMERA
+
+   We are framing this more like an actual possession
+   instead of two dudes waiting for the bus.
+   ========================================================= */
+
+.pixel-court {
+  height: 330px;
+}
+
+
+/* Move shooter and defender into an actual matchup */
+
+.pixel-player {
+  width: 72px;
+  height: 112px;
+
+  left: 24%;
+  bottom: 38px;
+
+  z-index: 20;
+
+  animation:
+    offensiveStance
+    1.5s
+    ease-in-out
+    infinite;
+
+  transform-origin:
+    50% 100%;
+}
+
+
+.pixel-defender {
+  width: 72px;
+  height: 112px;
+
+  left: 48%;
+  bottom: 38px;
+
+  z-index: 19;
+
+  animation:
+    defensiveStance
+    1.25s
+    ease-in-out
+    infinite;
+
+  transform-origin:
+    50% 100%;
+}
+
+
+/* =========================================================
+   REMOVE OLD BODY-PART STYLES
+   ========================================================= */
+
+.player-head,
+.player-body,
+.player-arm,
+.player-leg,
+
+.defender-head,
+.defender-body,
+.defender-arm,
+.defender-leg {
+  display: none !important;
+}
+
+
+/* =========================================================
+   SPRITE BODY
+   ========================================================= */
+
+.player-sprite {
+  width: 64px;
+  height: 106px;
+
+  position: relative;
+
+  image-rendering: pixelated;
+
+  transform-origin:
+    center bottom;
+}
+
+
+/* =========================================================
+   HEAD
+   ========================================================= */
+
+.sprite-head {
+  width: 28px;
+  height: 25px;
+
+  position: absolute;
+
+  left: 18px;
+  top: 3px;
+
+  background: #b86f43;
+
+  border:
+    4px solid #28150d;
+
+  box-shadow:
+    inset 4px 0 #ce8553,
+    inset -4px 0 #8c4f31;
+
+  z-index: 7;
+}
+
+
+/* nose / face pixel */
+
+.sprite-head::after {
+  content: "";
+
+  width: 4px;
+  height: 4px;
+
+  position: absolute;
+
+  right: -4px;
+  top: 10px;
+
+  background: #b86f43;
+
+  box-shadow:
+    0 6px 0 #28150d;
+}
+
+
+/* =========================================================
+   HAIR
+   ========================================================= */
+
+.sprite-hair {
+  width: 30px;
+  height: 8px;
+
+  position: absolute;
+
+  left: 17px;
+  top: 1px;
+
+  background: #24140e;
+
+  z-index: 9;
+}
+
+
+.sprite-hair::before {
+  content: "";
+
+  width: 7px;
+  height: 8px;
+
+  position: absolute;
+
+  left: 0;
+  top: 6px;
+
+  background: #24140e;
+}
+
+
+.sprite-hair::after {
+  content: "";
+
+  width: 7px;
+  height: 5px;
+
+  position: absolute;
+
+  right: 2px;
+  top: 6px;
+
+  background: #24140e;
+}
+
+
+/* =========================================================
+   NECK
+   ========================================================= */
+
+.sprite-neck {
+  width: 13px;
+  height: 10px;
+
+  position: absolute;
+
+  left: 26px;
+  top: 29px;
+
+  background: #a95f3a;
+
+  border-left:
+    3px solid #28150d;
+
+  border-right:
+    3px solid #28150d;
+
+  z-index: 4;
+}
+
+
+/* =========================================================
+   JERSEY
+   ========================================================= */
+
+.sprite-torso {
+  width: 39px;
+  height: 40px;
+
+  position: absolute;
+
+  left: 13px;
+  top: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    4px solid #05101a;
+
+  z-index: 5;
+}
+
+
+/* tapered jersey */
+
+.sprite-torso::after {
+  content: "";
+
+  width: 31px;
+  height: 8px;
+
+  position: absolute;
+
+  left: 0;
+  bottom: -8px;
+
+  border-left:
+    4px solid transparent;
+
+  border-right:
+    4px solid transparent;
+}
+
+
+.player-blue-sprite .sprite-torso {
+  background: #0878c9;
+
+  box-shadow:
+    inset 5px 0 #1498e7,
+    inset -5px 0 #045493;
+}
+
+
+.player-orange-sprite .sprite-torso {
+  background: #e86713;
+
+  box-shadow:
+    inset 5px 0 #ff8d27,
+    inset -5px 0 #a83d06;
+}
+
+
+.jersey-number {
+  position: relative;
+
+  z-index: 3;
+
+  color: white;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  line-height: 1;
+
+  text-shadow:
+    2px 2px 0 #07101a;
+}
+
+
+/* =========================================================
+   ARMS
+   ========================================================= */
+
+.sprite-arm {
+  width: 10px;
+  height: 38px;
+
+  position: absolute;
+
+  top: 38px;
+
+  background: #b86f43;
+
+  border:
+    3px solid #28150d;
+
+  z-index: 3;
+
+  transform-origin:
+    50% 4px;
+}
+
+
+.sprite-arm-left {
+  left: 4px;
+
+  transform:
+    rotate(17deg);
+}
+
+
+.sprite-arm-right {
+  right: 4px;
+
+  transform:
+    rotate(-24deg);
+}
+
+
+/* hands */
+
+.sprite-arm::after {
+  content: "";
+
+  width: 10px;
+  height: 9px;
+
+  position: absolute;
+
+  left: -3px;
+  bottom: -8px;
+
+  background: #c77b4a;
+
+  border:
+    3px solid #28150d;
+}
+
+
+/* =========================================================
+   SHORTS
+   ========================================================= */
+
+.sprite-shorts {
+  width: 39px;
+  height: 18px;
+
+  position: absolute;
+
+  left: 13px;
+  top: 73px;
+
+  border:
+    4px solid #05101a;
+
+  z-index: 6;
+}
+
+
+.player-blue-sprite .sprite-shorts {
+  background: #075c9d;
+}
+
+
+.player-orange-sprite .sprite-shorts {
+  background: #bd4709;
+}
+
+
+/* center shorts separation */
+
+.sprite-shorts::after {
+  content: "";
+
+  width: 4px;
+  height: 12px;
+
+  position: absolute;
+
+  left: 14px;
+  bottom: -3px;
+
+  background: #05101a;
+}
+
+
+/* =========================================================
+   LEGS
+   ========================================================= */
+
+.sprite-leg {
+  width: 11px;
+  height: 25px;
+
+  position: absolute;
+
+  top: 88px;
+
+  background: #a95f3a;
+
+  border:
+    3px solid #28150d;
+
+  z-index: 2;
+
+  transform-origin:
+    top center;
+}
+
+
+.sprite-leg-left {
+  left: 16px;
+
+  transform:
+    rotate(5deg);
+}
+
+
+.sprite-leg-right {
+  right: 16px;
+
+  transform:
+    rotate(-5deg);
+}
+
+
+/* =========================================================
+   SHOES
+   ========================================================= */
+
+.sprite-shoe {
+  width: 17px;
+  height: 8px;
+
+  position: absolute;
+
+  top: 108px;
+
+  background: #e9edf0;
+
+  border:
+    3px solid #07101a;
+
+  z-index: 8;
+}
+
+
+.sprite-shoe-left {
+  left: 10px;
+}
+
+
+.sprite-shoe-right {
+  right: 8px;
+}
+
+
+/* =========================================================
+   SHADOWS
+   ========================================================= */
+
+.pixel-player::after,
+.pixel-defender::after {
+  content: "";
+
+  width: 54px;
+  height: 9px;
+
+  position: absolute;
+
+  left: 8px;
+  bottom: -12px;
+
+  background:
+    rgba(61, 40, 20, 0.32);
+
+  border-radius: 50%;
+
+  z-index: -1;
+}
+
+
+/* =========================================================
+   OFFENSIVE STANCE
+   ========================================================= */
+
+@keyframes offensiveStance {
+
+  0%,
+  100% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+  25% {
+    transform:
+      translate3d(1px, 1px, 0)
+      rotate(0.5deg);
+  }
+
+  50% {
+    transform:
+      translate3d(0, 2px, 0)
+      rotate(0deg);
+  }
+
+  75% {
+    transform:
+      translate3d(-1px, 1px, 0)
+      rotate(-0.5deg);
+  }
+
+}
+
+
+/* =========================================================
+   DEFENSIVE STANCE
+   ========================================================= */
+
+@keyframes defensiveStance {
+
+  0%,
+  100% {
+    transform:
+      translate3d(-4px, 2px, 0)
+      rotate(-1deg);
+  }
+
+  50% {
+    transform:
+      translate3d(4px, 2px, 0)
+      rotate(1deg);
+  }
+
+}
+
+
+/* make defender look wider */
+
+.pixel-defender .sprite-arm-left {
+  transform:
+    rotate(48deg);
+}
+
+
+.pixel-defender .sprite-arm-right {
+  transform:
+    rotate(-48deg);
+}
+
+
+.pixel-defender .sprite-leg-left {
+  transform:
+    rotate(12deg);
+}
+
+
+.pixel-defender .sprite-leg-right {
+  transform:
+    rotate(-12deg);
+}
+
+
+/* =========================================================
+   BALL — BIGGER AND CLEANER
+   ========================================================= */
+
+.pixel-ball {
+  width: 24px;
+  height: 24px;
+
+  left: calc(24% + 58px);
+  bottom: 93px;
+
+  padding: 0;
+
+  font-size: 0;
+
+  background: #ed7420;
+
+  border:
+    3px solid #54200b;
+
+  border-radius: 50%;
+
+  box-sizing: border-box;
+
+  z-index: 40;
+
+  box-shadow:
+    inset -4px -3px #b84c10,
+    inset 3px 3px #ff9b3e,
+    2px 3px 0 rgba(0,0,0,0.25);
+
+  animation:
+    basketballDribble
+    0.72s
+    ease-in-out
+    infinite;
+}
+
+
+/* basketball seams */
+
+.pixel-ball::before {
+  content: "";
+
+  width: 3px;
+  height: 18px;
+
+  position: absolute;
+
+  left: 8px;
+  top: 0;
+
+  background: #54200b;
+
+  transform:
+    rotate(24deg);
+}
+
+
+.pixel-ball::after {
+  content: "";
+
+  width: 18px;
+  height: 3px;
+
+  position: absolute;
+
+  left: 0;
+  top: 8px;
+
+  background: #54200b;
+
+  transform:
+    rotate(-15deg);
+}
+
+
+@keyframes basketballDribble {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+  45% {
+    transform:
+      translate3d(1px, 48px, 0)
+      rotate(90deg)
+      scaleY(1);
+  }
+
+  50% {
+    transform:
+      translate3d(1px, 51px, 0)
+      rotate(100deg)
+      scaleX(1.12)
+      scaleY(0.82);
+  }
+
+  55% {
+    transform:
+      translate3d(1px, 46px, 0)
+      rotate(110deg)
+      scaleX(0.96)
+      scaleY(1.06);
+  }
+
+  100% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(210deg);
+  }
+
+}
+
+
+/* =========================================================
+   SHOOTING POSE
+   ========================================================= */
+
+.pixel-player.shooting {
+  animation:
+    properJumpShot
+    0.82s
+    cubic-bezier(.22, .75, .28, 1)
+    forwards;
+}
+
+
+/* gather the shooting arm */
+
+.pixel-player.shooting
+.sprite-arm-right {
+  animation:
+    properShootingArm
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+.pixel-player.shooting
+.sprite-arm-left {
+  animation:
+    properGuideHand
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+.pixel-player.shooting
+.sprite-leg-left {
+  animation:
+    jumpLegLeft
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+.pixel-player.shooting
+.sprite-leg-right {
+  animation:
+    jumpLegRight
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+@keyframes properJumpShot {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      scaleY(1);
+  }
+
+  15% {
+    transform:
+      translate3d(0, 6px, 0)
+      scaleY(0.93);
+  }
+
+  32% {
+    transform:
+      translate3d(2px, -4px, 0)
+      scaleY(1.03);
+  }
+
+  52% {
+    transform:
+      translate3d(4px, -27px, 0);
+  }
+
+  66% {
+    transform:
+      translate3d(6px, -29px, 0);
+  }
+
+  82% {
+    transform:
+      translate3d(7px, -11px, 0);
+  }
+
+  94% {
+    transform:
+      translate3d(7px, 3px, 0)
+      scaleY(0.96);
+  }
+
+  100% {
+    transform:
+      translate3d(7px, 0, 0)
+      scaleY(1);
+  }
+
+}
+
+
+@keyframes properShootingArm {
+
+  0% {
+    transform:
+      rotate(-24deg);
+  }
+
+  20% {
+    transform:
+      rotate(-8deg);
+  }
+
+  42% {
+    transform:
+      rotate(-72deg);
+  }
+
+  58% {
+    transform:
+      rotate(-132deg);
+  }
+
+  72% {
+    transform:
+      rotate(-146deg);
+  }
+
+  100% {
+    transform:
+      rotate(-130deg);
+  }
+
+}
+
+
+@keyframes properGuideHand {
+
+  0% {
+    transform:
+      rotate(17deg);
+  }
+
+  30% {
+    transform:
+      rotate(-25deg);
+  }
+
+  55% {
+    transform:
+      rotate(-80deg);
+  }
+
+  72% {
+    transform:
+      rotate(-92deg);
+  }
+
+  100% {
+    transform:
+      rotate(-58deg);
+  }
+
+}
+
+
+@keyframes jumpLegLeft {
+
+  0% {
+    transform:
+      rotate(5deg);
+  }
+
+  35% {
+    transform:
+      rotate(-8deg);
+  }
+
+  65% {
+    transform:
+      rotate(2deg);
+  }
+
+  100% {
+    transform:
+      rotate(8deg);
+  }
+
+}
+
+
+@keyframes jumpLegRight {
+
+  0% {
+    transform:
+      rotate(-5deg);
+  }
+
+  35% {
+    transform:
+      rotate(8deg);
+  }
+
+  65% {
+    transform:
+      rotate(-2deg);
+  }
+
+  100% {
+    transform:
+      rotate(-9deg);
+  }
+
+}
+
+
+/* =========================================================
+   DEFENDER BLOCK
+   ========================================================= */
+
+.pixel-defender.blocking {
+  animation:
+    properBlockJump
+    0.82s
+    cubic-bezier(.2, .8, .3, 1)
+    forwards;
+}
+
+
+.pixel-defender.blocking
+.sprite-arm-left {
+  animation:
+    properBlockArmLeft
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+.pixel-defender.blocking
+.sprite-arm-right {
+  animation:
+    properBlockArmRight
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+@keyframes properBlockJump {
+
+  0% {
+    transform:
+      translate3d(0, 2px, 0);
+  }
+
+  20% {
+    transform:
+      translate3d(-3px, 7px, 0)
+      scaleY(0.93);
+  }
+
+  48% {
+    transform:
+      translate3d(-13px, -30px, 0);
+  }
+
+  65% {
+    transform:
+      translate3d(-15px, -33px, 0);
+  }
+
+  84% {
+    transform:
+      translate3d(-8px, -8px, 0);
+  }
+
+  100% {
+    transform:
+      translate3d(0, 2px, 0);
+  }
+
+}
+
+
+@keyframes properBlockArmLeft {
+
+  0% {
+    transform:
+      rotate(48deg);
+  }
+
+  45% {
+    transform:
+      rotate(112deg);
+  }
+
+  65% {
+    transform:
+      rotate(145deg);
+  }
+
+  100% {
+    transform:
+      rotate(70deg);
+  }
+
+}
+
+
+@keyframes properBlockArmRight {
+
+  0% {
+    transform:
+      rotate(-48deg);
+  }
+
+  45% {
+    transform:
+      rotate(-92deg);
+  }
+
+  65% {
+    transform:
+      rotate(-120deg);
+  }
+
+  100% {
+    transform:
+      rotate(-65deg);
+  }
+
+}
+
+
+/* =========================================================
+   PLAYER SHADOW DURING JUMP
+   ========================================================= */
+
+.pixel-player.shooting::after,
+.pixel-defender.blocking::after {
+  animation:
+    jumpShadow
+    0.82s
+    ease-out
+    forwards;
+}
+
+
+@keyframes jumpShadow {
+
+  0%,
+  100% {
+    opacity: 0.32;
+
+    transform:
+      scaleX(1);
+  }
+
+  55% {
+    opacity: 0.12;
+
+    transform:
+      scaleX(0.55);
+  }
+
+}
+
+
+/* =========================================================
+   MAKE BALL ANIMATIONS MATCH NEW PLAYER POSITION
+   ========================================================= */
+
+.pixel-ball.shot-made {
+  animation:
+    newMadeShot
+    1.05s
+    cubic-bezier(.26, .58, .4, 1)
+    forwards;
+}
+
+
+@keyframes newMadeShot {
+
+  0% {
+    left: calc(24% + 58px);
+    bottom: 93px;
+
+    transform:
+      rotate(0deg);
+  }
+
+  12% {
+    left: 34%;
+    bottom: 158px;
+
+    transform:
+      rotate(55deg);
+  }
+
+  28% {
+    left: 46%;
+    bottom: 216px;
+
+    transform:
+      rotate(130deg);
+  }
+
+  46% {
+    left: 60%;
+    bottom: 240px;
+
+    transform:
+      rotate(220deg);
+  }
+
+  62% {
+    left: 72%;
+    bottom: 222px;
+
+    transform:
+      rotate(300deg);
+  }
+
+  76% {
+    left: 82%;
+    bottom: 185px;
+
+    transform:
+      rotate(380deg);
+  }
+
+  89% {
+    left: calc(100% - 101px);
+    bottom: 149px;
+
+    transform:
+      rotate(445deg);
+  }
+
+  95% {
+    left: calc(100% - 84px);
+    bottom: 129px;
+
+    transform:
+      rotate(475deg);
+  }
+
+  100% {
+    left: calc(100% - 82px);
+    bottom: 91px;
+
+    transform:
+      rotate(520deg)
+      scale(0.9);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .pixel-court {
+    height: 300px;
+  }
+
+
+  .pixel-player {
+    left: 12%;
+  }
+
+
+  .pixel-defender {
+    left: 45%;
+  }
+
+
+  .pixel-ball {
+    left:
+      calc(12% + 58px);
+  }
+
+}
