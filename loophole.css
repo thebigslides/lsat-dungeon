@@ -3738,3 +3738,1529 @@ footer a:hover {
   }
 
 }
+
+/* =========================================================
+   LOOPHOLE LEAGUE
+   POLISH PASS v1
+
+   Goals:
+   - smoother basketball animation
+   - more readable text
+   - better player movement
+   - preserve pixel-art appearance
+   ========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL TEXT READABILITY
+   ========================================================= */
+
+body {
+  color: #d8e1e8;
+}
+
+
+/* Main paragraphs */
+
+.lesson-body {
+  color: #c8d3dc;
+
+  font-size: 15px;
+
+  line-height: 1.72;
+}
+
+
+/* Don't blast the user's eyes with pure white everywhere */
+
+.lesson-body strong {
+  color: #f1f4f6;
+}
+
+
+.lesson-content p,
+.test-content p {
+  color: #afc0cc;
+}
+
+
+.chapter-description {
+  color: #332a20;
+}
+
+
+.sidebar-description {
+  color: #a9bdcb;
+}
+
+
+.record-row {
+  color: #9eb0bc;
+}
+
+
+.lesson-time {
+  color: #899eac;
+}
+
+
+.section-status {
+  color: #94a8b5;
+}
+
+
+/* =========================================================
+   EYEBROWS / SMALL LABELS
+   ========================================================= */
+
+.eyebrow {
+  color: #e58a2d;
+
+  text-shadow: none;
+}
+
+
+.mini-label,
+.mastery-label,
+.lesson-screen-progress span,
+.test-progress-info span,
+.test-score-live span {
+  color: #72acd1;
+
+  text-shadow: none;
+}
+
+
+.lesson-type {
+  color: #72acd1;
+}
+
+
+.concept-heading {
+  color: #a9bac5;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+.lesson-stage-header h1,
+.section-heading h2,
+.sidebar-heading h2,
+.lesson-content h3,
+.test-content h3 {
+  color: #edf2f5;
+
+  text-shadow:
+    2px 2px 0 #020912;
+}
+
+
+/* =========================================================
+   QUESTION READABILITY
+   ========================================================= */
+
+.lesson-stimulus {
+  color: #25231f;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #e8bb78 0px,
+      #e8bb78 80px,
+      #e2ae68 80px,
+      #e2ae68 160px
+    );
+
+  border-color: #d7a35f;
+
+  box-shadow:
+    inset 0 0 0 2px #f0cd96,
+    3px 3px 0 #020912;
+}
+
+
+.interaction-question {
+  color: #e7edf1;
+
+  font-size: 16px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ANSWER OPTIONS
+   ========================================================= */
+
+.interaction-option,
+.answer-button {
+  color: #c5d0d8;
+
+  background:
+    linear-gradient(
+      180deg,
+      #092b49,
+      #071d31
+    );
+
+  border-color: #175681;
+
+  line-height: 1.45;
+}
+
+
+.interaction-option:hover:not(:disabled),
+.answer-button:hover:not(:disabled) {
+  color: #edf2f5;
+
+  background:
+    linear-gradient(
+      180deg,
+      #0b3b62,
+      #092744
+    );
+}
+
+
+.answer-letter {
+  color: #eaf2f7;
+
+  background: #0b3658;
+
+  border-color: #2678ac;
+}
+
+
+/* selected answer */
+
+.interaction-option.selected,
+.answer-button.selected {
+  color: #fff4df;
+
+  background:
+    linear-gradient(
+      180deg,
+      #c96b13,
+      #a84f08
+    );
+
+  border-color: #e89b4b;
+}
+
+
+/* =========================================================
+   TEACHING BOXES
+   ========================================================= */
+
+.concept-box,
+.concept-example {
+  color: #29251f;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #e6b875 0px,
+      #e6b875 80px,
+      #dfaa64 80px,
+      #dfaa64 160px
+    );
+
+  border-color: #d19b58;
+}
+
+
+.concept-box h3,
+.concept-example h3 {
+  color: #12314b;
+}
+
+
+.concept-box p,
+.concept-example p {
+  color: #332d25;
+}
+
+
+/* =========================================================
+   FEEDBACK READABILITY
+   ========================================================= */
+
+.lesson-feedback {
+  background: #173822;
+
+  border-color: #4d9e51;
+}
+
+
+.lesson-feedback.wrong {
+  background: #48201c;
+
+  border-color: #b84a40;
+}
+
+
+.lesson-feedback p {
+  color: #c8d7ce;
+}
+
+
+.lesson-feedback.wrong p {
+  color: #dcc7c5;
+}
+
+
+.lesson-feedback-label {
+  color: #8ed58d;
+}
+
+
+.lesson-feedback.wrong .lesson-feedback-label {
+  color: #df8b83;
+}
+
+
+/* =========================================================
+   2. SMOOTHER COURT MOVEMENT
+
+   Pixel ART stays pixelated.
+   Motion itself becomes smooth.
+   ========================================================= */
+
+.pixel-player,
+.pixel-defender,
+.pixel-ball,
+.pixel-hoop,
+.net {
+  will-change: transform;
+
+  backface-visibility: hidden;
+
+  transform-style: preserve-3d;
+}
+
+
+/*
+  Kill the old choppy idle animations.
+*/
+
+.pixel-player {
+  animation:
+    playerIdleSmooth
+    1.35s
+    ease-in-out
+    infinite;
+}
+
+
+.pixel-defender {
+  animation:
+    defenderIdleSmooth
+    1.15s
+    ease-in-out
+    infinite;
+}
+
+
+.pixel-ball {
+  animation:
+    ballDribbleSmooth
+    0.72s
+    cubic-bezier(.45, .05, .55, .95)
+    infinite;
+}
+
+
+/* =========================================================
+   PLAYER IDLE
+
+   Tiny weight shift instead of vertical teleporting.
+   ========================================================= */
+
+@keyframes playerIdleSmooth {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+  25% {
+    transform:
+      translate3d(1px, 0, 0)
+      rotate(0.5deg);
+  }
+
+  50% {
+    transform:
+      translate3d(0, 1px, 0)
+      rotate(0deg);
+  }
+
+  75% {
+    transform:
+      translate3d(-1px, 0, 0)
+      rotate(-0.5deg);
+  }
+
+  100% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+}
+
+
+/* =========================================================
+   DEFENDER IDLE
+
+   Defensive slide / stance movement.
+   ========================================================= */
+
+@keyframes defenderIdleSmooth {
+
+  0% {
+    transform:
+      translate3d(-2px, 0, 0)
+      rotate(-1deg);
+  }
+
+  25% {
+    transform:
+      translate3d(0, 1px, 0)
+      rotate(0deg);
+  }
+
+  50% {
+    transform:
+      translate3d(3px, 0, 0)
+      rotate(1deg);
+  }
+
+  75% {
+    transform:
+      translate3d(0, 1px, 0)
+      rotate(0deg);
+  }
+
+  100% {
+    transform:
+      translate3d(-2px, 0, 0)
+      rotate(-1deg);
+  }
+
+}
+
+
+/* =========================================================
+   DRIBBLE
+
+   More natural:
+   hand → floor → hand
+
+   Ball compresses slightly at the bottom.
+   ========================================================= */
+
+@keyframes ballDribbleSmooth {
+
+  0% {
+    transform:
+      translate3d(0, -1px, 0)
+      rotate(0deg)
+      scaleX(1)
+      scaleY(1);
+  }
+
+  35% {
+    transform:
+      translate3d(1px, 11px, 0)
+      rotate(35deg)
+      scaleX(1)
+      scaleY(1);
+  }
+
+  50% {
+    transform:
+      translate3d(1px, 17px, 0)
+      rotate(55deg)
+      scaleX(1.08)
+      scaleY(0.88);
+  }
+
+  62% {
+    transform:
+      translate3d(1px, 11px, 0)
+      rotate(75deg)
+      scaleX(0.96)
+      scaleY(1.04);
+  }
+
+  100% {
+    transform:
+      translate3d(0, -1px, 0)
+      rotate(110deg)
+      scaleX(1)
+      scaleY(1);
+  }
+
+}
+
+
+/* =========================================================
+   3. BETTER SHOOTING ANIMATION
+   ========================================================= */
+
+.pixel-player.shooting {
+  animation:
+    playerJumpShot
+    0.78s
+    cubic-bezier(.25, .8, .35, 1)
+    forwards;
+}
+
+
+/*
+  Shooting arm now loads, raises, extends,
+  and follows through.
+*/
+
+.pixel-player.shooting .player-arm-right {
+  animation:
+    shootingArmNatural
+    0.78s
+    cubic-bezier(.25, .8, .35, 1)
+    forwards;
+}
+
+
+.pixel-player.shooting .player-arm-left {
+  animation:
+    guideHandNatural
+    0.78s
+    cubic-bezier(.25, .8, .35, 1)
+    forwards;
+}
+
+
+@keyframes playerJumpShot {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      scaleY(1);
+  }
+
+  15% {
+    transform:
+      translate3d(0, 3px, 0)
+      scaleY(0.95);
+  }
+
+  32% {
+    transform:
+      translate3d(1px, -5px, 0)
+      scaleY(1.02);
+  }
+
+  52% {
+    transform:
+      translate3d(2px, -17px, 0)
+      scaleY(1);
+  }
+
+  65% {
+    transform:
+      translate3d(3px, -18px, 0)
+      scaleY(1);
+  }
+
+  82% {
+    transform:
+      translate3d(4px, -7px, 0)
+      scaleY(1);
+  }
+
+  92% {
+    transform:
+      translate3d(4px, 2px, 0)
+      scaleY(0.97);
+  }
+
+  100% {
+    transform:
+      translate3d(4px, 0, 0)
+      scaleY(1);
+  }
+
+}
+
+
+@keyframes shootingArmNatural {
+
+  0% {
+    transform:
+      rotate(-18deg);
+  }
+
+  18% {
+    transform:
+      rotate(-8deg);
+  }
+
+  38% {
+    transform:
+      rotate(-62deg);
+  }
+
+  55% {
+    transform:
+      rotate(-105deg);
+  }
+
+  70% {
+    transform:
+      rotate(-128deg);
+  }
+
+  100% {
+    transform:
+      rotate(-118deg);
+  }
+
+}
+
+
+@keyframes guideHandNatural {
+
+  0% {
+    transform:
+      rotate(10deg);
+  }
+
+  25% {
+    transform:
+      rotate(5deg);
+  }
+
+  50% {
+    transform:
+      rotate(-58deg);
+  }
+
+  68% {
+    transform:
+      rotate(-78deg);
+  }
+
+  100% {
+    transform:
+      rotate(-55deg);
+  }
+
+}
+
+
+/* =========================================================
+   LEGS DURING JUMPSHOT
+   ========================================================= */
+
+.pixel-player.shooting .player-leg-left {
+  animation:
+    shooterLeftLeg
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+.pixel-player.shooting .player-leg-right {
+  animation:
+    shooterRightLeg
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+@keyframes shooterLeftLeg {
+
+  0% {
+    transform: rotate(5deg);
+  }
+
+  35% {
+    transform: rotate(-4deg);
+  }
+
+  65% {
+    transform: rotate(3deg);
+  }
+
+  100% {
+    transform: rotate(8deg);
+  }
+
+}
+
+
+@keyframes shooterRightLeg {
+
+  0% {
+    transform: rotate(-5deg);
+  }
+
+  35% {
+    transform: rotate(5deg);
+  }
+
+  65% {
+    transform: rotate(-2deg);
+  }
+
+  100% {
+    transform: rotate(-9deg);
+  }
+
+}
+
+
+/* =========================================================
+   MADE SHOT
+
+   Smooth parabola instead of a bunch of obvious
+   straight-line jumps.
+   ========================================================= */
+
+.pixel-ball.shot-made {
+  animation:
+    madeShotSmooth
+    1.05s
+    cubic-bezier(.28, .55, .42, 1)
+    forwards;
+}
+
+
+@keyframes madeShotSmooth {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform:
+      rotate(0deg)
+      scale(1);
+  }
+
+  10% {
+    left: 31%;
+    bottom: 121px;
+
+    transform:
+      rotate(45deg);
+  }
+
+  22% {
+    left: 40%;
+    bottom: 158px;
+
+    transform:
+      rotate(100deg);
+  }
+
+  36% {
+    left: 51%;
+    bottom: 184px;
+
+    transform:
+      rotate(165deg);
+  }
+
+  50% {
+    left: 62%;
+    bottom: 194px;
+
+    transform:
+      rotate(230deg);
+  }
+
+  63% {
+    left: 72%;
+    bottom: 185px;
+
+    transform:
+      rotate(290deg);
+  }
+
+  75% {
+    left: 81%;
+    bottom: 161px;
+
+    transform:
+      rotate(350deg);
+  }
+
+  86% {
+    left: calc(100% - 100px);
+    bottom: 133px;
+
+    transform:
+      rotate(405deg)
+      scale(0.98);
+  }
+
+  93% {
+    left: calc(100% - 85px);
+    bottom: 112px;
+
+    transform:
+      rotate(445deg)
+      scale(0.94);
+  }
+
+  100% {
+    left: calc(100% - 82px);
+    bottom: 82px;
+
+    transform:
+      rotate(500deg)
+      scale(0.88);
+  }
+
+}
+
+
+/* =========================================================
+   BETTER BRICK
+   ========================================================= */
+
+.pixel-ball.shot-miss {
+  animation:
+    brickShotSmooth
+    1.15s
+    cubic-bezier(.28, .55, .42, 1)
+    forwards;
+}
+
+
+@keyframes brickShotSmooth {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform:
+      rotate(0deg);
+  }
+
+  18% {
+    left: 39%;
+    bottom: 158px;
+
+    transform:
+      rotate(90deg);
+  }
+
+  38% {
+    left: 58%;
+    bottom: 190px;
+
+    transform:
+      rotate(190deg);
+  }
+
+  60% {
+    left: 76%;
+    bottom: 165px;
+
+    transform:
+      rotate(300deg);
+  }
+
+  78% {
+    left: calc(100% - 105px);
+    bottom: 132px;
+
+    transform:
+      rotate(390deg);
+  }
+
+  /* rim contact */
+
+  82% {
+    left: calc(100% - 111px);
+    bottom: 139px;
+
+    transform:
+      rotate(420deg)
+      scaleY(0.88);
+  }
+
+  /* ricochet */
+
+  90% {
+    left: calc(100% - 145px);
+    bottom: 112px;
+
+    transform:
+      rotate(485deg);
+  }
+
+  100% {
+    left: calc(100% - 180px);
+    bottom: 24px;
+
+    transform:
+      rotate(620deg);
+  }
+
+}
+
+
+/* =========================================================
+   BETTER BLOCK
+   ========================================================= */
+
+.pixel-defender.blocking {
+  animation:
+    defenderBlockNatural
+    0.78s
+    cubic-bezier(.2, .75, .3, 1)
+    forwards;
+}
+
+
+.pixel-defender.blocking .defender-arm-left {
+  animation:
+    defenderBlockArmNatural
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+.pixel-defender.blocking .defender-arm-right {
+  animation:
+    defenderGuideArm
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+@keyframes defenderBlockNatural {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0);
+  }
+
+  15% {
+    transform:
+      translate3d(-2px, 3px, 0)
+      scaleY(0.96);
+  }
+
+  35% {
+    transform:
+      translate3d(-7px, -12px, 0)
+      scaleY(1.02);
+  }
+
+  50% {
+    transform:
+      translate3d(-10px, -27px, 0);
+  }
+
+  62% {
+    transform:
+      translate3d(-11px, -29px, 0);
+  }
+
+  80% {
+    transform:
+      translate3d(-7px, -9px, 0);
+  }
+
+  92% {
+    transform:
+      translate3d(-4px, 2px, 0)
+      scaleY(0.97);
+  }
+
+  100% {
+    transform:
+      translate3d(0, 0, 0);
+  }
+
+}
+
+
+@keyframes defenderBlockArmNatural {
+
+  0% {
+    transform: rotate(15deg);
+  }
+
+  30% {
+    transform: rotate(65deg);
+  }
+
+  50% {
+    transform: rotate(122deg);
+  }
+
+  70% {
+    transform: rotate(135deg);
+  }
+
+  100% {
+    transform: rotate(90deg);
+  }
+
+}
+
+
+@keyframes defenderGuideArm {
+
+  0% {
+    transform: rotate(-15deg);
+  }
+
+  45% {
+    transform: rotate(-75deg);
+  }
+
+  70% {
+    transform: rotate(-95deg);
+  }
+
+  100% {
+    transform: rotate(-50deg);
+  }
+
+}
+
+
+/* blocked ball */
+
+.pixel-ball.shot-blocked {
+  animation:
+    blockedBallNatural
+    0.82s
+    cubic-bezier(.3, .7, .4, 1)
+    forwards;
+}
+
+
+@keyframes blockedBallNatural {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform: rotate(0deg);
+  }
+
+  25% {
+    left: 35%;
+    bottom: 124px;
+
+    transform: rotate(80deg);
+  }
+
+  42% {
+    left: 43%;
+    bottom: 145px;
+
+    transform: rotate(150deg);
+  }
+
+  /* CONTACT */
+
+  48% {
+    left: 46%;
+    bottom: 148px;
+
+    transform:
+      rotate(180deg)
+      scale(0.9);
+  }
+
+  58% {
+    left: 41%;
+    bottom: 130px;
+
+    transform:
+      rotate(240deg);
+  }
+
+  75% {
+    left: 35%;
+    bottom: 83px;
+
+    transform:
+      rotate(340deg);
+  }
+
+  100% {
+    left: 28%;
+    bottom: 18px;
+
+    transform:
+      rotate(520deg);
+  }
+
+}
+
+
+/* =========================================================
+   BETTER AIRBALL
+   ========================================================= */
+
+.pixel-ball.shot-airball {
+  animation:
+    airballNatural
+    1.2s
+    cubic-bezier(.28, .55, .42, 1)
+    forwards;
+}
+
+
+@keyframes airballNatural {
+
+  0% {
+    left: calc(24% + 31px);
+    bottom: 83px;
+
+    transform: rotate(0deg);
+  }
+
+  20% {
+    left: 40%;
+    bottom: 163px;
+
+    transform: rotate(100deg);
+  }
+
+  42% {
+    left: 60%;
+    bottom: 205px;
+
+    transform: rotate(210deg);
+  }
+
+  60% {
+    left: 75%;
+    bottom: 204px;
+
+    transform: rotate(310deg);
+  }
+
+  78% {
+    left: 89%;
+    bottom: 176px;
+
+    transform: rotate(420deg);
+  }
+
+  100% {
+    left: calc(100% + 20px);
+    bottom: 118px;
+
+    transform:
+      rotate(600deg);
+  }
+
+}
+
+
+/* =========================================================
+   SWISH / NET PHYSICS
+   ========================================================= */
+
+.pixel-hoop.swish .net {
+  animation:
+    netSwishNatural
+    0.58s
+    ease-out
+    0.82s;
+}
+
+
+@keyframes netSwishNatural {
+
+  0% {
+    transform:
+      translateY(0)
+      scaleY(1)
+      skewX(0deg);
+  }
+
+  20% {
+    transform:
+      translateY(3px)
+      scaleY(1.16)
+      skewX(4deg);
+  }
+
+  40% {
+    transform:
+      translateY(7px)
+      scaleY(1.3)
+      skewX(-7deg);
+  }
+
+  60% {
+    transform:
+      translateY(3px)
+      scaleY(0.92)
+      skewX(5deg);
+  }
+
+  80% {
+    transform:
+      translateY(1px)
+      scaleY(1.06)
+      skewX(-2deg);
+  }
+
+  100% {
+    transform:
+      translateY(0)
+      scaleY(1)
+      skewX(0deg);
+  }
+
+}
+
+
+/* =========================================================
+   CELEBRATION
+
+   No more repeatedly levitating like a possessed
+   NBA Live character.
+   ========================================================= */
+
+.pixel-player.celebrate {
+  animation:
+    playerCelebrateNatural
+    1.15s
+    ease-in-out
+    infinite;
+}
+
+
+.pixel-player.celebrate .player-arm-left {
+  animation:
+    celebrateArmLeft
+    1.15s
+    ease-in-out
+    infinite;
+}
+
+
+.pixel-player.celebrate .player-arm-right {
+  animation:
+    celebrateArmRight
+    1.15s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes playerCelebrateNatural {
+
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+  20% {
+    transform:
+      translate3d(-2px, -4px, 0)
+      rotate(-2deg);
+  }
+
+  40% {
+    transform:
+      translate3d(-3px, 0, 0)
+      rotate(-3deg);
+  }
+
+  60% {
+    transform:
+      translate3d(2px, -3px, 0)
+      rotate(2deg);
+  }
+
+  80% {
+    transform:
+      translate3d(3px, 0, 0)
+      rotate(3deg);
+  }
+
+  100% {
+    transform:
+      translate3d(0, 0, 0)
+      rotate(0deg);
+  }
+
+}
+
+
+@keyframes celebrateArmLeft {
+
+  0%,
+  100% {
+    transform: rotate(10deg);
+  }
+
+  30%,
+  70% {
+    transform: rotate(125deg);
+  }
+
+}
+
+
+@keyframes celebrateArmRight {
+
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+
+  30%,
+  70% {
+    transform: rotate(-125deg);
+  }
+
+}
+
+
+/* =========================================================
+   RESULT TEXT
+
+   Faster and cleaner arcade pop.
+   ========================================================= */
+
+.shot-result.result-pop {
+  animation:
+    arcadeResultPop
+    0.42s
+    cubic-bezier(.18, .85, .32, 1.35)
+    forwards;
+}
+
+
+@keyframes arcadeResultPop {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.6);
+  }
+
+  60% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.12);
+  }
+
+  82% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   COURT DEPTH / PRESENTATION
+   ========================================================= */
+
+.pixel-court {
+  box-shadow:
+    inset 0 15px 25px rgba(0, 0, 0, 0.09),
+    inset 0 -8px 0 rgba(126, 76, 31, 0.15);
+}
+
+
+/*
+  Player grounding shadows.
+*/
+
+.pixel-player::after,
+.pixel-defender::after {
+  content: "";
+
+  width: 30px;
+  height: 6px;
+
+  position: absolute;
+
+  left: 5px;
+  bottom: -5px;
+
+  z-index: -1;
+
+  background:
+    rgba(33, 35, 32, 0.28);
+
+  border-radius: 50%;
+
+  transform:
+    scaleX(1);
+}
+
+
+/*
+  Shadow gets smaller while jumping.
+*/
+
+.pixel-player.shooting::after {
+  animation:
+    shooterShadow
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+.pixel-defender.blocking::after {
+  animation:
+    defenderShadow
+    0.78s
+    ease-out
+    forwards;
+}
+
+
+@keyframes shooterShadow {
+
+  0%,
+  100% {
+    opacity: 0.28;
+
+    transform:
+      scaleX(1);
+  }
+
+  55% {
+    opacity: 0.13;
+
+    transform:
+      scaleX(0.62);
+  }
+
+}
+
+
+@keyframes defenderShadow {
+
+  0%,
+  100% {
+    opacity: 0.28;
+
+    transform:
+      scaleX(1);
+  }
+
+  55% {
+    opacity: 0.12;
+
+    transform:
+      scaleX(0.58);
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE ANIMATION CORRECTION
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  /*
+    Existing mobile CSS moves the shooter to 15%.
+    These animations need to start there too.
+  */
+
+  @keyframes madeShotSmooth {
+
+    0% {
+      left: calc(15% + 31px);
+      bottom: 83px;
+      transform: rotate(0deg);
+    }
+
+    22% {
+      left: 34%;
+      bottom: 150px;
+      transform: rotate(100deg);
+    }
+
+    48% {
+      left: 57%;
+      bottom: 184px;
+      transform: rotate(220deg);
+    }
+
+    72% {
+      left: 77%;
+      bottom: 158px;
+      transform: rotate(340deg);
+    }
+
+    90% {
+      left: calc(100% - 88px);
+      bottom: 125px;
+      transform: rotate(430deg);
+    }
+
+    100% {
+      left: calc(100% - 78px);
+      bottom: 78px;
+      transform: rotate(500deg);
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .pixel-player,
+  .pixel-defender,
+  .pixel-ball,
+  .pixel-hoop,
+  .net,
+  .shot-result {
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+  }
+
+}
