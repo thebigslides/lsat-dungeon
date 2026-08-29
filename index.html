@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Loophole League</title>
+  <title>Reasoning League</title>
 
   <link
     rel="stylesheet"
@@ -22,6 +22,76 @@
 
 
   <!-- =====================================================
+       PRIVATE ACCESS GATE
+       ===================================================== -->
+
+  <section
+    class="access-gate"
+    id="accessGate"
+  >
+
+    <div class="access-gate-card">
+
+      <p class="access-kicker">
+        PRIVATE TRAINING FACILITY
+      </p>
+
+      <h1>
+        REASONING LEAGUE
+      </h1>
+
+      <div class="access-scoreboard">
+        LOCKER ROOM ACCESS
+      </div>
+
+      <p class="access-description">
+        Enter your access code to continue.
+      </p>
+
+
+      <form id="accessForm">
+
+        <label for="accessCode">
+          ACCESS CODE
+        </label>
+
+        <input
+          id="accessCode"
+          type="password"
+          placeholder="ENTER CODE"
+          autocomplete="off"
+          required
+        >
+
+        <button
+          class="access-button"
+          type="submit"
+        >
+          ENTER ARENA
+        </button>
+
+      </form>
+
+
+      <p
+        class="access-error hidden"
+        id="accessError"
+      >
+        ACCESS DENIED — CHECK YOUR CODE
+      </p>
+
+
+      <p class="access-footer">
+        AUTHORIZED PLAYERS ONLY
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
        TOP SCOREBOARD
        ===================================================== -->
 
@@ -29,12 +99,9 @@
 
     <div class="brand-group">
 
-      <a
-        href="../index.html"
-        class="brand"
-      >
-        LOOPHOLE
-      </a>
+      <span class="brand">
+        REASONING
+      </span>
 
       <span class="game-title">
         LEAGUE
@@ -112,7 +179,7 @@
         <div class="course-progress-header">
 
           <strong>
-            Loophole Training
+            Reasoning Training
           </strong>
 
           <span id="courseProgressPercent">
@@ -789,8 +856,6 @@
         <div class="mastery-grid">
 
 
-          <!-- ARGUMENTS -->
-
           <article class="mastery-card">
 
             <div class="mastery-card-top">
@@ -819,8 +884,6 @@
           </article>
 
 
-
-          <!-- PREMISES -->
 
           <article class="mastery-card">
 
@@ -851,8 +914,6 @@
 
 
 
-          <!-- CONCLUSIONS -->
-
           <article class="mastery-card">
 
             <div class="mastery-card-top">
@@ -882,8 +943,6 @@
 
 
 
-          <!-- PREMISE SETS -->
-
           <article class="mastery-card">
 
             <div class="mastery-card-top">
@@ -912,8 +971,6 @@
           </article>
 
 
-
-          <!-- INFERENCES -->
 
           <article class="mastery-card">
 
@@ -961,11 +1018,7 @@
     id="lessonScreen"
   >
 
-
-    <!-- LESSON TOPBAR -->
-
     <header class="lesson-screen-header">
-
 
       <button
         class="exit-button"
@@ -999,8 +1052,6 @@
 
 
 
-    <!-- LESSON CONTENT -->
-
     <div class="lesson-screen-inner">
 
 
@@ -1021,18 +1072,13 @@
 
 
 
-      <!-- =================================================
-           BASKETBALL GAME
-           ================================================= -->
+      <!-- BASKETBALL GAME -->
 
       <section
         class="basketball-stage hidden"
         id="basketballStage"
         aria-label="Basketball feedback animation"
       >
-
-
-        <!-- SCOREBOARD -->
 
         <div class="court-scoreboard">
 
@@ -1050,7 +1096,6 @@
           </div>
 
 
-
           <div class="possession-display">
 
             <span>
@@ -1062,7 +1107,6 @@
             </strong>
 
           </div>
-
 
 
           <div class="court-team opponent">
@@ -1081,17 +1125,11 @@
 
 
 
-        <!-- =================================================
-             COURT
-             ================================================= -->
-
         <div
           class="pixel-court"
           id="pixelCourt"
         >
 
-
-          <!-- CROWD -->
 
           <div class="pixel-crowd">
 
@@ -1115,37 +1153,24 @@
           </div>
 
 
-
-          <!-- COURT LINES -->
-
           <div class="court-center-line"></div>
-
           <div class="court-circle"></div>
-
           <div class="court-key"></div>
-
           <div class="three-point-line"></div>
 
 
 
-          <!-- =================================================
-               OFFENSIVE PLAYER
-               ================================================= -->
+          <!-- OFFENSIVE PLAYER -->
 
           <div
             class="pixel-player"
             id="pixelPlayer"
           >
 
-            <div
-              class="player-sprite player-blue-sprite"
-            >
-
+            <div class="player-sprite player-blue-sprite">
 
               <div class="sprite-head"></div>
-
               <div class="sprite-hair"></div>
-
               <div class="sprite-neck"></div>
 
 
@@ -1158,34 +1183,16 @@
               </div>
 
 
-              <div
-                class="sprite-arm sprite-arm-left"
-              ></div>
-
-              <div
-                class="sprite-arm sprite-arm-right"
-              ></div>
-
+              <div class="sprite-arm sprite-arm-left"></div>
+              <div class="sprite-arm sprite-arm-right"></div>
 
               <div class="sprite-shorts"></div>
 
+              <div class="sprite-leg sprite-leg-left"></div>
+              <div class="sprite-leg sprite-leg-right"></div>
 
-              <div
-                class="sprite-leg sprite-leg-left"
-              ></div>
-
-              <div
-                class="sprite-leg sprite-leg-right"
-              ></div>
-
-
-              <div
-                class="sprite-shoe sprite-shoe-left"
-              ></div>
-
-              <div
-                class="sprite-shoe sprite-shoe-right"
-              ></div>
+              <div class="sprite-shoe sprite-shoe-left"></div>
+              <div class="sprite-shoe sprite-shoe-right"></div>
 
             </div>
 
@@ -1193,24 +1200,17 @@
 
 
 
-          <!-- =================================================
-               DEFENDER
-               ================================================= -->
+          <!-- DEFENDER -->
 
           <div
             class="pixel-defender"
             id="pixelDefender"
           >
 
-            <div
-              class="player-sprite player-orange-sprite"
-            >
-
+            <div class="player-sprite player-orange-sprite">
 
               <div class="sprite-head"></div>
-
               <div class="sprite-hair"></div>
-
               <div class="sprite-neck"></div>
 
 
@@ -1223,34 +1223,16 @@
               </div>
 
 
-              <div
-                class="sprite-arm sprite-arm-left"
-              ></div>
-
-              <div
-                class="sprite-arm sprite-arm-right"
-              ></div>
-
+              <div class="sprite-arm sprite-arm-left"></div>
+              <div class="sprite-arm sprite-arm-right"></div>
 
               <div class="sprite-shorts"></div>
 
+              <div class="sprite-leg sprite-leg-left"></div>
+              <div class="sprite-leg sprite-leg-right"></div>
 
-              <div
-                class="sprite-leg sprite-leg-left"
-              ></div>
-
-              <div
-                class="sprite-leg sprite-leg-right"
-              ></div>
-
-
-              <div
-                class="sprite-shoe sprite-shoe-left"
-              ></div>
-
-              <div
-                class="sprite-shoe sprite-shoe-right"
-              ></div>
+              <div class="sprite-shoe sprite-shoe-left"></div>
+              <div class="sprite-shoe sprite-shoe-right"></div>
 
             </div>
 
@@ -1258,9 +1240,7 @@
 
 
 
-          <!-- =================================================
-               BALL
-               ================================================= -->
+          <!-- BALL -->
 
           <div
             class="pixel-ball"
@@ -1272,9 +1252,7 @@
 
 
 
-          <!-- =================================================
-               HOOP
-               ================================================= -->
+          <!-- HOOP -->
 
           <div
             class="pixel-hoop"
@@ -1282,18 +1260,14 @@
           >
 
             <div class="backboard"></div>
-
             <div class="rim"></div>
-
             <div class="net"></div>
 
           </div>
 
 
 
-          <!-- =================================================
-               PLAY RESULT
-               ================================================= -->
+          <!-- RESULT -->
 
           <div
             class="shot-result hidden"
@@ -1308,9 +1282,7 @@
 
 
 
-      <!-- =================================================
-           LESSON MATERIAL
-           ================================================= -->
+      <!-- LESSON MATERIAL -->
 
       <article
         class="lesson-body"
@@ -1319,7 +1291,7 @@
 
 
 
-      <!-- ANSWER OPTIONS GENERATED BY JS -->
+      <!-- ANSWER OPTIONS -->
 
       <section
         class="interaction-area"
@@ -1328,9 +1300,7 @@
 
 
 
-      <!-- =================================================
-           FEEDBACK
-           ================================================= -->
+      <!-- FEEDBACK -->
 
       <section
         class="lesson-feedback hidden"
@@ -1368,9 +1338,7 @@
 
 
 
-      <!-- =================================================
-           LESSON NAVIGATION
-           ================================================= -->
+      <!-- LESSON NAVIGATION -->
 
       <footer class="lesson-controls">
 
@@ -1413,7 +1381,6 @@
     class="test-screen hidden"
     id="testScreen"
   >
-
 
     <header class="test-screen-header">
 
