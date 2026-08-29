@@ -2,12 +2,21 @@
 // REASONING LEAGUE — PRIVATE ACCESS GATE
 // ============================================================
 
-// Change this to whatever password you want.
-const ACCESS_CODE = "CHANGE-ME";
+// IMPORTANT:
+// Replace this placeholder with the 64-character SHA-256 hash
+// of your chosen password. Do NOT store the actual password here.
+const ACCESS_HASH = "PASTE-YOUR-64-CHARACTER-SHA256-HASH-HERE";
 
-// How long access lasts:
-// sessionStorage = stays unlocked until the browser/tab session ends.
 const ACCESS_STORAGE_KEY = "reasoningLeagueAccess";
+
+// Basic client-side throttling.
+// This discourages casual password guessing, but it is not
+// a substitute for real server-side authentication.
+const ACCESS_MAX_ATTEMPTS = 5;
+const ACCESS_LOCKOUT_MS = 30_000;
+
+const ACCESS_ATTEMPTS_KEY = "reasoningLeagueFailedAttempts";
+const ACCESS_LOCKOUT_KEY = "reasoningLeagueLockedUntil";
 
 
 // ------------------------------------------------------------
@@ -22,14 +31,165 @@ const accessGateCard = document.querySelector(".access-gate-card");
 
 
 // ------------------------------------------------------------
-// CHECK WHETHER THIS SESSION IS ALREADY UNLOCKED
+// SHA-256
+// ------------------------------------------------------------
+
+async function sha256(text) {
+
+  const data =
+    new TextEncoder().encode(text);
+
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
+
+  return Array.from(
+    new Uint8Array(hashBuffer)
+  )
+    .map(byte =>
+      byte
+        .toString(16)
+        .padStart(2, "0")
+    )
+    .join("");
+}
+
+
+// ------------------------------------------------------------
+// ACCESS HELPERS
+// ------------------------------------------------------------
+
+function getFailedAttempts() {
+
+  return Number(
+    sessionStorage.getItem(
+      ACCESS_ATTEMPTS_KEY
+    ) || 0
+  );
+}
+
+
+function setFailedAttempts(count) {
+
+  sessionStorage.setItem(
+    ACCESS_ATTEMPTS_KEY,
+    String(count)
+  );
+}
+
+
+function getLockedUntil() {
+
+  return Number(
+    sessionStorage.getItem(
+      ACCESS_LOCKOUT_KEY
+    ) || 0
+  );
+}
+
+
+function clearAccessFailures() {
+
+  sessionStorage.removeItem(
+    ACCESS_ATTEMPTS_KEY
+  );
+
+  sessionStorage.removeItem(
+    ACCESS_LOCKOUT_KEY
+  );
+}
+
+
+function showAccessError(message) {
+
+  if (!accessError) {
+    return;
+  }
+
+  accessError.textContent =
+    message;
+
+  accessError.classList.remove(
+    "hidden"
+  );
+}
+
+
+function shakeAccessGate() {
+
+  if (!accessGateCard) {
+    return;
+  }
+
+  accessGateCard.classList.remove(
+    "access-denied"
+  );
+
+  void accessGateCard.offsetWidth;
+
+  accessGateCard.classList.add(
+    "access-denied"
+  );
+
+  setTimeout(() => {
+
+    accessGateCard.classList.remove(
+      "access-denied"
+    );
+
+  }, 300);
+}
+
+
+function unlockAccessGate() {
+
+  sessionStorage.setItem(
+    ACCESS_STORAGE_KEY,
+    "granted"
+  );
+
+  clearAccessFailures();
+
+  if (accessError) {
+    accessError.classList.add(
+      "hidden"
+    );
+  }
+
+  if (!accessGate) {
+    return;
+  }
+
+  accessGate.classList.add(
+    "access-granted"
+  );
+
+  setTimeout(() => {
+
+    accessGate.classList.add(
+      "hidden"
+    );
+
+  }, 300);
+}
+
+
+// ------------------------------------------------------------
+// ALREADY UNLOCKED?
 // ------------------------------------------------------------
 
 const alreadyUnlocked =
-  sessionStorage.getItem(ACCESS_STORAGE_KEY) === "granted";
+  sessionStorage.getItem(
+    ACCESS_STORAGE_KEY
+  ) === "granted";
 
 if (alreadyUnlocked && accessGate) {
-  accessGate.classList.add("hidden");
+
+  accessGate.classList.add(
+    "hidden"
+  );
 }
 
 
@@ -39,64 +199,137 @@ if (alreadyUnlocked && accessGate) {
 
 if (accessForm) {
 
-  accessForm.addEventListener("submit", (event) => {
+  accessForm.addEventListener(
+    "submit",
+    async (event) => {
 
-    event.preventDefault();
-
-    const enteredCode = accessCodeInput.value.trim();
+      event.preventDefault();
 
 
-    // CORRECT PASSWORD
-    if (enteredCode === ACCESS_CODE) {
+      // If the hash has not been configured yet,
+      // fail closed instead of accidentally allowing access.
+      if (
+        ACCESS_HASH ===
+        "PASTE-YOUR-64-CHARACTER-SHA256-HASH-HERE"
+      ) {
 
-      sessionStorage.setItem(
-        ACCESS_STORAGE_KEY,
-        "granted"
+        showAccessError(
+          "ACCESS HASH NOT CONFIGURED"
+        );
+
+        shakeAccessGate();
+
+        return;
+      }
+
+
+      const now =
+        Date.now();
+
+      const lockedUntil =
+        getLockedUntil();
+
+
+      // Still in a temporary lockout.
+      if (lockedUntil > now) {
+
+        const secondsRemaining =
+          Math.ceil(
+            (lockedUntil - now) / 1000
+          );
+
+        showAccessError(
+          `TOO MANY ATTEMPTS — TRY AGAIN IN ${secondsRemaining}s`
+        );
+
+        shakeAccessGate();
+
+        return;
+      }
+
+
+      // Expired lockout: reset the counter.
+      if (lockedUntil !== 0) {
+
+        clearAccessFailures();
+      }
+
+
+      const enteredCode =
+        accessCodeInput.value.trim();
+
+      const enteredHash =
+        await sha256(
+          enteredCode
+        );
+
+
+      // CORRECT PASSWORD
+      if (enteredHash === ACCESS_HASH) {
+
+        accessCodeInput.value =
+          "";
+
+        unlockAccessGate();
+
+        return;
+      }
+
+
+      // WRONG PASSWORD
+      const failedAttempts =
+        getFailedAttempts() + 1;
+
+      setFailedAttempts(
+        failedAttempts
       );
 
-      accessError.classList.add("hidden");
+      accessCodeInput.value =
+        "";
 
-      accessGate.classList.add("access-granted");
+      accessCodeInput.focus();
+
+      shakeAccessGate();
 
 
-      // Wait for the CSS fade animation before removing gate.
-      setTimeout(() => {
+      // Temporary lockout after repeated failures.
+      if (
+        failedAttempts >=
+        ACCESS_MAX_ATTEMPTS
+      ) {
 
-        accessGate.classList.add("hidden");
+        const newLockedUntil =
+          Date.now() +
+          ACCESS_LOCKOUT_MS;
 
-      }, 300);
+        sessionStorage.setItem(
+          ACCESS_LOCKOUT_KEY,
+          String(newLockedUntil)
+        );
 
-      return;
+        showAccessError(
+          "TOO MANY ATTEMPTS — LOCKED FOR 30 SECONDS"
+        );
+
+        return;
+      }
+
+
+      const attemptsRemaining =
+        ACCESS_MAX_ATTEMPTS -
+        failedAttempts;
+
+      showAccessError(
+        `ACCESS DENIED — ${attemptsRemaining} ATTEMPT${attemptsRemaining === 1 ? "" : "S"} REMAINING`
+      );
+
     }
-
-
-    // WRONG PASSWORD
-    accessError.classList.remove("hidden");
-
-    accessCodeInput.value = "";
-    accessCodeInput.focus();
-
-
-    // Restart shake animation.
-    accessGateCard.classList.remove("access-denied");
-
-    void accessGateCard.offsetWidth;
-
-    accessGateCard.classList.add("access-denied");
-
-
-    setTimeout(() => {
-
-      accessGateCard.classList.remove("access-denied");
-
-    }, 300);
-
-  });
-
+  );
 }
 
+
 /* =========================================================
-   LOOPHOLE LEAGUE
+   REASONING LEAGUE
    VERSION 3
 
    Learn → Check → Shoot → Feedback → Master
@@ -1668,10 +1901,6 @@ function showShotResult(
   );
 
 
-  /*
-    Force browser to restart animation.
-  */
-
   void shotResult.offsetWidth;
 
 
@@ -2142,10 +2371,6 @@ function renderLessonStep() {
   hideBasketballCourt();
 
 
-  /* =======================================================
-     LEARN
-     ======================================================= */
-
   if (step.type === "learn") {
 
     lessonStageType.textContent =
@@ -2164,10 +2389,6 @@ function renderLessonStep() {
       "Continue →";
   }
 
-
-  /* =======================================================
-     QUESTION
-     ======================================================= */
 
   if (step.type === "question") {
 
@@ -2272,10 +2493,6 @@ function renderLessonStep() {
       "Shoot";
   }
 
-
-  /* =======================================================
-     COMPLETE
-     ======================================================= */
 
   if (step.type === "complete") {
 
@@ -2393,11 +2610,6 @@ async function checkLessonAnswer() {
     );
 
 
-  /*
-    Lock the entire interface while the
-    possession animation plays.
-  */
-
   options.forEach(option => {
 
     option.disabled =
@@ -2413,10 +2625,6 @@ async function checkLessonAnswer() {
   previousLessonStep.disabled =
     true;
 
-
-  /* =======================================================
-     CORRECT
-     ======================================================= */
 
   if (correct) {
 
@@ -2440,10 +2648,6 @@ async function checkLessonAnswer() {
   }
 
 
-  /* =======================================================
-     WRONG
-     ======================================================= */
-
   else {
 
     player.streak =
@@ -2453,10 +2657,6 @@ async function checkLessonAnswer() {
     await playMissedShot();
   }
 
-
-  /* =======================================================
-     REVEAL ANSWERS
-     ======================================================= */
 
   options.forEach(
     (option, index) => {
@@ -2488,10 +2688,6 @@ async function checkLessonAnswer() {
     }
   );
 
-
-  /* =======================================================
-     FEEDBACK
-     ======================================================= */
 
   if (correct) {
 
@@ -2650,11 +2846,6 @@ function handleNextStep() {
     ];
 
 
-  /*
-    Question selected but possession
-    has not yet been played.
-  */
-
   if (
     step.type === "question" &&
     !currentQuestionAnswered
@@ -2666,10 +2857,6 @@ function handleNextStep() {
   }
 
 
-  /*
-    End of lesson.
-  */
-
   if (step.type === "complete") {
 
     closeLesson();
@@ -2677,10 +2864,6 @@ function handleNextStep() {
     return;
   }
 
-
-  /*
-    Advance.
-  */
 
   if (
     currentStepIndex <
@@ -2736,10 +2919,6 @@ function completeLesson() {
         activeLessonID
       ];
 
-
-  /*
-    Completion rewards only happen once.
-  */
 
   if (!lessonProgressData.completed) {
 
@@ -2984,15 +3163,15 @@ startChapterTest.addEventListener(
    DEVELOPMENT RESET
 
    Browser console:
-   resetLoopholeProgress()
+   resetReasoningLeagueProgress()
    ========================================================= */
 
-window.resetLoopholeProgress =
+window.resetReasoningLeagueProgress =
   function () {
 
     const confirmed =
       confirm(
-        "Reset all Loophole League progress?"
+        "Reset all Reasoning League progress?"
       );
 
 
