@@ -6455,3 +6455,154 @@ body {
   }
 
 }
+
+/* =========================================================
+   TEXT READABILITY FIX
+   ========================================================= */
+
+
+/* Main lesson text */
+
+.lesson-body,
+.lesson-body p {
+  color: #b9c4cc;
+}
+
+
+/* Bold text in normal lesson paragraphs */
+
+.lesson-body strong {
+  color: #d2d9de;
+}
+
+
+/* Main lesson title */
+
+.lesson-stage-header h1 {
+  color: #d7dde1;
+
+  text-shadow:
+    2px 2px 0 #020912;
+}
+
+
+/* FILM ROOM label */
+
+.lesson-stage-header .eyebrow {
+  color: #d98228;
+}
+
+
+/* =========================================================
+   TAN EXAMPLE BOX
+   ========================================================= */
+
+.concept-example,
+.concept-box {
+  color: #33291f;
+}
+
+
+/* ALL text inside tan boxes */
+
+.concept-example p,
+.concept-box p {
+  color: #33291f;
+}
+
+
+/*
+  Important:
+  previously <strong> inherited our bright
+  global strong styling and turned white.
+*/
+
+.concept-example strong,
+.concept-box strong {
+  color: #49331f;
+}
+
+
+/* =========================================================
+   LOGIC FLOW
+   ========================================================= */
+
+.logic-node {
+  color: #c2ccd2;
+
+  background: #092844;
+
+  border-color: #0878c9;
+
+  text-shadow: none;
+}
+
+
+.logic-node.conclusion-node {
+  color: #382514;
+
+  background: #d97816;
+
+  border-color: #f29a3e;
+
+  text-shadow: none;
+}
+
+
+.logic-arrow {
+  color: #dc872c;
+
+  text-shadow: none;
+}
+
+
+/* =========================================================
+   QUESTION TEXT
+   ========================================================= */
+
+.interaction-question {
+  color: #cbd4da;
+}
+
+
+/* =========================================================
+   GENERAL LESSON HEADINGS
+   ========================================================= */
+
+.lesson-body h2,
+.lesson-body h3 {
+  color: #d1d9de;
+}
+
+
+/* =========================================================
+   LINKS / EMPHASIS
+   ========================================================= */
+
+.lesson-body em {
+  color: #c5a87e;
+}
+
+
+/* =========================================================
+   FEEDBACK
+   ========================================================= */
+
+.lesson-feedback h3 {
+  color: #d5ddd8;
+}
+
+
+.lesson-feedback p {
+  color: #b7c5bc;
+}
+
+
+.lesson-feedback.wrong h3 {
+  color: #dfcfcd;
+}
+
+
+.lesson-feedback.wrong p {
+  color: #c8b7b5;
+}
