@@ -5,7 +5,7 @@
 // IMPORTANT:
 // Replace this placeholder with the 64-character SHA-256 hash
 // of your chosen password. Do NOT store the actual password here.
-const ACCESS_HASH = "PASTE-YOUR-64-CHARACTER-SHA256-HASH-HERE";
+const ACCESS_HASH = "25bc6abdd052321472f2e3c9161f194eb8b595c18b7aff42174a7a3385aec0e0";
 
 const ACCESS_STORAGE_KEY = "reasoningLeagueAccess";
 
