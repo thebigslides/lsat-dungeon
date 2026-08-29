@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Loophole League | LSAT Training</title>
+  <title>Loophole League</title>
 
   <link
     rel="stylesheet"
@@ -20,9 +20,10 @@
 
 <body>
 
+
   <!-- =====================================================
        TOP SCOREBOARD
-  ====================================================== -->
+       ===================================================== -->
 
   <header class="topbar">
 
@@ -35,10 +36,6 @@
         LOOPHOLE
       </a>
 
-      <span class="divider">
-        /
-      </span>
-
       <span class="game-title">
         LEAGUE
       </span>
@@ -46,7 +43,7 @@
     </div>
 
 
-    <div class="player-mini">
+    <div class="player-mini-stats">
 
       <div class="mini-stat">
 
@@ -91,61 +88,46 @@
   </header>
 
 
+
   <!-- =====================================================
        MAIN APP
-  ====================================================== -->
+       ===================================================== -->
 
   <main class="app-shell">
 
 
     <!-- ===================================================
-         LEFT SIDEBAR
-    ==================================================== -->
+         SIDEBAR
+         =================================================== -->
 
     <aside class="sidebar">
 
-      <div class="sidebar-heading">
+
+      <section class="sidebar-section">
 
         <p class="eyebrow">
-          SEASON MODE
+          SEASON PROGRESS
         </p>
 
-        <h2>
-          Training Camp
-        </h2>
+        <div class="course-progress-header">
 
-        <p class="sidebar-description">
-          Learn the concepts. Run the drills.
-          Win the chapter game.
-        </p>
-
-      </div>
-
-
-      <!-- =================================================
-           OVERALL PROGRESS
-      ================================================== -->
-
-      <section class="overall-progress">
-
-        <div class="panel-heading">
-
-          <span>
-            Season Progress
-          </span>
-
-          <strong id="courseProgressPercent">
-            0%
+          <strong>
+            Loophole Training
           </strong>
+
+          <span id="courseProgressPercent">
+            0%
+          </span>
 
         </div>
 
 
-        <div class="progress-bar">
+        <div class="progress-track">
 
           <div
             class="progress-fill"
             id="courseProgressBar"
+            style="width: 0%;"
           ></div>
 
         </div>
@@ -153,205 +135,201 @@
       </section>
 
 
-      <!-- =================================================
-           CHAPTERS
-      ================================================== -->
 
-      <nav class="chapter-list">
+      <!-- CHAPTERS -->
 
-
-        <button
-          class="chapter-card active"
-          data-chapter="1"
-        >
-
-          <div class="chapter-number">
-            01
-          </div>
-
-          <div class="chapter-info">
-
-            <strong>
-              Foundations
-            </strong>
-
-            <span>
-              Arguments + structure
-            </span>
-
-          </div>
-
-          <div class="chapter-status unlocked">
-            PLAY
-          </div>
-
-        </button>
-
-
-        <button
-          class="chapter-card locked"
-          data-chapter="2"
-          disabled
-        >
-
-          <div class="chapter-number">
-            02
-          </div>
-
-          <div class="chapter-info">
-
-            <strong>
-              Inferences
-            </strong>
-
-            <span>
-              What follows?
-            </span>
-
-          </div>
-
-          <div class="chapter-status">
-            LOCKED
-          </div>
-
-        </button>
-
-
-        <button
-          class="chapter-card locked"
-          data-chapter="3"
-          disabled
-        >
-
-          <div class="chapter-number">
-            03
-          </div>
-
-          <div class="chapter-info">
-
-            <strong>
-              Power Players
-            </strong>
-
-            <span>
-              Certainty + possibility
-            </span>
-
-          </div>
-
-          <div class="chapter-status">
-            LOCKED
-          </div>
-
-        </button>
-
-
-        <button
-          class="chapter-card locked"
-          data-chapter="4"
-          disabled
-        >
-
-          <div class="chapter-number">
-            04
-          </div>
-
-          <div class="chapter-info">
-
-            <strong>
-              Loopholes
-            </strong>
-
-            <span>
-              Attack the gap
-            </span>
-
-          </div>
-
-          <div class="chapter-status">
-            LOCKED
-          </div>
-
-        </button>
-
-
-        <button
-          class="chapter-card locked"
-          data-chapter="5"
-          disabled
-        >
-
-          <div class="chapter-number">
-            05
-          </div>
-
-          <div class="chapter-info">
-
-            <strong>
-              Playoffs
-            </strong>
-
-            <span>
-              Mixed review
-            </span>
-
-          </div>
-
-          <div class="chapter-status">
-            LOCKED
-          </div>
-
-        </button>
-
-      </nav>
-
-
-      <!-- =================================================
-           PLAYER RECORD
-      ================================================== -->
-
-      <section class="player-record">
+      <section class="sidebar-section">
 
         <p class="eyebrow">
-          PLAYER CARD
+          CHAPTERS
         </p>
 
 
-        <div class="record-row">
+        <div class="chapter-list">
 
-          <span>
-            Questions
-          </span>
 
-          <strong id="totalAnswered">
-            0
-          </strong>
+          <button
+            class="chapter-card active"
+            type="button"
+          >
+
+            <span class="chapter-number">
+              01
+            </span>
+
+            <span class="chapter-card-text">
+
+              <strong>
+                Fundamentals
+              </strong>
+
+              <small>
+                Current Chapter
+              </small>
+
+            </span>
+
+          </button>
+
+
+
+          <button
+            class="chapter-card locked"
+            type="button"
+            disabled
+          >
+
+            <span class="chapter-number">
+              02
+            </span>
+
+            <span class="chapter-card-text">
+
+              <strong>
+                Chapter 2
+              </strong>
+
+              <small>
+                Locked
+              </small>
+
+            </span>
+
+          </button>
+
+
+
+          <button
+            class="chapter-card locked"
+            type="button"
+            disabled
+          >
+
+            <span class="chapter-number">
+              03
+            </span>
+
+            <span class="chapter-card-text">
+
+              <strong>
+                Chapter 3
+              </strong>
+
+              <small>
+                Locked
+              </small>
+
+            </span>
+
+          </button>
+
+
+
+          <button
+            class="chapter-card locked"
+            type="button"
+            disabled
+          >
+
+            <span class="chapter-number">
+              04
+            </span>
+
+            <span class="chapter-card-text">
+
+              <strong>
+                Chapter 4
+              </strong>
+
+              <small>
+                Locked
+              </small>
+
+            </span>
+
+          </button>
+
+
+
+          <button
+            class="chapter-card locked"
+            type="button"
+            disabled
+          >
+
+            <span class="chapter-number">
+              05
+            </span>
+
+            <span class="chapter-card-text">
+
+              <strong>
+                Chapter 5
+              </strong>
+
+              <small>
+                Locked
+              </small>
+
+            </span>
+
+          </button>
 
         </div>
 
-
-        <div class="record-row">
-
-          <span>
-            FG%
-          </span>
-
-          <strong id="overallAccuracy">
-            —
-          </strong>
-
-        </div>
+      </section>
 
 
-        <div class="record-row">
 
-          <span>
-            Best Streak
-          </span>
+      <!-- PLAYER RECORD -->
 
-          <strong id="bestStreak">
-            0
-          </strong>
+      <section class="sidebar-section">
+
+        <p class="eyebrow">
+          PLAYER RECORD
+        </p>
+
+
+        <div class="record-list">
+
+
+          <div class="record-row">
+
+            <span>
+              Questions
+            </span>
+
+            <strong id="totalAnswered">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="record-row">
+
+            <span>
+              Accuracy
+            </span>
+
+            <strong id="overallAccuracy">
+              —
+            </strong>
+
+          </div>
+
+
+          <div class="record-row">
+
+            <span>
+              Best Streak
+            </span>
+
+            <strong id="bestStreak">
+              0
+            </strong>
+
+          </div>
 
         </div>
 
@@ -360,43 +338,40 @@
     </aside>
 
 
+
     <!-- ===================================================
-         MAIN COURSE AREA
-    ==================================================== -->
+         COURSE AREA
+         =================================================== -->
 
     <section class="course-area">
 
 
-      <!-- =================================================
-           CHAPTER HEADER
-      ================================================== -->
+      <!-- CHAPTER HEADER -->
 
       <section class="chapter-header">
 
         <div class="chapter-header-content">
 
           <p class="eyebrow">
-            CHAPTER 01
+            CHAPTER 1
           </p>
 
           <h1>
-            Foundations
+            Fundamentals
           </h1>
 
           <p class="chapter-description">
-            Build the fundamentals first. Learn how arguments
-            work, identify their pieces, and understand how
-            conclusions are supported before moving into
-            harder reasoning.
+            Build the core reasoning skills that everything
+            else in Logical Reasoning depends on.
           </p>
 
         </div>
 
 
-        <div class="chapter-mastery">
+        <div class="chapter-mastery-box">
 
-          <span class="mastery-label">
-            Chapter Record
+          <span>
+            CHAPTER MASTERY
           </span>
 
           <strong id="chapterMastery">
@@ -404,11 +379,12 @@
           </strong>
 
 
-          <div class="progress-bar">
+          <div class="progress-track">
 
             <div
               class="progress-fill"
               id="chapterMasteryBar"
+              style="width: 0%;"
             ></div>
 
           </div>
@@ -418,57 +394,56 @@
       </section>
 
 
+
       <!-- =================================================
            CURRENT OBJECTIVE
-      ================================================== -->
+           ================================================= -->
 
       <section class="objective-panel">
 
-        <div class="objective-marker">
-          ▶
-        </div>
+        <div>
 
-
-        <div class="objective-content">
-
-          <span>
+          <p class="eyebrow">
             NEXT POSSESSION
-          </span>
+          </p>
 
-          <strong id="currentObjective">
+          <h2 id="currentObjective">
             Complete Lesson 1.1 — What Is an Argument?
-          </strong>
+          </h2>
 
         </div>
 
 
         <button
-          class="continue-button"
+          class="primary-button"
           id="continueTraining"
           data-lesson="1-1"
+          type="button"
         >
-          Continue
+          Continue Training
         </button>
 
       </section>
 
 
+
       <!-- =================================================
            LESSON PATH
-      ================================================== -->
+           ================================================= -->
 
-      <section class="lesson-path">
+      <section class="lesson-section">
+
 
         <div class="section-heading">
 
           <div>
 
             <p class="eyebrow">
-              GAME PLAN
+              TRAINING CAMP
             </p>
 
             <h2>
-              Chapter Training
+              Chapter Lessons
             </h2>
 
           </div>
@@ -484,411 +459,314 @@
         </div>
 
 
-        <!-- ===============================================
-             LESSON 1.1
-        ================================================ -->
 
-        <article
-          class="lesson-card available"
-          data-lesson="1-1"
-        >
-
-          <div class="lesson-status-icon">
-            ▶
-          </div>
+        <div class="lesson-path">
 
 
-          <div class="lesson-content">
+          <!-- LESSON 1.1 -->
 
-            <p class="lesson-type">
-              LESSON 1.1
-            </p>
+          <article
+            class="lesson-card available"
+            data-lesson="1-1"
+          >
 
-            <h3>
-              What Is an Argument?
-            </h3>
-
-            <p>
-              Learn what separates an actual argument
-              from a collection of statements.
-            </p>
+            <div class="lesson-status-icon">
+              ▶
+            </div>
 
 
-            <div class="lesson-tags">
+            <div class="lesson-card-content">
 
-              <span>
-                Learn
+              <span class="lesson-type">
+                LESSON 1.1
               </span>
 
-              <span>
-                3 Drills
-              </span>
+              <h3>
+                What Is an Argument?
+              </h3>
+
+              <p>
+                Learn what separates an argument from
+                a simple collection of statements.
+              </p>
 
             </div>
 
-          </div>
 
+            <div class="lesson-card-actions">
 
-          <div class="lesson-meta">
-
-            <span class="lesson-time">
-              ~5 MIN
-            </span>
-
-            <button
-              class="lesson-button"
-              data-start-lesson="1-1"
-            >
-              Start Lesson
-            </button>
-
-          </div>
-
-        </article>
-
-
-        <div class="path-connector"></div>
-
-
-        <!-- ===============================================
-             LESSON 1.2
-        ================================================ -->
-
-        <article
-          class="lesson-card locked"
-          data-lesson="1-2"
-        >
-
-          <div class="lesson-status-icon">
-            🔒
-          </div>
-
-
-          <div class="lesson-content">
-
-            <p class="lesson-type">
-              LESSON 1.2
-            </p>
-
-            <h3>
-              Premises
-            </h3>
-
-            <p>
-              Learn how to identify the statements doing
-              the supporting work inside an argument.
-            </p>
-
-
-            <div class="lesson-tags">
-
-              <span>
-                Learn
+              <span class="lesson-time">
+                5–10 MIN
               </span>
 
-              <span>
-                Drills
-              </span>
+              <button
+                class="lesson-button"
+                data-start-lesson="1-1"
+                type="button"
+              >
+                Start Lesson
+              </button>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="lesson-meta">
 
-            <span class="lesson-time">
-              ~6 MIN
-            </span>
+          <!-- LESSON 1.2 -->
 
-            <button
-              class="lesson-button"
-              disabled
-            >
-              Locked
-            </button>
+          <article
+            class="lesson-card locked"
+            data-lesson="1-2"
+          >
 
-          </div>
-
-        </article>
+            <div class="lesson-status-icon">
+              🔒
+            </div>
 
 
-        <div class="path-connector"></div>
+            <div class="lesson-card-content">
 
-
-        <!-- ===============================================
-             LESSON 1.3
-        ================================================ -->
-
-        <article
-          class="lesson-card locked"
-          data-lesson="1-3"
-        >
-
-          <div class="lesson-status-icon">
-            🔒
-          </div>
-
-
-          <div class="lesson-content">
-
-            <p class="lesson-type">
-              LESSON 1.3
-            </p>
-
-            <h3>
-              Conclusions
-            </h3>
-
-            <p>
-              Find the claim the author actually wants
-              you to accept.
-            </p>
-
-
-            <div class="lesson-tags">
-
-              <span>
-                Learn
+              <span class="lesson-type">
+                LESSON 1.2
               </span>
 
-              <span>
-                Drills
-              </span>
+              <h3>
+                Premises
+              </h3>
+
+              <p>
+                Identify the statements doing the
+                supporting inside an argument.
+              </p>
 
             </div>
 
-          </div>
 
+            <div class="lesson-card-actions">
 
-          <div class="lesson-meta">
-
-            <span class="lesson-time">
-              ~6 MIN
-            </span>
-
-            <button
-              class="lesson-button"
-              disabled
-            >
-              Locked
-            </button>
-
-          </div>
-
-        </article>
-
-
-        <div class="path-connector"></div>
-
-
-        <!-- ===============================================
-             LESSON 1.4
-        ================================================ -->
-
-        <article
-          class="lesson-card locked"
-          data-lesson="1-4"
-        >
-
-          <div class="lesson-status-icon">
-            🔒
-          </div>
-
-
-          <div class="lesson-content">
-
-            <p class="lesson-type">
-              LESSON 1.4
-            </p>
-
-            <h3>
-              Premise Sets
-            </h3>
-
-            <p>
-              Understand how multiple pieces of support
-              work together.
-            </p>
-
-
-            <div class="lesson-tags">
-
-              <span>
-                Learn
+              <span class="lesson-time">
+                5–10 MIN
               </span>
 
-              <span>
-                Drills
-              </span>
+              <button
+                class="lesson-button"
+                data-start-lesson="1-2"
+                type="button"
+                disabled
+              >
+                Locked
+              </button>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="lesson-meta">
 
-            <span class="lesson-time">
-              ~7 MIN
-            </span>
+          <!-- LESSON 1.3 -->
 
-            <button
-              class="lesson-button"
-              disabled
-            >
-              Locked
-            </button>
+          <article
+            class="lesson-card locked"
+            data-lesson="1-3"
+          >
 
-          </div>
-
-        </article>
+            <div class="lesson-status-icon">
+              🔒
+            </div>
 
 
-        <div class="path-connector"></div>
+            <div class="lesson-card-content">
 
-
-        <!-- ===============================================
-             LESSON 1.5
-        ================================================ -->
-
-        <article
-          class="lesson-card locked"
-          data-lesson="1-5"
-        >
-
-          <div class="lesson-status-icon">
-            🔒
-          </div>
-
-
-          <div class="lesson-content">
-
-            <p class="lesson-type">
-              LESSON 1.5
-            </p>
-
-            <h3>
-              Valid & Invalid Conclusions
-            </h3>
-
-            <p>
-              Learn when the evidence actually earns
-              the conclusion being drawn.
-            </p>
-
-
-            <div class="lesson-tags">
-
-              <span>
-                Learn
+              <span class="lesson-type">
+                LESSON 1.3
               </span>
 
-              <span>
-                Mixed Drill
-              </span>
+              <h3>
+                Conclusions
+              </h3>
+
+              <p>
+                Find the claim the rest of the
+                argument is trying to establish.
+              </p>
 
             </div>
 
-          </div>
 
+            <div class="lesson-card-actions">
 
-          <div class="lesson-meta">
-
-            <span class="lesson-time">
-              ~8 MIN
-            </span>
-
-            <button
-              class="lesson-button"
-              disabled
-            >
-              Locked
-            </button>
-
-          </div>
-
-        </article>
-
-
-        <div class="path-connector final"></div>
-
-
-        <!-- ===============================================
-             CHAPTER GAME
-        ================================================ -->
-
-        <article
-          class="chapter-test-card locked"
-          id="chapterTestCard"
-        >
-
-          <div class="test-icon">
-            🏆
-          </div>
-
-
-          <div class="test-content">
-
-            <p class="lesson-type">
-              CHAPTER GAME
-            </p>
-
-            <h3>
-              Foundations Championship
-            </h3>
-
-            <p>
-              Put the entire chapter together in one
-              cumulative assessment.
-            </p>
-
-
-            <div class="test-requirements">
-
-              <span>
-                10 Questions
+              <span class="lesson-time">
+                5–10 MIN
               </span>
 
-              <span>
-                Mixed Concepts
-              </span>
-
-              <span>
-                80% To Win
-              </span>
+              <button
+                class="lesson-button"
+                data-start-lesson="1-3"
+                type="button"
+                disabled
+              >
+                Locked
+              </button>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="lesson-meta">
 
-            <span class="lesson-time">
-              LOCKED
-            </span>
+          <!-- LESSON 1.4 -->
 
-            <button
-              class="test-button"
-              id="startChapterTest"
-              disabled
-            >
-              Complete Lessons
-            </button>
+          <article
+            class="lesson-card locked"
+            data-lesson="1-4"
+          >
 
-          </div>
+            <div class="lesson-status-icon">
+              🔒
+            </div>
 
-        </article>
+
+            <div class="lesson-card-content">
+
+              <span class="lesson-type">
+                LESSON 1.4
+              </span>
+
+              <h3>
+                Premise Sets
+              </h3>
+
+              <p>
+                Understand how multiple premises
+                combine to support a conclusion.
+              </p>
+
+            </div>
+
+
+            <div class="lesson-card-actions">
+
+              <span class="lesson-time">
+                5–10 MIN
+              </span>
+
+              <button
+                class="lesson-button"
+                data-start-lesson="1-4"
+                type="button"
+                disabled
+              >
+                Locked
+              </button>
+
+            </div>
+
+          </article>
+
+
+
+          <!-- LESSON 1.5 -->
+
+          <article
+            class="lesson-card locked"
+            data-lesson="1-5"
+          >
+
+            <div class="lesson-status-icon">
+              🔒
+            </div>
+
+
+            <div class="lesson-card-content">
+
+              <span class="lesson-type">
+                LESSON 1.5
+              </span>
+
+              <h3>
+                Valid &amp; Invalid Conclusions
+              </h3>
+
+              <p>
+                Learn what the evidence actually
+                allows you to conclude.
+              </p>
+
+            </div>
+
+
+            <div class="lesson-card-actions">
+
+              <span class="lesson-time">
+                5–10 MIN
+              </span>
+
+              <button
+                class="lesson-button"
+                data-start-lesson="1-5"
+                type="button"
+                disabled
+              >
+                Locked
+              </button>
+
+            </div>
+
+          </article>
+
+        </div>
 
       </section>
 
 
+
+      <!-- =================================================
+           CHAPTER TEST
+           ================================================= -->
+
+      <section
+        class="chapter-test-card locked"
+        id="chapterTestCard"
+      >
+
+        <div>
+
+          <p class="eyebrow">
+            CHAPTER GAME
+          </p>
+
+          <h2>
+            Chapter 1 Championship
+          </h2>
+
+          <p>
+            Finish all five lessons before taking
+            the cumulative Chapter 1 assessment.
+          </p>
+
+        </div>
+
+
+        <button
+          class="primary-button"
+          id="startChapterTest"
+          type="button"
+          disabled
+        >
+          Complete Lessons
+        </button>
+
+      </section>
+
+
+
       <!-- =================================================
            CONCEPT MASTERY
-      ================================================== -->
+           ================================================= -->
 
-      <section class="concept-section">
+      <section class="mastery-section">
+
 
         <div class="section-heading">
 
@@ -899,7 +777,7 @@
             </p>
 
             <h2>
-              Skill Ratings
+              Concept Mastery
             </h2>
 
           </div>
@@ -907,14 +785,17 @@
         </div>
 
 
-        <div class="concept-grid">
+
+        <div class="mastery-grid">
 
 
-          <div class="concept-card">
+          <!-- ARGUMENTS -->
 
-            <div class="concept-heading">
+          <article class="mastery-card">
 
-              <span>
+            <div class="mastery-card-top">
+
+              <span class="mastery-label">
                 Arguments
               </span>
 
@@ -925,23 +806,27 @@
             </div>
 
 
-            <div class="progress-bar">
+            <div class="progress-track">
 
               <div
                 class="progress-fill"
                 id="argumentsMasteryBar"
+                style="width: 0%;"
               ></div>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="concept-card">
 
-            <div class="concept-heading">
+          <!-- PREMISES -->
 
-              <span>
+          <article class="mastery-card">
+
+            <div class="mastery-card-top">
+
+              <span class="mastery-label">
                 Premises
               </span>
 
@@ -952,23 +837,27 @@
             </div>
 
 
-            <div class="progress-bar">
+            <div class="progress-track">
 
               <div
                 class="progress-fill"
                 id="premisesMasteryBar"
+                style="width: 0%;"
               ></div>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="concept-card">
 
-            <div class="concept-heading">
+          <!-- CONCLUSIONS -->
 
-              <span>
+          <article class="mastery-card">
+
+            <div class="mastery-card-top">
+
+              <span class="mastery-label">
                 Conclusions
               </span>
 
@@ -979,23 +868,27 @@
             </div>
 
 
-            <div class="progress-bar">
+            <div class="progress-track">
 
               <div
                 class="progress-fill"
                 id="conclusionsMasteryBar"
+                style="width: 0%;"
               ></div>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="concept-card">
 
-            <div class="concept-heading">
+          <!-- PREMISE SETS -->
 
-              <span>
+          <article class="mastery-card">
+
+            <div class="mastery-card-top">
+
+              <span class="mastery-label">
                 Premise Sets
               </span>
 
@@ -1006,23 +899,27 @@
             </div>
 
 
-            <div class="progress-bar">
+            <div class="progress-track">
 
               <div
                 class="progress-fill"
                 id="premiseSetsMasteryBar"
+                style="width: 0%;"
               ></div>
 
             </div>
 
-          </div>
+          </article>
 
 
-          <div class="concept-card">
 
-            <div class="concept-heading">
+          <!-- INFERENCES -->
 
-              <span>
+          <article class="mastery-card">
+
+            <div class="mastery-card-top">
+
+              <span class="mastery-label">
                 Inferences
               </span>
 
@@ -1033,16 +930,17 @@
             </div>
 
 
-            <div class="progress-bar">
+            <div class="progress-track">
 
               <div
                 class="progress-fill"
                 id="inferencesMasteryBar"
+                style="width: 0%;"
               ></div>
 
             </div>
 
-          </div>
+          </article>
 
         </div>
 
@@ -1053,480 +951,556 @@
   </main>
 
 
+
   <!-- =====================================================
        LESSON SCREEN
-  ====================================================== -->
+       ===================================================== -->
 
   <section
     class="lesson-screen hidden"
     id="lessonScreen"
   >
 
-    <div class="lesson-screen-shell">
+
+    <!-- LESSON TOPBAR -->
+
+    <header class="lesson-screen-header">
+
+
+      <button
+        class="exit-button"
+        id="exitLesson"
+        type="button"
+      >
+        ← Exit
+      </button>
+
+
+      <div class="lesson-screen-progress">
+
+        <span id="lessonProgressText">
+          Lesson 1.1
+        </span>
+
+
+        <div class="progress-track">
+
+          <div
+            class="progress-fill"
+            id="lessonScreenProgressBar"
+            style="width: 0%;"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- LESSON CONTENT -->
+
+    <div class="lesson-screen-inner">
+
+
+      <div class="lesson-stage-header">
+
+        <p
+          class="eyebrow"
+          id="lessonStageType"
+        >
+          FILM ROOM
+        </p>
+
+        <h1 id="lessonStageTitle">
+          Lesson
+        </h1>
+
+      </div>
+
 
 
       <!-- =================================================
-           LESSON SCOREBOARD
-      ================================================== -->
+           BASKETBALL GAME
+           ================================================= -->
 
-      <header class="lesson-screen-header">
+      <section
+        class="basketball-stage hidden"
+        id="basketballStage"
+        aria-label="Basketball feedback animation"
+      >
+
+
+        <!-- SCOREBOARD -->
+
+        <div class="court-scoreboard">
+
+
+          <div class="court-team">
+
+            <span>
+              YOU
+            </span>
+
+            <strong id="playerScore">
+              0
+            </strong>
+
+          </div>
+
+
+
+          <div class="possession-display">
+
+            <span>
+              POSSESSION
+            </span>
+
+            <strong id="possessionNumber">
+              1
+            </strong>
+
+          </div>
+
+
+
+          <div class="court-team opponent">
+
+            <span>
+              LSAT
+            </span>
+
+            <strong id="opponentScore">
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             COURT
+             ================================================= -->
+
+        <div
+          class="pixel-court"
+          id="pixelCourt"
+        >
+
+
+          <!-- CROWD -->
+
+          <div class="pixel-crowd">
+
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+            <span>▪</span>
+            <span>●</span>
+
+          </div>
+
+
+
+          <!-- COURT LINES -->
+
+          <div class="court-center-line"></div>
+
+          <div class="court-circle"></div>
+
+          <div class="court-key"></div>
+
+          <div class="three-point-line"></div>
+
+
+
+          <!-- =================================================
+               OFFENSIVE PLAYER
+               ================================================= -->
+
+          <div
+            class="pixel-player"
+            id="pixelPlayer"
+          >
+
+            <div
+              class="player-sprite player-blue-sprite"
+            >
+
+
+              <div class="sprite-head"></div>
+
+              <div class="sprite-hair"></div>
+
+              <div class="sprite-neck"></div>
+
+
+              <div class="sprite-torso">
+
+                <span class="jersey-number">
+                  7
+                </span>
+
+              </div>
+
+
+              <div
+                class="sprite-arm sprite-arm-left"
+              ></div>
+
+              <div
+                class="sprite-arm sprite-arm-right"
+              ></div>
+
+
+              <div class="sprite-shorts"></div>
+
+
+              <div
+                class="sprite-leg sprite-leg-left"
+              ></div>
+
+              <div
+                class="sprite-leg sprite-leg-right"
+              ></div>
+
+
+              <div
+                class="sprite-shoe sprite-shoe-left"
+              ></div>
+
+              <div
+                class="sprite-shoe sprite-shoe-right"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               DEFENDER
+               ================================================= -->
+
+          <div
+            class="pixel-defender"
+            id="pixelDefender"
+          >
+
+            <div
+              class="player-sprite player-orange-sprite"
+            >
+
+
+              <div class="sprite-head"></div>
+
+              <div class="sprite-hair"></div>
+
+              <div class="sprite-neck"></div>
+
+
+              <div class="sprite-torso">
+
+                <span class="jersey-number">
+                  L
+                </span>
+
+              </div>
+
+
+              <div
+                class="sprite-arm sprite-arm-left"
+              ></div>
+
+              <div
+                class="sprite-arm sprite-arm-right"
+              ></div>
+
+
+              <div class="sprite-shorts"></div>
+
+
+              <div
+                class="sprite-leg sprite-leg-left"
+              ></div>
+
+              <div
+                class="sprite-leg sprite-leg-right"
+              ></div>
+
+
+              <div
+                class="sprite-shoe sprite-shoe-left"
+              ></div>
+
+              <div
+                class="sprite-shoe sprite-shoe-right"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               BALL
+               ================================================= -->
+
+          <div
+            class="pixel-ball"
+            id="pixelBall"
+            aria-hidden="true"
+          >
+            🏀
+          </div>
+
+
+
+          <!-- =================================================
+               HOOP
+               ================================================= -->
+
+          <div
+            class="pixel-hoop"
+            id="pixelHoop"
+          >
+
+            <div class="backboard"></div>
+
+            <div class="rim"></div>
+
+            <div class="net"></div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               PLAY RESULT
+               ================================================= -->
+
+          <div
+            class="shot-result hidden"
+            id="shotResult"
+          >
+            BUCKET!
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           LESSON MATERIAL
+           ================================================= -->
+
+      <article
+        class="lesson-body"
+        id="lessonBody"
+      ></article>
+
+
+
+      <!-- ANSWER OPTIONS GENERATED BY JS -->
+
+      <section
+        class="interaction-area"
+        id="interactionArea"
+      ></section>
+
+
+
+      <!-- =================================================
+           FEEDBACK
+           ================================================= -->
+
+      <section
+        class="lesson-feedback hidden"
+        id="lessonFeedback"
+      >
+
+        <div
+          class="lesson-feedback-icon"
+          id="lessonFeedbackIcon"
+        >
+          🏀
+        </div>
+
+
+        <div class="lesson-feedback-content">
+
+          <span
+            class="lesson-feedback-label"
+            id="lessonFeedbackLabel"
+          >
+            BUCKET
+          </span>
+
+          <h3 id="lessonFeedbackTitle">
+            Correct
+          </h3>
+
+          <p id="lessonFeedbackText">
+            Explanation
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           LESSON NAVIGATION
+           ================================================= -->
+
+      <footer class="lesson-controls">
+
 
         <button
-          class="exit-lesson"
-          id="exitLesson"
+          class="secondary-button"
+          id="previousLessonStep"
+          type="button"
         >
-          ← Locker Room
+          ← Previous
         </button>
 
 
-        <div class="lesson-screen-progress">
-
-          <span id="lessonProgressText">
-            Lesson 1.1
-          </span>
+        <span id="stepCounter">
+          1 / 1
+        </span>
 
 
-          <div class="progress-bar">
-
-            <div
-              class="progress-fill"
-              id="lessonScreenProgressBar"
-            ></div>
-
-          </div>
-
-        </div>
-
-
-        <div class="lesson-xp">
-          LOOPHOLE LEAGUE
-        </div>
-
-      </header>
-
-
-      <!-- =================================================
-           LESSON CONTENT
-      ================================================== -->
-
-      <main class="lesson-stage">
-
-
-        <div class="lesson-stage-header">
-
-          <p
-            class="eyebrow"
-            id="lessonStageType"
-          >
-            LEARN
-          </p>
-
-          <h1 id="lessonStageTitle">
-            What Is an Argument?
-          </h1>
-
-        </div>
-
-
-        <!-- =================================================
-             BASKETBALL GAME STAGE
-
-             JS will show this only during interactive
-             questions/drills.
-        ================================================== -->
-
-        <section
-          class="basketball-stage hidden"
-          id="basketballStage"
-          aria-label="Basketball feedback animation"
+        <button
+          class="primary-button"
+          id="nextLessonStep"
+          type="button"
         >
+          Continue →
+        </button>
 
-          <!-- SCOREBOARD -->
-
-          <div class="court-scoreboard">
-
-            <div class="court-team">
-
-              <span>
-                YOU
-              </span>
-
-              <strong id="playerScore">
-                0
-              </strong>
-
-            </div>
-
-
-            <div class="possession-display">
-
-              <span>
-                POSSESSION
-              </span>
-
-              <strong id="possessionNumber">
-                1
-              </strong>
-
-            </div>
-
-
-            <div class="court-team opponent">
-
-              <span>
-                LSAT
-              </span>
-
-              <strong id="opponentScore">
-                0
-              </strong>
-
-            </div>
-
-          </div>
-
-
-          <!-- COURT -->
-
-          <div
-            class="pixel-court"
-            id="pixelCourt"
-          >
-
-            <!-- CROWD -->
-
-            <div class="pixel-crowd">
-
-              <span>▪</span>
-              <span>●</span>
-              <span>▪</span>
-              <span>●</span>
-              <span>▪</span>
-              <span>●</span>
-              <span>▪</span>
-              <span>●</span>
-              <span>▪</span>
-              <span>●</span>
-              <span>▪</span>
-              <span>●</span>
-
-            </div>
-
-
-            <!-- COURT LINES -->
-
-            <div class="court-center-line"></div>
-
-            <div class="court-circle"></div>
-
-            <div class="court-key"></div>
-
-            <div class="three-point-line"></div>
-
-
-            <!-- PLAYER -->
-
-            <div
-              class="pixel-player"
-              id="pixelPlayer"
-            >
-
-              <div class="player-head"></div>
-
-              <div class="player-body">
-                7
-              </div>
-
-              <div class="player-arm player-arm-left"></div>
-
-              <div class="player-arm player-arm-right"></div>
-
-              <div class="player-leg player-leg-left"></div>
-
-              <div class="player-leg player-leg-right"></div>
-
-            </div>
-
-
-            <!-- DEFENDER -->
-
-            <div
-              class="pixel-defender"
-              id="pixelDefender"
-            >
-
-              <div class="defender-head"></div>
-
-              <div class="defender-body">
-                L
-              </div>
-
-              <div class="defender-arm defender-arm-left"></div>
-
-              <div class="defender-arm defender-arm-right"></div>
-
-              <div class="defender-leg defender-leg-left"></div>
-
-              <div class="defender-leg defender-leg-right"></div>
-
-            </div>
-
-
-            <!-- BALL -->
-
-            <div
-              class="pixel-ball"
-              id="pixelBall"
-            >
-              🏀
-            </div>
-
-
-            <!-- BASKET -->
-
-            <div
-              class="pixel-hoop"
-              id="pixelHoop"
-            >
-
-              <div class="backboard"></div>
-
-              <div class="rim"></div>
-
-              <div class="net"></div>
-
-            </div>
-
-
-            <!-- RESULT TEXT -->
-
-            <div
-              class="shot-result hidden"
-              id="shotResult"
-            >
-              BUCKET!
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- =================================================
-             LESSON TEXT
-        ================================================== -->
-
-        <div
-          class="lesson-body"
-          id="lessonBody"
-        ></div>
-
-
-        <!-- =================================================
-             INTERACTIVE ANSWERS
-        ================================================== -->
-
-        <div
-          class="interaction-area"
-          id="interactionArea"
-        ></div>
-
-
-        <!-- =================================================
-             FEEDBACK
-        ================================================== -->
-
-        <section
-          class="lesson-feedback hidden"
-          id="lessonFeedback"
-        >
-
-          <div
-            class="lesson-feedback-icon"
-            id="lessonFeedbackIcon"
-          >
-            ✓
-          </div>
-
-
-          <div>
-
-            <p
-              class="lesson-feedback-label"
-              id="lessonFeedbackLabel"
-            >
-              BUCKET
-            </p>
-
-            <h3 id="lessonFeedbackTitle">
-              That's the read.
-            </h3>
-
-            <p id="lessonFeedbackText">
-              Explanation goes here.
-            </p>
-
-          </div>
-
-        </section>
-
-
-        <!-- =================================================
-             CONTROLS
-        ================================================== -->
-
-        <div class="lesson-controls">
-
-          <button
-            class="lesson-nav-button secondary"
-            id="previousLessonStep"
-          >
-            ← Previous
-          </button>
-
-
-          <span
-            class="step-counter"
-            id="stepCounter"
-          >
-            1 / 12
-          </span>
-
-
-          <button
-            class="lesson-nav-button primary"
-            id="nextLessonStep"
-          >
-            Continue →
-          </button>
-
-        </div>
-
-      </main>
+      </footer>
 
     </div>
 
   </section>
 
 
+
   <!-- =====================================================
        CHAPTER TEST SCREEN
-  ====================================================== -->
+       ===================================================== -->
 
   <section
     class="test-screen hidden"
     id="testScreen"
   >
 
-    <div class="test-screen-shell">
+
+    <header class="test-screen-header">
 
 
-      <header class="test-screen-header">
+      <button
+        class="exit-button"
+        id="exitTest"
+        type="button"
+      >
+        ← Exit
+      </button>
 
-        <button
-          class="exit-test"
-          id="exitTest"
+
+      <div class="test-progress-info">
+
+        <span>
+          CHAPTER 1 CHAMPIONSHIP
+        </span>
+
+        <strong id="testScore">
+          0 / 0
+        </strong>
+
+      </div>
+
+    </header>
+
+
+
+    <div class="test-screen-inner">
+
+
+      <div class="test-meta">
+
+        <span id="testQuestionTag">
+          ARGUMENTS
+        </span>
+
+        <span id="testDifficulty">
+          ROOKIE
+        </span>
+
+      </div>
+
+
+
+      <article class="test-content">
+
+
+        <p
+          class="test-stimulus"
+          id="testStimulus"
         >
-          ← Exit Game
-        </button>
+          Question stimulus
+        </p>
 
 
-        <div class="test-progress-info">
-
-          <span>
-            Chapter Game
-          </span>
-
-          <strong>
-            Foundations Championship
-          </strong>
-
-        </div>
-
-
-        <div class="test-score-live">
-
-          <span>
-            Score
-          </span>
-
-          <strong id="testScore">
-            0 / 10
-          </strong>
-
-        </div>
-
-      </header>
-
-
-      <main class="test-stage">
-
-        <div class="test-question-meta">
-
-          <span
-            class="question-tag"
-            id="testQuestionTag"
-          >
-            ARGUMENTS
-          </span>
-
-          <span
-            class="difficulty"
-            id="testDifficulty"
-          >
-            REGULAR SEASON
-          </span>
-
-        </div>
-
-
-        <div class="test-question-content">
-
-          <p
-            class="stimulus"
-            id="testStimulus"
-          >
-            Question stimulus
-          </p>
-
-          <h2
-            class="question-prompt"
-            id="testQuestionPrompt"
-          >
-            Question prompt
-          </h2>
-
-        </div>
+        <h2 id="testQuestionPrompt">
+          Question
+        </h2>
 
 
         <div
-          class="answers"
+          class="test-answer-container"
           id="testAnswerContainer"
         ></div>
 
 
-        <div class="test-actions">
+        <button
+          class="primary-button"
+          id="submitTestAnswer"
+          type="button"
+        >
+          Lock In
+        </button>
 
-          <button
-            class="submit-button"
-            id="submitTestAnswer"
-            disabled
-          >
-            Lock In
-          </button>
-
-        </div>
-
-      </main>
+      </article>
 
     </div>
 
   </section>
 
 
+
   <!-- =====================================================
        JAVASCRIPT
-  ====================================================== -->
+       ===================================================== -->
 
   <script src="loophole.js"></script>
 
